@@ -21,10 +21,10 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User registerUser(User user) {
+    public void registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 
     public User findByUsername(String username) {
