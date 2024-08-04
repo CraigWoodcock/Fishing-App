@@ -6,11 +6,24 @@
 <body>
 <h2>Register</h2>
 <form th:action="@{/register}" th:object="${user}" method="post">
+
     <input id="username" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <input type="text" th:field="${user.username}" placeholder="Username" required>
-    <input type="text" th:field="${user.name}" placeholder="Name" required>
-    <input type="password" th:field="${user.password}" placeholder="Password" required>
-    <input type="email" th:field="${user.email}" placeholder="Email" required>
+    <p>
+        <label for="userinput">Username :</label>
+        <input id="userinput" type="text" th:field="${user.username}" placeholder="Enter a Username" required>
+    </p>
+    <p>
+        <label for="name">Name :</label>
+        <input id="name" type="text" th:field="${user.name}" placeholder="Enter Full Name" required>
+    </p>
+    <p>
+        <label for="passwordinput">Password :</label>
+        <input id="passwordinput" type="password" th:field="${user.password}" placeholder="Choose a Password" required>
+    </p>
+<p>
+    <label for="passwordinput">Email :</label>
+    <input type="email" th:field="${user.email}" placeholder="Enter Email Address" required>
+</p>
     <button type="submit">Register</button>
 </form>
 </body>
