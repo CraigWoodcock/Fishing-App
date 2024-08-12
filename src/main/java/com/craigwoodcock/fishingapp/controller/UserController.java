@@ -25,11 +25,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String processRegistrationForm(@ModelAttribute("user") User user, BindingResult bindingResult) {
+    public String processRegistrationForm(@ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "register"; // Return to the registration form with errors
+            return "register";
         }
-        userService.registerUser(user);
-        return "redirect:/login";
+        try {
+            userService.registerUser(user);
+            return "redirect:/login?registered";
+        } catch (UserService.UserAlreadyExistsException e) {
+            model.addAttribute("error", e.getMessage());
+            return "register";
+        }
     }
 }

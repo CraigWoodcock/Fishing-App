@@ -23,17 +23,25 @@ private final Logger log = Logger.getLogger(this.getClass().getName());
         this.passwordEncoder = passwordEncoder;
     }
 @Transactional
-    public void registerUser(User user) {
-    try {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
-        User savedUser = userRepository.save(user);
-        log.info("User saved successfully: " + savedUser.getId());
-    } catch (Exception e) {
-        log.severe("Error saving user" +e.getMessage());
-
-        throw e; // Re-throw to roll back transaction
+    public void registerUser(User user) throws UserAlreadyExistsException {
+    if(userRepository.findByUsername(user.getUsername()).isPresent()) {
+        throw new UserAlreadyExistsException("Username already exists");
     }
+    if(userRepository.findByEmail(user.getEmail()).isPresent()) {
+        throw new UserAlreadyExistsException("Email already exists");
+    }
+    log.info("Registering user: " + user.getUsername());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+   log.info("encoded password");
+        user.setRole(Role.USER);
+        log.info("Role Set: " + user.getRole());
+        userRepository.save(user);
+        log.info("User saved");
+    }
+    public static class UserAlreadyExistsException extends RuntimeException {
+        public UserAlreadyExistsException(String message) {
+            super(message);
+        }
     }
 
     public User findByUsername(String username) {
