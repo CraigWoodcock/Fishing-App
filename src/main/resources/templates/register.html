@@ -1,31 +1,88 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title>Register</title>
-    <link rel="stylesheet" th:href="@{/css/output.css}">
-</head>
-<body>
-<h2>Register</h2>
-<form th:action="@{/register}" th:object="${user}" method="post">
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Register</title>-->
+<!--    <link rel="stylesheet" th:href="@{/css/output.css}">-->
+<!--</head>-->
+<!--<body>-->
+<!--<h2>Register</h2>-->
+<!--<form th:action="@{/register}" th:object="${user}" method="post">-->
 
-    <input id="username" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-    <p>
-        <label for="userinput">Username :</label>
-        <input id="userinput" type="text" th:field="${user.username}" placeholder="Enter a Username" required>
-    </p>
-    <p>
-        <label for="name">Name :</label>
-        <input id="name" type="text" th:field="${user.name}" placeholder="Enter Full Name" required>
-    </p>
-    <p>
-        <label for="passwordinput">Password :</label>
-        <input id="passwordinput" type="password" th:field="${user.password}" placeholder="Choose a Password" required>
-    </p>
-<p>
-    <label for="passwordinput">Email :</label>
-    <input type="email" th:field="${user.email}" placeholder="Enter Email Address" required>
-</p>
-    <button type="submit">Register</button>
-</form>
+<!--    <input id="username" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
+<!--    <p>-->
+<!--        <label for="userinput">Username :</label>-->
+<!--        <input id="userinput" type="text" th:field="${user.username}" placeholder="Enter a Username" required>-->
+<!--    </p>-->
+<!--    <p>-->
+<!--        <label for="name">Name :</label>-->
+<!--        <input id="name" type="text" th:field="${user.name}" placeholder="Enter Full Name" required>-->
+<!--    </p>-->
+<!--    <p>-->
+<!--        <label for="passwordinput">Password :</label>-->
+<!--        <input id="passwordinput" type="password" th:field="${user.password}" placeholder="Choose a Password" required>-->
+<!--    </p>-->
+<!--<p>-->
+<!--    <label for="passwordinput">Email :</label>-->
+<!--    <input type="email" th:field="${user.email}" placeholder="Enter Email Address" required>-->
+<!--</p>-->
+<!--    <button type="submit">Register</button>-->
+<!--</form>-->
+<!--</body>-->
+<!--</html>-->
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Fishing Session Tracker | Start Logging Your Catches</title>
+    <meta name="description" content="Create your Fishing Session Tracker account to start logging your fishing adventures. Record catches, track locations, and analyze your fishing patterns.">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <meta name="robots" content="index, follow">
+</head>
+<body class="bg-black text-white">
+<header class="p-4 text-center" >
+    <h1 class="text-3xl font-bold">Fishing Session Tracker</h1>
+</header>
+<main class="min-h-screen flex items-center justify-center">
+    <section class="bg-gray-900 p-8 rounded shadow-md w-96">
+        <h2 class="text-2xl font-semibold mb-6">Create Your Account</h2>
+        <form th:action="@{/register}" th:object="${user}" method="post">
+            <input id="username" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <div class="mb-4">
+                <label for="usernameInput" class="block mb-2">Username</label>
+                <input type="text" id="usernameInput" th:field="${user.username}" required
+                       class="w-full px-3 py-2 bg-gray-800 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="name" class="block mb-2">Name</label>
+                <input type="text" id="name" th:field="${user.name}" required
+                       class="w-full px-3 py-2 bg-gray-800 rounded">
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block mb-2">Email</label>
+                <input type="email" id="email" th:field="${user.email}" required
+                       class="w-full px-3 py-2 bg-gray-800 rounded">
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block mb-2">Password</label>
+                <input type="password" id="password" th:field="${user.password}" required
+                       class="w-full px-3 py-2 bg-gray-800 rounded">
+            </div>
+            <button type="submit"
+                    class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700">
+                Register
+            </button>
+        </form>
+        <div class="mt-4 text-center">
+            <a href="/login" class="text-blue-400 hover:underline">
+                Already have an account? Login here
+            </a>
+        </div>
+    </section>
+</main>
+<footer class="text-center p-4">
+    <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
+</footer>
 </body>
 </html>

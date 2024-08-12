@@ -1,0 +1,11 @@
+body{
+    background-color: pink;
+}
+
+.blue {
+    background-color: blue;
+}
+
+h1, h2 {
+    color: red;
+}
