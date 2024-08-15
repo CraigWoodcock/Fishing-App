@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface AnglerRepository extends JpaRepository<Angler, Long> {
   List<Angler> findBySession(Session session);
+
+    List<Angler> findBySessionId(Long sessionId);
 }

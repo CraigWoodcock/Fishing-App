@@ -13,4 +13,6 @@ public interface CatchRepository extends JpaRepository<Catch, Long> {
     List<Catch> findByAngler(Angler angler);
 
     List<Catch> findBySession(Session session);
+
+    List<Catch> findBySessionId(Long sessionId);
 }
