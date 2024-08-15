@@ -43,7 +43,7 @@ public class SessionController {
     public String viewSession(@PathVariable Long id, Model model) {
         Session session = sessionService.getSessionById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
-        model.addAttribute("session", session);
+        model.addAttribute("sessions", session);
         model.addAttribute("anglers", sessionService.getanglersBySession(id));
         model.addAttribute("catches", sessionService.getCatchesBySession(id));
         return "sessions/view";
@@ -53,7 +53,7 @@ public class SessionController {
     public String editSessionForm(@PathVariable Long id, Model model) {
         Session session = sessionService.getSessionById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
-        model.addAttribute("session", session);
+        model.addAttribute("sessions", session);
         return "sessions/form";
     }
 
