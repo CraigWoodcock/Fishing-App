@@ -31,6 +31,6 @@ public class Dashboardcontroller {
         User user = userService.findByUsername(authentication.getName());
         List<Session> sessions = sessionService.getAllSessionsByUser(user);
         model.addAttribute("sessions", sessions);
-        return "/dashboard";
+        return "dashboard";
     }
 }
