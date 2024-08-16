@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/login")
+@RequestMapping("/")
 public class LoginController {
 
-    @GetMapping
+    @GetMapping("login")
     public String getLoginForm(@ModelAttribute User user,@RequestParam(value = "error", required = false) String error,
     @RequestParam(value = "logout", required = false) String logout, Model model){
         model.addAttribute("user", user);

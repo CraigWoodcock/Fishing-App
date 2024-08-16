@@ -12,12 +12,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.logging.Logger;
+
 @Controller
 @RequestMapping("/sessions")
 public class SessionController {
 
     private final SessionService sessionService;
     private final UserService userService;
+    private static final Logger log = Logger.getLogger(SessionController.class.getName());
 
     @Autowired
     public SessionController(SessionService sessionService, UserService userService) {
@@ -28,14 +31,17 @@ public class SessionController {
     @GetMapping("/new")
     public String newSessionForm(Model model) {
         model.addAttribute("session", new Session());
-        return "sessions/form";
+        return "new-session";
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public String createSession(@ModelAttribute Session session, Authentication authentication) {
+
         User user = userService.findByUsername(authentication.getName());
+        log.info("User Retrieved = " + user.getName());
         session.setUser(user);
         sessionService.createSession(session);
+        log.info("Created new session for user: " + user.getName());
         return "redirect:/dashboard";
     }
 
@@ -46,7 +52,7 @@ public class SessionController {
         model.addAttribute("sessions", session);
         model.addAttribute("anglers", sessionService.getanglersBySession(id));
         model.addAttribute("catches", sessionService.getCatchesBySession(id));
-        return "sessions/view";
+        return "view-session";
     }
 
     @GetMapping("/{id}/edit")
