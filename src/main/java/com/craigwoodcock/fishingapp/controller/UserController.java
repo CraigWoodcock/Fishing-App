@@ -1,5 +1,6 @@
 package com.craigwoodcock.fishingapp.controller;
 
+import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ public class UserController {
         try {
             userService.registerUser(user);
             return "redirect:/login?registered";
-        } catch (UserService.UserAlreadyExistsException e) {
+        } catch (UserAlreadyExistsException e) {
             model.addAttribute("error", e.getMessage());
             return "register";
         }

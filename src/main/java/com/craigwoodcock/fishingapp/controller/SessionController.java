@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
@@ -36,12 +37,12 @@ public class SessionController {
 
     @PostMapping("/create")
     public String createSession(@ModelAttribute Session session, Authentication authentication) {
-
         User user = userService.findByUsername(authentication.getName());
         log.info("User Retrieved = " + user.getName());
         session.setUser(user);
         sessionService.createSession(session);
         log.info("Created new session for user: " + user.getName());
+
         return "redirect:/dashboard";
     }
 

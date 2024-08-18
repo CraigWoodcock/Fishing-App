@@ -1,5 +1,6 @@
 package com.craigwoodcock.fishingapp.service;
 
+import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.model.Role;
 import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.repository.UserRepository;
@@ -32,17 +33,13 @@ private final Logger log = Logger.getLogger(this.getClass().getName());
     }
     log.info("Registering user: " + user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-   log.info("encoded password");
+    log.info("encoded password");
         user.setRole(Role.USER);
-        log.info("Role Set: " + user.getRole());
+    log.info("Role Set: " + user.getRole());
         userRepository.save(user);
-        log.info("User saved");
+    log.info("User saved");
     }
-    public static class UserAlreadyExistsException extends RuntimeException {
-        public UserAlreadyExistsException(String message) {
-            super(message);
-        }
-    }
+
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username).orElse(null);
