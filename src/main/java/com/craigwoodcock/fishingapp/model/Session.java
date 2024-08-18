@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,10 +30,11 @@ public class Session {
     @Column(name = "duration_hours", nullable = false)
     private Integer durationHours;
 
-    @OneToMany(mappedBy = "session")
-    private List<Angler> anglers;
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Angler> anglers = new ArrayList<>();
 
-    @OneToMany(mappedBy = "session")
+
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Catch> catches = new LinkedHashSet<>();
 
     public Long getId() {

@@ -12,12 +12,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.logging.Logger;
+
 @Controller
 @RequestMapping("")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("register")
     public String showRegistrationForm(Model model) {
@@ -32,7 +38,8 @@ public class UserController {
         }
         try {
             userService.registerUser(user);
-            return "redirect:/login?registered";
+            model.addAttribute("message", "User has been registered successfully");
+            return "/login";
         } catch (UserAlreadyExistsException e) {
             model.addAttribute("error", e.getMessage());
             return "register";
