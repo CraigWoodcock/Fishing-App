@@ -7,11 +7,13 @@ import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.service.SessionService;
 import com.craigwoodcock.fishingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -35,13 +37,29 @@ public class SessionController {
         return "new-session";
     }
 
+//    @PostMapping("/create")
+//    public String createSession(@ModelAttribute Session session, Authentication authentication) {
+//        User user = userService.findByUsername(authentication.getName());
+//        log.info("User Retrieved = " + user.getName());
+//        session.setUser(user);
+//        sessionService.createSession(session);
+//        log.info("Created new session for user: " + user.getName());
+//
+//        return "redirect:/dashboard";
+//    }
+
     @PostMapping("/create")
-    public String createSession(@ModelAttribute Session session, Authentication authentication) {
-        User user = userService.findByUsername(authentication.getName());
+    public String createSession(@RequestParam String venue,
+                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate startDate,
+                                @RequestParam int durationHours,
+                                @RequestParam String anglersList,
+                                Authentication authentication,
+                                Model model) {
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
         log.info("User Retrieved = " + user.getName());
-        session.setUser(user);
-        sessionService.createSession(session);
-        log.info("Created new session for user: " + user.getName());
+        sessionService.createSession(user,venue,startDate,durationHours,anglersList);
+        model.addAttribute("message", "Session Created!!");
 
         return "redirect:/dashboard";
     }

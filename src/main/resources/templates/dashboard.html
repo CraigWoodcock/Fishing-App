@@ -23,6 +23,9 @@
     <div th:if="${sessions.isEmpty()}">
         <p>You haven't created any sessions yet.</p>
     </div>
+    <div th:if="${message}" class="bg-green-500 text-white p-3 rounded mb-4" role="alert">
+        <p th:text="${message}"></p>
+    </div>
 
 
     <div th:each="sess : ${sessions}" class="bg-gray-800 p-4 rounded-lg">

@@ -7,9 +7,12 @@ import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.repository.CatchRepository;
 import com.craigwoodcock.fishingapp.repository.SessionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,8 +28,29 @@ public class SessionService {
         this.anglerRepository = anglerRepository;
         this.catchRepository = catchRepository;
     }
+@Transactional
+public Session createSession(User user, String venue, LocalDate startdate,
+                             int durationHours, String anglersList) {
+        Session session = new Session();
+        session.setUser(user);
+        session.setVenue(venue);
+        session.setStartDate(startdate);
+        session.setDurationHours(durationHours);
 
-public Session createSession(Session session) {
+        session = sessionRepository.save(session);
+
+        String[] anglerNames = anglersList.split(",");
+        List<Angler> anglers = new ArrayList<>();
+
+        for (String anglerName : anglerNames) {
+            Angler angler = new Angler();
+            angler.setName(anglerName.trim());
+            angler.setSession(session);
+            anglers.add(angler);
+        }
+        anglerRepository.saveAll(anglers);
+        session.setAnglers(anglers);
+
         return sessionRepository.save(session);
 }
 
