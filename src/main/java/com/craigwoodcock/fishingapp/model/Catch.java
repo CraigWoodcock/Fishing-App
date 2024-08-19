@@ -14,7 +14,7 @@ public class Catch {
     @Column(name = "id", nullable = false)
     private Long id;
 
-@ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "session_id", nullable = false)
     private Session session;
 

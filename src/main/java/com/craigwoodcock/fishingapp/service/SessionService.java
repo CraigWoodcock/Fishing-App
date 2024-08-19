@@ -31,26 +31,39 @@ public class SessionService {
 @Transactional
 public Session createSession(User user, String venue, LocalDate startdate,
                              int durationHours, String anglersList) {
+
         Session session = new Session();
         session.setUser(user);
         session.setVenue(venue);
         session.setStartDate(startdate);
         session.setDurationHours(durationHours);
-
         session = sessionRepository.save(session);
 
-        String[] anglerNames = anglersList.split(",");
+// Create a new List of type Angler
         List<Angler> anglers = new ArrayList<>();
-
+// Create a new Angler for the user, this will be the logged-in User.
+        Angler userAngler = new Angler();
+// Set the name of the new Angler to the logged-in User
+        userAngler.setName(user.getName());
+// Set the Session to the passed in session
+        userAngler.setSession(session);
+// Add the logged-in User to the Anglers List
+        anglers.add(userAngler);
+// Create a String Array of anglers names (seperated by a comma-seperated list)
+    if (anglersList.matches(".*[a-zA-Z].*")){
+        String[] anglerNames = anglersList.split(",");
         for (String anglerName : anglerNames) {
             Angler angler = new Angler();
             angler.setName(anglerName.trim());
             angler.setSession(session);
             anglers.add(angler);
         }
-        anglerRepository.saveAll(anglers);
+    }
+// Save the Anglers List
+    anglerRepository.saveAll(anglers);
+// Set the Anglers for this Session to the Anglers List
         session.setAnglers(anglers);
-
+// Save the Session
         return sessionRepository.save(session);
 }
 

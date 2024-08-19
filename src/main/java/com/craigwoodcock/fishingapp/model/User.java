@@ -34,7 +34,7 @@ public class User {
     @Column(name = "role", nullable = false, length = 20)
     private Role role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Session> sessions = new ArrayList<>();
 
     public List<GrantedAuthority> getAuthorities() {

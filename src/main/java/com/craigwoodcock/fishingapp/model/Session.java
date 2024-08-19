@@ -31,11 +31,11 @@ public class Session {
     @Column(name = "duration_hours", nullable = false)
     private Integer durationHours;
 
-    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Angler> anglers = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Catch> catches = new LinkedHashSet<>();
 
     public Long getId() {
