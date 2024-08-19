@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -54,12 +55,12 @@ public class SessionController {
                                 @RequestParam int durationHours,
                                 @RequestParam String anglersList,
                                 Authentication authentication,
-                                Model model) {
+                                RedirectAttributes redirectAttributes) {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
         log.info("User Retrieved = " + user.getName());
         sessionService.createSession(user,venue,startDate,durationHours,anglersList);
-        model.addAttribute("message", "Session Created!!");
+        redirectAttributes.addFlashAttribute("message", "Session Created");
 
         return "redirect:/dashboard";
     }
