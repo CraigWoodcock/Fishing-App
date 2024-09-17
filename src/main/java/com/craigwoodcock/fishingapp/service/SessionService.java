@@ -81,16 +81,6 @@ public void deleteSession(Long id) {
         sessionRepository.deleteById(id);
 }
 
-public Angler addAnglerToSession(Long sessionId, Angler angler) {
-        Session session = sessionRepository.findById(sessionId).orElseThrow(()-> new RuntimeException("Session not found"));
-        angler.setSession(session);
-    return anglerRepository.save(angler);
-    }
-
-    public List<Angler> getanglersBySession(Long sessionId) {
-        return anglerRepository.findBySessionId(sessionId);
-    }
-
     public void removeAnglerFromSession(Long sessionId, Long anglerId) {
         anglerRepository.deleteById(anglerId);
     }

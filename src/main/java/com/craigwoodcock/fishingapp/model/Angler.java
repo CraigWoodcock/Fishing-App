@@ -2,7 +2,8 @@ package com.craigwoodcock.fishingapp.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "anglers")
@@ -12,15 +13,17 @@ public class Angler {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "session_id", nullable = false)
-    private Session session;
+    @ManyToMany
+    @JoinTable(name = "angler_session",
+            joinColumns = @JoinColumn(name = "angler_id"),
+            inverseJoinColumns = @JoinColumn(name = "session_id"))
+    private Set<Session> sessions = new LinkedHashSet<>();
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @OneToMany(mappedBy = "angler", cascade = CascadeType.ALL)
-    private List<Catch> catches;
+    @OneToMany(mappedBy = "angler")
+    private Set<Catch> catches = new LinkedHashSet<>();
 
     public Long getId() {
         return id;
@@ -30,12 +33,12 @@ public class Angler {
         this.id = id;
     }
 
-    public Session getSession() {
-        return session;
+    public Set<Session> getSessions() {
+        return sessions;
     }
 
-    public void setSession(Session session) {
-        this.session = session;
+    public void setSessions(Set<Session> sessions) {
+        this.sessions = sessions;
     }
 
     public String getName() {
@@ -46,21 +49,12 @@ public class Angler {
         this.name = name;
     }
 
-    public List<Catch> getCatches() {
+    public Set<Catch> getCatches() {
         return catches;
     }
 
-    public void setCatches(List<Catch> catches) {
+    public void setCatches(Set<Catch> catches) {
         this.catches = catches;
     }
 
-    @Override
-    public String toString() {
-        return "Angler{" +
-                "id=" + id +
-                ", session=" + session +
-                ", name='" + name + '\'' +
-                ", catches=" + catches +
-                '}';
-    }
 }
