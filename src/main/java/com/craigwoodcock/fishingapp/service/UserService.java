@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -36,6 +37,8 @@ private final Logger log = Logger.getLogger(this.getClass().getName());
     log.info("encoded password");
         user.setRole(Role.USER);
     log.info("Role Set: " + user.getRole());
+        user.setCreatedAt(LocalDateTime.now());
+    log.info("Created at: " + user.getCreatedAt());
         userRepository.save(user);
     log.info("User saved");
     }

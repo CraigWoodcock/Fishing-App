@@ -3,6 +3,8 @@ package com.craigwoodcock.fishingapp.model;
 import jakarta.persistence.*;
 
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,13 +19,24 @@ public class Angler {
     @JoinTable(name = "angler_session",
             joinColumns = @JoinColumn(name = "angler_id"),
             inverseJoinColumns = @JoinColumn(name = "session_id"))
-    private Set<Session> sessions = new LinkedHashSet<>();
+    private List<Session> sessions = new LinkedList();
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
     @OneToMany(mappedBy = "angler")
     private Set<Catch> catches = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "angler")
+    private Set<AnglerSession> anglerSessions = new LinkedHashSet<>();
+
+    public Set<AnglerSession> getAnglerSessions() {
+        return anglerSessions;
+    }
+
+    public void setAnglerSessions(Set<AnglerSession> anglerSessions) {
+        this.anglerSessions = anglerSessions;
+    }
 
     public Long getId() {
         return id;
@@ -33,13 +46,14 @@ public class Angler {
         this.id = id;
     }
 
-    public Set<Session> getSessions() {
+    public List<Session> getSessions() {
         return sessions;
     }
 
-    public void setSessions(Set<Session> sessions) {
+    public void setSessions(List<Session> sessions) {
         this.sessions = sessions;
     }
+
 
     public String getName() {
         return name;

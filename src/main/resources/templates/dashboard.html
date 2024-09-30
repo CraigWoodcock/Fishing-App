@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Dashboard</title>
     <link rel="stylesheet" th:href="@{/css/output.css}">
-<!--    <link rel="stylesheet" th:href="@{/css/style.css}">-->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="bg-black text-white">
 <div class="container mx-auto px-4 py-8">
@@ -33,7 +33,8 @@
        <p th:text="${'Date: ' + #temporals.format(sess.startDate, 'dd-MM-yyyy')}" class="mb-1"></p>
        <p th:text="${'Duration: ' + sess.durationHours + ' hours'}" class="mb-1"></p>
        <p th:text="${'Anglers: ' + sess.anglers.size()}" class="mb-2"></p>
-       <a th:href="@{/sessions/{id}(id=${sess.id})}" class="text-red-400 hover:text-red-300">View Details</a>
+       <a th:href="@{/sessions/{id}(id=${sess.id})}" class="text-red-400 bg-red-600 hover:text-red-300">View Details</a>
+        <hr class="red">
     </div>
 
 </div>

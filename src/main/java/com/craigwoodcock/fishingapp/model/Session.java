@@ -40,6 +40,17 @@ public class Session {
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Catch> catches = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "session")
+    private Set<AnglerSession> anglerSessions = new LinkedHashSet<>();
+
+    public Set<AnglerSession> getAnglerSessions() {
+        return anglerSessions;
+    }
+
+    public void setAnglerSessions(Set<AnglerSession> anglerSessions) {
+        this.anglerSessions = anglerSessions;
+    }
+
     public Session(Long id, User user, String venue, LocalDate startDate, Integer durationHours, Set<Angler> anglers, Set<Catch> catches) {
         this.id = id;
         this.user = user;
@@ -48,6 +59,10 @@ public class Session {
         this.durationHours = durationHours;
         this.anglers = anglers;
         this.catches = catches;
+    }
+
+    public Session() {
+
     }
 
     public Long getId() {

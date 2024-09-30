@@ -8,10 +8,8 @@ import java.time.Instant;
 @Entity
 @Table(name = "angler_session")
 public class AnglerSession {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
-    private Long id;
+    @EmbeddedId
+    private AnglerSessionId id;
 
     @MapsId("anglerId")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -21,17 +19,18 @@ public class AnglerSession {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "session_id", nullable = false)
+    @MapsId("sessionId")
     private Session session;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
     @Column(name = "created_at")
     private Instant createdAt;
 
-    public Long getId() {
+    public AnglerSessionId getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(AnglerSessionId id) {
         this.id = id;
     }
 

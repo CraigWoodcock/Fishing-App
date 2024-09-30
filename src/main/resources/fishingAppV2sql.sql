@@ -1,8 +1,8 @@
-drop database if exists fishing_demo;
+drop database if exists fishing_app;
 
-CREATE database if not exists fishing_demo;
+CREATE database if not exists fishing_app;
 
-USE fishing_demo;
+USE fishing_app;
 
 drop table if exists users;
 

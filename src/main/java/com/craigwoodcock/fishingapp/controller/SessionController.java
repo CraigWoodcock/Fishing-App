@@ -1,8 +1,10 @@
 package com.craigwoodcock.fishingapp.controller;
 
+import com.craigwoodcock.fishingapp.model.Angler;
 import com.craigwoodcock.fishingapp.model.Catch;
 import com.craigwoodcock.fishingapp.model.Session;
 import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.service.SessionService;
 import com.craigwoodcock.fishingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Controller
@@ -23,11 +26,13 @@ public class SessionController {
     private final SessionService sessionService;
     private final UserService userService;
     private static final Logger log = Logger.getLogger(SessionController.class.getName());
+    private final AnglerRepository anglerRepository;
 
     @Autowired
-    public SessionController(SessionService sessionService, UserService userService) {
+    public SessionController(SessionService sessionService, UserService userService, AnglerRepository anglerRepository) {
         this.sessionService = sessionService;
         this.userService = userService;
+        this.anglerRepository = anglerRepository;
     }
 
     @GetMapping("/new")
@@ -68,8 +73,6 @@ public class SessionController {
         Session session = sessionService.getSessionById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
         model.addAttribute("sessions", session);
-        model.addAttribute("anglers", sessionService.getanglersBySession(id));
-        model.addAttribute("catches", sessionService.getCatchesBySession(id));
         return "view-session";
     }
 
@@ -94,11 +97,11 @@ public class SessionController {
         return "redirect:/dashboard";
     }
 
-    @PostMapping("/{id}/anglers")
-    public String addAngler(@PathVariable Long id, @ModelAttribute Angler angler) {
-        sessionService.addAnglerToSession(id, angler);
-        return "redirect:/sessions/" + id;
-    }
+//    @PostMapping("/{id}/anglers")
+//    public String addAngler(@PathVariable Long id, @ModelAttribute Angler angler) {
+//        sessionService.addAnglerToSession(id, angler);
+//        return "redirect:/sessions/" + id;
+//    }
 
     @PostMapping("/{sessionId}/anglers/{anglerId}/delete")
     public String removeAngler(@PathVariable Long sessionId, @PathVariable Long anglerId) {
