@@ -31,12 +31,39 @@ public class Session {
     @Column(name = "duration_hours", nullable = false)
     private Integer durationHours;
 
-    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Angler> anglers = new ArrayList<>();
-
+    @ManyToMany
+    @JoinTable(name = "angler_session",
+            joinColumns = @JoinColumn(name = "session_id"),
+            inverseJoinColumns = @JoinColumn(name = "angler_id"))
+    private Set<Angler> anglers = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Catch> catches = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "session")
+    private Set<AnglerSession> anglerSessions = new LinkedHashSet<>();
+
+    public Set<AnglerSession> getAnglerSessions() {
+        return anglerSessions;
+    }
+
+    public void setAnglerSessions(Set<AnglerSession> anglerSessions) {
+        this.anglerSessions = anglerSessions;
+    }
+
+    public Session(Long id, User user, String venue, LocalDate startDate, Integer durationHours, Set<Angler> anglers, Set<Catch> catches) {
+        this.id = id;
+        this.user = user;
+        this.venue = venue;
+        this.startDate = startDate;
+        this.durationHours = durationHours;
+        this.anglers = anglers;
+        this.catches = catches;
+    }
+
+    public Session() {
+
+    }
 
     public Long getId() {
         return id;
@@ -78,11 +105,11 @@ public class Session {
         this.durationHours = durationHours;
     }
 
-    public List<Angler> getAnglers() {
+    public Set<Angler> getAnglers() {
         return anglers;
     }
 
-    public void setAnglers(List<Angler> anglers) {
+    public void setAnglers(Set<Angler> anglers) {
         this.anglers = anglers;
     }
 
@@ -92,18 +119,5 @@ public class Session {
 
     public void setCatches(Set<Catch> catches) {
         this.catches = catches;
-    }
-
-    @Override
-    public String toString() {
-        return "Session{" +
-                "id=" + id +
-                ", user=" + user +
-                ", venue='" + venue + '\'' +
-                ", startDate=" + startDate +
-                ", durationHours=" + durationHours +
-                ", anglers=" + anglers +
-                ", catches=" + catches +
-                '}';
     }
 }

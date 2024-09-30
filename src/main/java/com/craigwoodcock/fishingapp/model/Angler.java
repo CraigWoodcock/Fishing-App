@@ -2,7 +2,10 @@ package com.craigwoodcock.fishingapp.model;
 
 import jakarta.persistence.*;
 
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "anglers")
@@ -12,15 +15,28 @@ public class Angler {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "session_id", nullable = false)
-    private Session session;
+    @ManyToMany
+    @JoinTable(name = "angler_session",
+            joinColumns = @JoinColumn(name = "angler_id"),
+            inverseJoinColumns = @JoinColumn(name = "session_id"))
+    private List<Session> sessions = new LinkedList();
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
-    @OneToMany(mappedBy = "angler", cascade = CascadeType.ALL)
-    private List<Catch> catches;
+    @OneToMany(mappedBy = "angler")
+    private Set<Catch> catches = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "angler")
+    private Set<AnglerSession> anglerSessions = new LinkedHashSet<>();
+
+    public Set<AnglerSession> getAnglerSessions() {
+        return anglerSessions;
+    }
+
+    public void setAnglerSessions(Set<AnglerSession> anglerSessions) {
+        this.anglerSessions = anglerSessions;
+    }
 
     public Long getId() {
         return id;
@@ -30,13 +46,14 @@ public class Angler {
         this.id = id;
     }
 
-    public Session getSession() {
-        return session;
+    public List<Session> getSessions() {
+        return sessions;
     }
 
-    public void setSession(Session session) {
-        this.session = session;
+    public void setSessions(List<Session> sessions) {
+        this.sessions = sessions;
     }
+
 
     public String getName() {
         return name;
@@ -46,21 +63,12 @@ public class Angler {
         this.name = name;
     }
 
-    public List<Catch> getCatches() {
+    public Set<Catch> getCatches() {
         return catches;
     }
 
-    public void setCatches(List<Catch> catches) {
+    public void setCatches(Set<Catch> catches) {
         this.catches = catches;
     }
 
-    @Override
-    public String toString() {
-        return "Angler{" +
-                "id=" + id +
-                ", session=" + session +
-                ", name='" + name + '\'' +
-                ", catches=" + catches +
-                '}';
-    }
 }

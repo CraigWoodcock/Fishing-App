@@ -6,12 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface AnglerRepository extends JpaRepository<Angler, Long> {
-    List<Angler> findBySession(Session session);
 
-    List<Angler> findBySessionId(Long sessionId);
+    Optional<Angler> findByName(String name);
 
-    Angler findByName(String name);
+    Angler findById(long id);
 }
