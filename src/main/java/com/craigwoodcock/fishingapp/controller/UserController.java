@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.logging.Logger;
 
 @Controller
-@RequestMapping("")
 public class UserController {
 
 
@@ -25,7 +24,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("register")
+    @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
         return "/register";
