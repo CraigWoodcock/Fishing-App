@@ -4,3 +4,9 @@ hr{
     height: 2px;
     width: 100%;
 }
+.position-fixed{
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 0;
+    color: blue;
+}
