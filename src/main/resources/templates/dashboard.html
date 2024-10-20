@@ -18,6 +18,10 @@
         Add New Session
     </a>
 
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" value="Logout" />
+    </form>
+
     <h2 class="text-2xl font-semibold mb-4">Your Sessions</h2>
 
     <div th:if="${sessions.isEmpty()}">
