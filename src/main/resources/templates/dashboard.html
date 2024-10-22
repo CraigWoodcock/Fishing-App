@@ -11,18 +11,20 @@
 <body class="bg-black text-white">
 <div class="container mx-auto px-4 py-8">
 
-    <h1 class="text-3xl font-semibold mb-6">Welcome, <span th:text="${#authentication.name}"></span>!</h1>
+    <div class="dashboard-heading">
+        <h1 class="text-3xl font-semibold mb-6">Welcome, <span th:text="${#authentication.name}"></span>!</h1>
+        <form th:action="@{/logout}" method="post">
+            <input class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-8 inline-block" type="submit" value="Logout" />
+        </form>
+    </div>
 
-
-    <a href="/sessions/new" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-8 inline-block">
+    <h2 class="text-2xl font-semibold mb-4">Your Sessions</h2>
+    <div class="session-button">
+    <a href="/sessions/new" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded inline-block">
         Add New Session
     </a>
 
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="Logout" />
-    </form>
-
-    <h2 class="text-2xl font-semibold mb-4">Your Sessions</h2>
+    </div>
 
     <div th:if="${sessions.isEmpty()}">
         <p>You haven't created any sessions yet.</p>
@@ -32,7 +34,7 @@
     </div>
 
 
-    <div th:each="sess : ${sessions}" class="bg-gray-800 p-4 rounded-lg">
+    <div th:each="sess : ${sessions}" class="session-list bg-gray-800 p-4 rounded-lg">
        <h3 th:text="${sess.venue}" class="text-xl font-semibold mb-2"></h3>
        <p th:text="${'Date: ' + #temporals.format(sess.startDate, 'dd-MM-yyyy')}" class="mb-1"></p>
        <p th:text="${'Duration: ' + sess.durationHours + ' hours'}" class="mb-1"></p>

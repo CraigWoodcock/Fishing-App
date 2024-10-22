@@ -1,3 +1,5 @@
+/*Dashboard styles*/
+
 hr{
    background-color: #ff1e26;
     border: none;
@@ -9,4 +11,28 @@ hr{
     bottom: 0;
     margin-bottom: 0;
     color: blue;
+}
+
+.dashboard-heading{
+    margin: 2px auto ;
+    padding: 2px;
+    display: flex;
+    justify-content: space-between;
+    justify-items: center;
+    align-items: center;
+}
+
+.session-button {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.session-button > a{
+    height: 100%;
+    text-align: center;
+    padding: 4px;
+}
+.session-list{
+    margin-top: 5px;
 }
