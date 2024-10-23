@@ -33,6 +33,7 @@ public class UserController {
     @PostMapping("/register")
     public String processRegistrationForm(@ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("error", bindingResult);
             return "register";
         }
         try {
