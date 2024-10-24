@@ -15,11 +15,11 @@ public class Angler {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToMany
-    @JoinTable(name = "angler_session",
-            joinColumns = @JoinColumn(name = "angler_id"),
-            inverseJoinColumns = @JoinColumn(name = "session_id"))
-    private List<Session> sessions = new LinkedList();
+//    @ManyToMany
+//    @JoinTable(name = "angler_session",
+//            joinColumns = @JoinColumn(name = "angler_id"),
+//            inverseJoinColumns = @JoinColumn(name = "session_id"))
+//    private List<Session> sessions = new LinkedList();
 
     @Column(name = "name", nullable = false, length = 50)
     private String name;
@@ -29,6 +29,18 @@ public class Angler {
 
     @OneToMany(mappedBy = "angler")
     private Set<AnglerSession> anglerSessions = new LinkedHashSet<>();
+
+    public Angler(Long id, String name, Set<Catch> catches, Set<AnglerSession> anglerSessions) {
+        this.id = id;
+        this.name = name;
+        this.catches = catches;
+        this.anglerSessions = anglerSessions;
+    }
+
+    public Angler() {
+
+    }
+
 
     public Set<AnglerSession> getAnglerSessions() {
         return anglerSessions;
@@ -46,13 +58,13 @@ public class Angler {
         this.id = id;
     }
 
-    public List<Session> getSessions() {
-        return sessions;
-    }
-
-    public void setSessions(List<Session> sessions) {
-        this.sessions = sessions;
-    }
+//    public List<Session> getSessions() {
+//        return sessions;
+//    }
+//
+//    public void setSessions(List<Session> sessions) {
+//        this.sessions = sessions;
+//    }
 
 
     public String getName() {
