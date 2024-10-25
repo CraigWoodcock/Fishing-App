@@ -18,7 +18,7 @@ public class Session {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -31,11 +31,11 @@ public class Session {
     @Column(name = "duration_hours", nullable = false)
     private Integer durationHours;
 
-    @ManyToMany
-    @JoinTable(name = "angler_session",
-            joinColumns = @JoinColumn(name = "session_id"),
-            inverseJoinColumns = @JoinColumn(name = "angler_id"))
-    private Set<Angler> anglers = new LinkedHashSet<>();
+//    @ManyToMany
+//    @JoinTable(name = "angler_session",
+//            joinColumns = @JoinColumn(name = "session_id"),
+//            inverseJoinColumns = @JoinColumn(name = "angler_id"))
+//    private Set<Angler> anglers = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Catch> catches = new LinkedHashSet<>();
@@ -51,18 +51,19 @@ public class Session {
         this.anglerSessions = anglerSessions;
     }
 
-    public Session(Long id, User user, String venue, LocalDate startDate, Integer durationHours, Set<Angler> anglers, Set<Catch> catches) {
+
+    public Session() {
+
+    }
+
+    public Session(Long id, User user, String venue, LocalDate startDate, Integer durationHours, Set<Catch> catches, Set<AnglerSession> anglerSessions) {
         this.id = id;
         this.user = user;
         this.venue = venue;
         this.startDate = startDate;
         this.durationHours = durationHours;
-        this.anglers = anglers;
         this.catches = catches;
-    }
-
-    public Session() {
-
+        this.anglerSessions = anglerSessions;
     }
 
     public Long getId() {
@@ -105,13 +106,13 @@ public class Session {
         this.durationHours = durationHours;
     }
 
-    public Set<Angler> getAnglers() {
-        return anglers;
-    }
-
-    public void setAnglers(Set<Angler> anglers) {
-        this.anglers = anglers;
-    }
+//    public Set<Angler> getAnglers() {
+//        return anglers;
+//    }
+//
+//    public void setAnglers(Set<Angler> anglers) {
+//        this.anglers = anglers;
+//    }
 
     public Set<Catch> getCatches() {
         return catches;

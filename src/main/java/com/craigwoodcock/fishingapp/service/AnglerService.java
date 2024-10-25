@@ -1,10 +1,13 @@
 package com.craigwoodcock.fishingapp.service;
 
 import com.craigwoodcock.fishingapp.model.Angler;
+import com.craigwoodcock.fishingapp.model.AnglerSession;
 import com.craigwoodcock.fishingapp.model.Session;
 import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
+import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
 import com.craigwoodcock.fishingapp.repository.SessionRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -16,10 +19,13 @@ public class AnglerService {
     private static final Logger log = Logger.getLogger(AnglerService.class.getName());
 
     private final AnglerRepository anglerRepository;
+    private final AnglerSessionRepository anglerSessionRepository;
     private final SessionRepository sessionRepository;
 
-    public AnglerService(AnglerRepository anglerRepository, SessionRepository sessionRepository) {
+
+    public AnglerService(AnglerRepository anglerRepository, AnglerSessionRepository anglerSessionRepository, SessionRepository sessionRepository) {
         this.anglerRepository = anglerRepository;
+        this.anglerSessionRepository = anglerSessionRepository;
         this.sessionRepository = sessionRepository;
     }
 
@@ -38,11 +44,11 @@ public class AnglerService {
     }
 
     public List<Angler> findAllAnglersByUser(User user) {
-        log.info("Finding all Anglers by user: " + user);
-        List<Session> userSessions = sessionRepository.findByUser(user);
+        log.info("Finding all Anglers by user: "+ user);
+        List<AnglerSession> anglerSessions = anglerSessionRepository.findBySessionUserId(user.getId());
         Set<Angler> uniqueAnglers = new HashSet<>();
-        for (Session session : userSessions) {
-            uniqueAnglers.addAll(session.getAnglers());
+        for (AnglerSession anglerSession : anglerSessions) {
+            uniqueAnglers.add(anglerSession.getAngler());
         }
         log.info("Found " + uniqueAnglers.size() + " Anglers");
         return new ArrayList<>(uniqueAnglers);

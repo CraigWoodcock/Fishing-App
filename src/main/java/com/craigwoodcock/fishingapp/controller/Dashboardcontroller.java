@@ -1,7 +1,9 @@
 package com.craigwoodcock.fishingapp.controller;
 
+import com.craigwoodcock.fishingapp.model.AnglerSession;
 import com.craigwoodcock.fishingapp.model.Session;
 import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
 import com.craigwoodcock.fishingapp.service.SessionService;
 import com.craigwoodcock.fishingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,12 @@ public class Dashboardcontroller {
 
     private final UserService userService;
     private final SessionService sessionService;
+//    private final AnglerSessionRepository anglerSessionRepository;
 
-    @Autowired
-    public Dashboardcontroller(UserService userService, SessionService sessionService) {
+    public Dashboardcontroller(UserService userService, SessionService sessionService, AnglerSessionRepository anglerSessionRepository) {
         this.userService = userService;
         this.sessionService = sessionService;
+//        this.anglerSessionRepository = anglerSessionRepository;
     }
 
     @GetMapping()

@@ -41,16 +41,7 @@ public class SessionController {
         return "new-session";
     }
 
-//    @PostMapping("/create")
-//    public String createSession(@ModelAttribute Session session, Authentication authentication) {
-//        User user = userService.findByUsername(authentication.getName());
-//        log.info("User Retrieved = " + user.getName());
-//        session.setUser(user);
-//        sessionService.createSession(session);
-//        log.info("Created new session for user: " + user.getName());
-//
-//        return "redirect:/dashboard";
-//    }
+
 
     @PostMapping("/create")
     public String createSession(@RequestParam String venue,
@@ -72,7 +63,7 @@ public class SessionController {
     public String viewSession(@PathVariable Long id, Model model) {
         Session session = sessionService.getSessionById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
-        model.addAttribute("sessions", session);
+        model.addAttribute("sess", session);
         return "view-session";
     }
 
@@ -92,8 +83,9 @@ public class SessionController {
     }
 
     @PostMapping("/{id}/delete")
-    public String deleteSession(@PathVariable Long id) {
+    public String deleteSession(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         sessionService.deleteSession(id);
+        redirectAttributes.addFlashAttribute("message", "Session Deleted Successfully");
         return "redirect:/dashboard";
     }
 
@@ -109,15 +101,15 @@ public class SessionController {
         return "redirect:/sessions/" + sessionId;
     }
 
-    @PostMapping("/{sessionId}/anglers/{anglerId}/catches")
-    public String addCatch(@PathVariable Long sessionId, @PathVariable Long anglerId, @ModelAttribute Catch capture) {
-        sessionService.addCatchToSession(sessionId, anglerId, capture);
-        return "redirect:/sessions/" + sessionId;
-    }
+//    @PostMapping("/{sessionId}/anglers/{anglerId}/catches")
+//    public String addCatch(@PathVariable Long sessionId, @PathVariable Long anglerId, @ModelAttribute Catch capture) {
+//        sessionService.addCatchToSession(sessionId, anglerId, capture);
+//        return "redirect:/sessions/" + sessionId;
+//    }
 
-    @PostMapping("/{sessionId}/catches/{catchId}/delete")
-    public String removeCatch(@PathVariable Long sessionId, @PathVariable Long catchId) {
-        sessionService.removeCatchFromSession(sessionId, catchId);
-        return "redirect:/sessions/" + sessionId;
-    }
+//    @PostMapping("/{sessionId}/catches/{catchId}/delete")
+//    public String removeCatch(@PathVariable Long sessionId, @PathVariable Long catchId) {
+//        sessionService.removeCatchFromSession(sessionId, catchId);
+//        return "redirect:/sessions/" + sessionId;
+//    }
 }
