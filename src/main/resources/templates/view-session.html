@@ -16,7 +16,7 @@
         <p class="mb-2"><strong>Duration:</strong> <span th:text="${sess.durationHours + ' hours'}"></span></p>
         <p class="mb-4"><strong>Anglers:</strong></p>
         <ul class="list-disc pl-6 mb-4">
-<!--            <li th:each="angler : ${session}" th:text="${angler.name}"></li>-->
+            <li th:each="angler : ${@sessionService.getAnglersForSession(sess.id)} " th:text="${angler.name}"> </li>
         </ul>
 
         <form th:action="@{/sessions/{id}/delete(id=${sess.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this session?');">
