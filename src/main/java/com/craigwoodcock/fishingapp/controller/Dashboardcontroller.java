@@ -21,19 +21,18 @@ public class Dashboardcontroller {
 
     private final UserService userService;
     private final SessionService sessionService;
-    private final AnglerSessionRepository anglerSessionRepository;
+//    private final AnglerSessionRepository anglerSessionRepository;
 
     public Dashboardcontroller(UserService userService, SessionService sessionService, AnglerSessionRepository anglerSessionRepository) {
         this.userService = userService;
         this.sessionService = sessionService;
-        this.anglerSessionRepository = anglerSessionRepository;
+//        this.anglerSessionRepository = anglerSessionRepository;
     }
 
     @GetMapping()
     public String getDashboardScreen(Model model, Authentication authentication) {
         User user = userService.findByUsername(authentication.getName());
-//        List<Session> sessions = sessionService.getAllSessionsByUser(user);
-        List<AnglerSession> sessions = anglerSessionRepository.findBySessionUserId(user.getId());
+        List<Session> sessions = sessionService.getAllSessionsByUser(user);
         model.addAttribute("sessions", sessions);
         return "dashboard";
     }

@@ -10,16 +10,16 @@
 </head>
 <body class="bg-black text-white">
 <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8" th:text="${sessions.venue}"></h1>
+    <h1 class="text-3xl font-bold mb-8" th:text="${sess.venue}"></h1>
     <div class="bg-gray-800 p-6 rounded-lg mb-8">
-        <p class="mb-2"><strong>Date:</strong> <span th:text="${#temporals.format(sessions.startDate, 'dd-MM-yyyy')}"></span></p>
-        <p class="mb-2"><strong>Duration:</strong> <span th:text="${sessions.durationHours + ' hours'}"></span></p>
+        <p class="mb-2"><strong>Date:</strong> <span th:text="${#temporals.format(sess.startDate, 'dd-MM-yyyy')}"></span></p>
+        <p class="mb-2"><strong>Duration:</strong> <span th:text="${sess.durationHours + ' hours'}"></span></p>
         <p class="mb-4"><strong>Anglers:</strong></p>
         <ul class="list-disc pl-6 mb-4">
-            <li th:each="angler : ${sessions.anglers}" th:text="${angler.name}"></li>
+<!--            <li th:each="angler : ${session}" th:text="${angler.name}"></li>-->
         </ul>
 
-        <form th:action="@{/sessions/{id}/delete(id=${sessions.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this session?');">
+        <form th:action="@{/sessions/{id}/delete(id=${sess.id})}" method="post" onsubmit="return confirm('Are you sure you want to delete this session?');">
             <button type="submit" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
                 Delete Session
             </button>
