@@ -20,6 +20,22 @@ public class AnglerSessionId implements Serializable {
 
     // Getters and setters
 
+    public Long getAnglerId() {
+        return anglerId;
+    }
+
+    public void setAnglerId(Long anglerId) {
+        this.anglerId = anglerId;
+    }
+
+    public Long getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(Long sessionId) {
+        this.sessionId = sessionId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
