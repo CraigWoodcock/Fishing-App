@@ -30,14 +30,17 @@ CREATE TABLE if not exists sessions (
     foreign key (user_id) references users(id)
 );
 
-CREATE TABLE anglers (
+drop table if exists anglers;
+CREATE TABLE if not exists anglers (
     id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     name VARCHAR(50) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-CREATE TABLE catches (
+drop table if exists catches;
+
+CREATE TABLE if not exists catches (
     id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     angler_id BIGINT NOT NULL,
     session_id BIGINT NOT NULL,
@@ -60,6 +63,16 @@ CREATE TABLE angler_session (
     FOREIGN KEY (session_id) REFERENCES sessions(id)
 );
 
+CREATE TABLE IF NOT EXISTS jwt_tokens(
+id BIGINT PRIMARY KEY AUTO_INCREMENT,
+token VARCHAR(255) NOT NULL,
+user_id BIGINT NOT NULL,
+expiry_date TIMESTAMP NOT NULL,
+revoked BOOLEAN NOT NULL DEFAULT FALSE,
+FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+INSERT INTO users (username, name, password, email, role) VALUES ('craig', 'craig woodcock', 'craig', 'craig@example.com', 'USER');
 -- drop table angler_session; 
 -- drop table sessions;
 -- drop table catches;
