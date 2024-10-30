@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -56,5 +57,9 @@ private final Logger log = Logger.getLogger(this.getClass().getName());
 
     public List<User> findAllUsers() {
         return userRepository.findAll();
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 }
