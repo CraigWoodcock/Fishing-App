@@ -1,4 +1,4 @@
-package com.craigwoodcock.fishingapp.controller;
+package com.craigwoodcock.fishingapp.webController;
 
 import com.craigwoodcock.fishingapp.model.User;
 import org.springframework.stereotype.Controller;

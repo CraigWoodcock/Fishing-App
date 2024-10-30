@@ -1,4 +1,4 @@
-package com.craigwoodcock.fishingapp.controller;
+package com.craigwoodcock.fishingapp.apiController;
 
 import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.service.UserService;

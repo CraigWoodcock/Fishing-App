@@ -1,7 +1,5 @@
-package com.craigwoodcock.fishingapp.controller;
+package com.craigwoodcock.fishingapp.webController;
 
-import com.craigwoodcock.fishingapp.model.Angler;
-import com.craigwoodcock.fishingapp.model.Catch;
 import com.craigwoodcock.fishingapp.model.Session;
 import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.logging.Logger;
 
 @Controller

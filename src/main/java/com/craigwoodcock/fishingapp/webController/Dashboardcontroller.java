@@ -1,12 +1,10 @@
-package com.craigwoodcock.fishingapp.controller;
+package com.craigwoodcock.fishingapp.webController;
 
-import com.craigwoodcock.fishingapp.model.AnglerSession;
 import com.craigwoodcock.fishingapp.model.Session;
 import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
 import com.craigwoodcock.fishingapp.service.SessionService;
 import com.craigwoodcock.fishingapp.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
