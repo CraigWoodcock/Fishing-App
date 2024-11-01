@@ -20,9 +20,9 @@ import java.util.logging.Logger;
 @RequestMapping("/sessions")
 public class SessionController {
 
+    private static final Logger log = Logger.getLogger(SessionController.class.getName());
     private final SessionService sessionService;
     private final UserService userService;
-    private static final Logger log = Logger.getLogger(SessionController.class.getName());
     private final AnglerRepository anglerRepository;
 
     @Autowired
@@ -39,10 +39,9 @@ public class SessionController {
     }
 
 
-
     @PostMapping("/create")
     public String createSession(@RequestParam String venue,
-                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate startDate,
+                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
                                 @RequestParam int durationHours,
                                 @RequestParam String anglersList,
                                 Authentication authentication,
@@ -50,7 +49,7 @@ public class SessionController {
         String username = authentication.getName();
         User user = userService.findByUsername(username);
         log.info("User Retrieved = " + user.getName());
-        sessionService.createSession(user,venue,startDate,durationHours,anglersList);
+        sessionService.createSession(user, venue, startDate, durationHours, anglersList);
         redirectAttributes.addFlashAttribute("message", "Session Created");
 
         return "redirect:/dashboard";

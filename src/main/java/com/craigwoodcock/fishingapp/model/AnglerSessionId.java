@@ -1,6 +1,7 @@
 package com.craigwoodcock.fishingapp.model;
 
 import jakarta.persistence.Embeddable;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -11,7 +12,8 @@ public class AnglerSessionId implements Serializable {
 
     // Constructors, getters, setters, equals, and hashCode methods
 
-    public AnglerSessionId() {}
+    public AnglerSessionId() {
+    }
 
     public AnglerSessionId(Long anglerId, Long sessionId) {
         this.anglerId = anglerId;

@@ -3,15 +3,15 @@ package com.craigwoodcock.fishingapp.service;
 import com.craigwoodcock.fishingapp.model.*;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
-import com.craigwoodcock.fishingapp.repository.CatchRepository;
 import com.craigwoodcock.fishingapp.repository.SessionRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -33,17 +33,17 @@ public class SessionService {
     }
 
 
-@Transactional
-public Session createSession(User user, String venue, LocalDate startDate,
-                             int durationHours, String anglersList) {
-log.info("Creating new session");
+    @Transactional
+    public Session createSession(User user, String venue, LocalDate startDate,
+                                 int durationHours, String anglersList) {
+        log.info("Creating new session");
         Session session = new Session();
         session.setUser(user);
         session.setVenue(venue);
         session.setStartDate(startDate);
         session.setDurationHours(durationHours);
         session = sessionRepository.save(session);
-log.info("Session created with id " + session.getId());
+        log.info("Session created with id " + session.getId());
 
 // Find or create the userAngler, this will be the logged in user.
         Angler userAngler = anglerService.findOrCreateAngler(user.getName());
@@ -52,19 +52,19 @@ log.info("Session created with id " + session.getId());
 
 // Create a String Array of anglers names (seperated by a comma-seperated list)
 // if the anglersList is not empty.
-    if (anglersList != null && !anglersList.trim().isEmpty()){
-        String[] anglerNames = anglersList.split(",");
+        if (anglersList != null && !anglersList.trim().isEmpty()) {
+            String[] anglerNames = anglersList.split(",");
 
 // Find or create each angler in the list
-        for (String anglerName : anglerNames) {
-           if (!anglerName.trim().equals(user.getName())){
-               Angler angler = anglerService.findOrCreateAngler(anglerName.trim());
-               createAnglerSession(session, angler);
-           }
+            for (String anglerName : anglerNames) {
+                if (!anglerName.trim().equals(user.getName())) {
+                    Angler angler = anglerService.findOrCreateAngler(anglerName.trim());
+                    createAnglerSession(session, angler);
+                }
+            }
         }
-    }
         return session;
-}
+    }
 
     private void createAnglerSession(Session session, Angler angler) {
         AnglerSession anglerSession = new AnglerSession();
@@ -75,32 +75,33 @@ log.info("Session created with id " + session.getId());
         anglerSession.setCreatedAt(Instant.now());
         anglerSessionRepository.save(anglerSession);
     }
-public Optional<Session> getSessionById(long id) {
+
+    public Optional<Session> getSessionById(long id) {
         return sessionRepository.findById(id);
-}
+    }
 
-public List<Session> getAllSessionsByUser(User user) {
+    public List<Session> getAllSessionsByUser(User user) {
         return sessionRepository.findByUser(user);
-}
+    }
 
-public Session updateSession(Session session) {
+    public Session updateSession(Session session) {
         return sessionRepository.save(session);
-}
+    }
 
-@Transactional
-public void deleteSession(Long sessionId) {
+    @Transactional
+    public void deleteSession(Long sessionId) {
         // delete associated anglers first.
         anglerSessionRepository.deleteBySessionId(sessionId);
         // then delete the session.
         sessionRepository.deleteById(sessionId);
-}
+    }
 
-@Transactional
-public void removeAnglerFromSession(Long sessionId, Long anglerId) {
+    @Transactional
+    public void removeAnglerFromSession(Long sessionId, Long anglerId) {
         AnglerSessionId id = new AnglerSessionId(anglerId, sessionId);
         anglerSessionRepository.deleteById(id);
 
-}
+    }
 
     public List<Angler> getAnglersForSession(Long sessionId) {
         List<AnglerSession> anglerSessions = anglerSessionRepository.findBySessionId(sessionId);

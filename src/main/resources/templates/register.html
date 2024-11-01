@@ -34,51 +34,53 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Register - Fishing Session Tracker | Start Logging Your Catches</title>
-    <meta name="description" content="Create your Fishing Session Tracker account to start logging your fishing adventures. Record catches, track locations, and analyze your fishing patterns.">
+    <meta content="Create your Fishing Session Tracker account to start logging your fishing adventures. Record catches, track locations, and analyze your fishing patterns."
+          name="description">
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <meta name="robots" content="index, follow">
+    <meta content="index, follow" name="robots">
 </head>
 <body class="bg-black text-white">
-<header class="p-4 text-center" >
+<header class="p-4 text-center">
     <h1 class="text-3xl font-bold">Fishing Session Tracker</h1>
 </header>
 <main class="min-h-screen flex items-center justify-center">
     <section class="bg-gray-900 p-8 rounded shadow-md w-96">
         <h2 class="text-2xl font-semibold mb-6">Create Your Account</h2>
-        <form th:action="@{/register}" th:object="${user}" method="post">
-            <input id="username" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <form method="post" th:action="@{/register}" th:object="${user}">
+            <input id="username" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <div class="mb-4">
-                <label for="usernameInput" class="block mb-2">Username</label>
-                <input type="text" id="usernameInput" th:field="${user.username}" required
-                       class="w-full px-3 py-2 bg-gray-800 rounded">
+                <label class="block mb-2" for="usernameInput">Username</label>
+                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="usernameInput" required th:field="${user.username}"
+                       type="text">
             </div>
             <div class="mb-4">
-                <label for="name" class="block mb-2">Name</label>
-                <input type="text" id="name" th:field="${user.name}" required
-                       class="w-full px-3 py-2 bg-gray-800 rounded">
+                <label class="block mb-2" for="name">Name</label>
+                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="name" required th:field="${user.name}"
+                       type="text">
             </div>
             <div class="mb-4">
-                <label for="email" class="block mb-2">Email</label>
-                <input type="email" id="email" th:field="${user.email}" required
-                       class="w-full px-3 py-2 bg-gray-800 rounded">
+                <label class="block mb-2" for="email">Email</label>
+                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="email" required th:field="${user.email}"
+                       type="email">
             </div>
             <div class="mb-6">
-                <label for="password" class="block mb-2">Password</label>
-                <input type="password" id="password" th:field="${user.password}" required
-                       class="w-full px-3 py-2 bg-gray-800 rounded">
+                <label class="block mb-2" for="password">Password</label>
+                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="password" required th:field="${user.password}"
+                       type="password">
             </div>
-            <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert"
+                 th:if="${error}">
                 <span class="block sm:inline" th:text="${error}"></span>
             </div>
-            <button type="submit"
-                    class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700">
+            <button class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+                    type="submit">
                 Register
             </button>
         </form>
         <div class="mt-4 text-center">
-            <a href="/login" class="text-blue-400 hover:underline">
+            <a class="text-blue-400 hover:underline" href="/login">
                 Already have an account? Login here
             </a>
         </div>

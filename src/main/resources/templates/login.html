@@ -27,11 +27,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Login - Fishing Session Tracker | Record Your Fishing Adventures</title>
-    <meta name="description" content="Log in to your Fishing Session Tracker account to record and manage your fishing adventures. Keep track of your catches, locations, and more.">
+    <meta content="Log in to your Fishing Session Tracker account to record and manage your fishing adventures. Keep track of your catches, locations, and more."
+          name="description">
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <meta name="robots" content="index, follow">
+    <meta content="index, follow" name="robots">
 </head>
 <body class="bg-black text-white">
 <header class="text-center p-4 pb-0 mb-0">
@@ -40,30 +41,32 @@
 <main class="min-h-screen flex items-center justify-center ">
     <section class="bg-gray-900 p-8 rounded shadow-md w-96">
         <h2 class="text-2xl font-semibold mb-6">Login to Your Account</h2>
-        <form th:action="@{/login}" th:object="${user}" method="post">
+        <form method="post" th:action="@{/login}" th:object="${user}">
             <div class="mb-4">
-                <label for="username" class="block mb-2">Username</label>
-                <input type="text" id="username" name="username" th:field="${user.username}" placeholder="Enter Username" required
-                       class="w-full px-3 py-2 bg-gray-800 rounded">
+                <label class="block mb-2" for="username">Username</label>
+                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="username" name="username" placeholder="Enter Username"
+                       required th:field="${user.username}"
+                       type="text">
             </div>
             <div class="mb-6">
-                <label for="password" class="block mb-2">Password</label>
-                <input type="password" id="password" name="password" th:field="${user.password}" placeholder="Enter Password" required
-                       class="w-full px-3 py-2 bg-gray-800 rounded">
+                <label class="block mb-2" for="password">Password</label>
+                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="password" name="password" placeholder="Enter Password"
+                       required th:field="${user.password}"
+                       type="password">
             </div>
-            <button type="submit"
-                    class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700">
+            <button class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+                    type="submit">
                 Login
             </button>
         </form>
-        <div th:if="${error}" class="bg-red-500 text-white p-3 rounded mb-4" role="alert">
+        <div class="bg-red-500 text-white p-3 rounded mb-4" role="alert" th:if="${error}">
             <p th:text="${error}"></p>
         </div>
-        <div th:if="${message}" class="bg-green-500 text-white p-3 rounded mb-4" role="alert">
+        <div class="bg-green-500 text-white p-3 rounded mb-4" role="alert" th:if="${message}">
             <p th:text="${message}"></p>
         </div>
         <div class="mt-4 text-center">
-            <a href="/register" class="text-blue-400 hover:underline">
+            <a class="text-blue-400 hover:underline" href="/register">
                 Don't have an account? Register here
             </a>
         </div>

@@ -3,7 +3,6 @@ package com.craigwoodcock.fishingapp.model;
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity

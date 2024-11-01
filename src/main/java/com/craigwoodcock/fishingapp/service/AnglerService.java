@@ -2,12 +2,10 @@ package com.craigwoodcock.fishingapp.service;
 
 import com.craigwoodcock.fishingapp.model.Angler;
 import com.craigwoodcock.fishingapp.model.AnglerSession;
-import com.craigwoodcock.fishingapp.model.Session;
 import com.craigwoodcock.fishingapp.model.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
 import com.craigwoodcock.fishingapp.repository.SessionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -35,7 +33,7 @@ public class AnglerService {
             log.info("Angler: " + existingAngler.get().getName() + " already exists");
             return existingAngler.get();
         } else {
-            log.info("Creating new Angler.... " );
+            log.info("Creating new Angler.... ");
             Angler newAngler = new Angler();
             newAngler.setName(name);
             log.info("Angler: " + newAngler.getName() + " created");
@@ -44,7 +42,7 @@ public class AnglerService {
     }
 
     public List<Angler> findAllAnglersByUser(User user) {
-        log.info("Finding all Anglers by user: "+ user);
+        log.info("Finding all Anglers by user: " + user);
         List<AnglerSession> anglerSessions = anglerSessionRepository.findBySessionUserId(user.getId());
         Set<Angler> uniqueAnglers = new HashSet<>();
         for (AnglerSession anglerSession : anglerSessions) {

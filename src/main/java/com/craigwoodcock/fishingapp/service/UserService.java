@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 @Service
 public class UserService {
-private final Logger log = Logger.getLogger(this.getClass().getName());
+    private final Logger log = Logger.getLogger(this.getClass().getName());
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -36,37 +36,38 @@ private final Logger log = Logger.getLogger(this.getClass().getName());
         this.jwtUtils = jwtUtils;
         this.jwtTokenRepository = jwtTokenRepository;
     }
-@Transactional
+
+    @Transactional
     public void registerUser(User user) throws UserAlreadyExistsException {
-    if(userRepository.findByUsername(user.getUsername()).isPresent()) {
-        throw new UserAlreadyExistsException("Username already exists");
-    }
-    if(userRepository.findByEmail(user.getEmail()).isPresent()) {
-        throw new UserAlreadyExistsException("Email already exists");
-    }
-    log.info("Registering user: " + user.getUsername());
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException("Username already exists");
+        }
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new UserAlreadyExistsException("Email already exists");
+        }
+        log.info("Registering user: " + user.getUsername());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-    log.info("encoded password");
+        log.info("encoded password");
         user.setRole(Role.USER);
-    log.info("Role Set: " + user.getRole());
+        log.info("Role Set: " + user.getRole());
         userRepository.save(user);
-    log.info("User saved");
+        log.info("User saved");
         user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-    log.info("Created at: " + user.getCreatedAt());
+        log.info("Created at: " + user.getCreatedAt());
         user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-    log.info("Updated at: " + user.getUpdatedAt());
+        log.info("Updated at: " + user.getUpdatedAt());
         userRepository.save(user);
-    log.info("User saved");
-    log.info("Generating JWT token");
-    String token = jwtUtils.generateToken(user.getUsername());
-    JwtToken jwtToken = new JwtToken();
-    log.info("JWT token Created!!");
-    jwtToken.setToken(token);
-    jwtToken.setUser(user);
-    jwtToken.setExpiryDate(LocalDateTime.now().plusDays(10));
-    jwtToken.setRevoked(false);
-    jwtTokenRepository.save(jwtToken);
-    log.info("JWT token saved for user: " + user.getUsername());
+        log.info("User saved");
+        log.info("Generating JWT token");
+        String token = jwtUtils.generateToken(user.getUsername());
+        JwtToken jwtToken = new JwtToken();
+        log.info("JWT token Created!!");
+        jwtToken.setToken(token);
+        jwtToken.setUser(user);
+        jwtToken.setExpiryDate(LocalDateTime.now().plusDays(10));
+        jwtToken.setRevoked(false);
+        jwtTokenRepository.save(jwtToken);
+        log.info("JWT token saved for user: " + user.getUsername());
     }
 
     public List<String> getUserTokens(User user) {

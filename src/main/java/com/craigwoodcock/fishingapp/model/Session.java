@@ -2,12 +2,8 @@ package com.craigwoodcock.fishingapp.model;
 
 import jakarta.persistence.*;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -43,15 +39,6 @@ public class Session {
     @OneToMany(mappedBy = "session")
     private Set<AnglerSession> anglerSessions = new LinkedHashSet<>();
 
-    public Set<AnglerSession> getAnglerSessions() {
-        return anglerSessions;
-    }
-
-    public void setAnglerSessions(Set<AnglerSession> anglerSessions) {
-        this.anglerSessions = anglerSessions;
-    }
-
-
     public Session() {
 
     }
@@ -63,6 +50,14 @@ public class Session {
         this.startDate = startDate;
         this.durationHours = durationHours;
         this.catches = catches;
+        this.anglerSessions = anglerSessions;
+    }
+
+    public Set<AnglerSession> getAnglerSessions() {
+        return anglerSessions;
+    }
+
+    public void setAnglerSessions(Set<AnglerSession> anglerSessions) {
         this.anglerSessions = anglerSessions;
     }
 

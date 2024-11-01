@@ -12,8 +12,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AuthController {
 
     @GetMapping("/login")
-    public String getLoginForm(@ModelAttribute User user,@RequestParam(value = "error", required = false) String error,
-    @RequestParam(value = "logout", required = false) String logout, Model model){
+    public String getLoginForm(@ModelAttribute User user, @RequestParam(value = "error", required = false) String error,
+                               @RequestParam(value = "logout", required = false) String logout, Model model) {
         model.addAttribute("user", user);
 
         if (error != null) {
@@ -27,7 +27,7 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public String logout(RedirectAttributes redirectAttributes){
+    public String logout(RedirectAttributes redirectAttributes) {
         redirectAttributes.addFlashAttribute("message", "You have been logged out successfully.");
         return "redirect:/login";
     }

@@ -44,10 +44,10 @@ public class JwtUtils {
     }
 
     public boolean validateToken(String token) {
-        try{
+        try {
             extractAllClaims(token);
             return true;
-        }catch (JwtException | IllegalArgumentException e) {
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
