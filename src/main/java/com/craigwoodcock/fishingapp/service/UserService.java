@@ -1,6 +1,7 @@
 package com.craigwoodcock.fishingapp.service;
 
 import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
+import com.craigwoodcock.fishingapp.exception.UserNotFoundException;
 import com.craigwoodcock.fishingapp.model.JwtToken;
 import com.craigwoodcock.fishingapp.model.Role;
 import com.craigwoodcock.fishingapp.model.User;
@@ -89,15 +90,25 @@ public class UserService {
 
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username).orElse(null);
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("Username not found"));
     }
 
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<User> findAllUsers() throws UserNotFoundException {
+        try {
+            return userRepository.findAll();
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException("No registered users found!");
+        }
     }
 
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public Optional<User> findById(Long id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+        return user;
+
     }
 }

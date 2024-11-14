@@ -1,6 +1,5 @@
 package com.craigwoodcock.fishingapp.apiController;
 
-import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.model.AuthRequest;
 import com.craigwoodcock.fishingapp.model.AuthResponse;
 import com.craigwoodcock.fishingapp.model.User;
@@ -40,13 +39,9 @@ public class AuthApiController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody User user) {
-        try {
-            userService.registerUser(user);
-            return ResponseEntity.ok(new AuthResponse(jwtUtils.generateToken(user.getUsername()), user.getUsername()));
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(new AuthResponse("User already exists", user.getUsername()));
-//            throw new UserAlreadyExistsException("User already exists");
-        }
+        userService.registerUser(user);
+        return ResponseEntity.ok(new AuthResponse(jwtUtils.generateToken(user.getUsername()), user.getUsername()));
+
 
     }
 }
