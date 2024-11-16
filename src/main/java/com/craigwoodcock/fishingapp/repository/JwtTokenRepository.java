@@ -1,7 +1,7 @@
 package com.craigwoodcock.fishingapp.repository;
 
-import com.craigwoodcock.fishingapp.model.JwtToken;
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.entity.JwtToken;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

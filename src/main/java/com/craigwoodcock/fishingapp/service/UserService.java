@@ -2,9 +2,10 @@ package com.craigwoodcock.fishingapp.service;
 
 import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.exception.UserNotFoundException;
-import com.craigwoodcock.fishingapp.model.JwtToken;
-import com.craigwoodcock.fishingapp.model.Role;
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.dto.UserDto;
+import com.craigwoodcock.fishingapp.model.entity.JwtToken;
+import com.craigwoodcock.fishingapp.model.entity.Role;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.JwtTokenRepository;
 import com.craigwoodcock.fishingapp.repository.UserRepository;
 import com.craigwoodcock.fishingapp.utils.DateFormatter;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -88,6 +88,17 @@ public class UserService {
         }
     }
 
+    public UserDto getByUsername(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("Username : " + username + "  not found"));
+        return new UserDto(user);
+
+    }
+
+    public UserDto getById(Long id) {
+        User user = userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundException("User with id: " + id + " not found"));
+        return new UserDto(user);
+    }
+
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
@@ -103,12 +114,19 @@ public class UserService {
         }
     }
 
-    public Optional<User> findById(Long id) throws UserNotFoundException {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isEmpty()) {
-            throw new UserNotFoundException("User not found");
+    public List<UserDto> getAllUsers() throws UserNotFoundException {
+
+        List<User> users = userRepository.findAll();
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : users) {
+            userDtos.add(new UserDto(user));
         }
-        return user;
+
+        return userDtos;
+    }
+
+    public User findById(Long id) throws UserNotFoundException {
+        return userRepository.getUserById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
 
     }
 }

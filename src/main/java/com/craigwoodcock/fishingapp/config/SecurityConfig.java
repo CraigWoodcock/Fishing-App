@@ -1,8 +1,11 @@
 package com.craigwoodcock.fishingapp.config;
 
+import com.craigwoodcock.fishingapp.security.CustomAccessDeniedHandler;
+import com.craigwoodcock.fishingapp.security.CustomAuthenticationEntryPoint;
 import com.craigwoodcock.fishingapp.security.JwtAuthenticationFilter;
 import com.craigwoodcock.fishingapp.service.CustomUserDetailsService;
 import com.craigwoodcock.fishingapp.utils.JwtUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,16 +26,28 @@ public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
     private final JwtUtils jwtUtils;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtUtils jwtUtils) {
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService, JwtUtils jwtUtils, ObjectMapper objectMapper) {
         this.customUserDetailsService = customUserDetailsService;
         this.jwtUtils = jwtUtils;
+        this.objectMapper = objectMapper;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public CustomAuthenticationEntryPoint customAuthenticationEntryPoint() {
+        return new CustomAuthenticationEntryPoint(objectMapper);
+    }
+
+    @Bean
+    public CustomAccessDeniedHandler customAccessDeniedHandler() {
+        return new CustomAccessDeniedHandler(objectMapper);
     }
 
     @Bean
@@ -46,6 +61,10 @@ public class SecurityConfig {
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtAuthenticationFilter(customUserDetailsService, jwtUtils), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(customAuthenticationEntryPoint())
+                        .accessDeniedHandler(customAccessDeniedHandler())
+                )
                 .csrf(csrf -> csrf.disable());
 
         return http.build();

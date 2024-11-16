@@ -1,6 +1,6 @@
 package com.craigwoodcock.fishingapp.repository;
 
-import com.craigwoodcock.fishingapp.model.Angler;
+import com.craigwoodcock.fishingapp.model.entity.Angler;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

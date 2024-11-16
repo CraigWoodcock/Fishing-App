@@ -1,6 +1,6 @@
 package com.craigwoodcock.fishingapp.service;
 
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

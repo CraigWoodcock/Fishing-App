@@ -1,8 +1,8 @@
 package com.craigwoodcock.fishingapp.service;
 
-import com.craigwoodcock.fishingapp.model.Angler;
-import com.craigwoodcock.fishingapp.model.AnglerSession;
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.entity.Angler;
+import com.craigwoodcock.fishingapp.model.entity.AnglerSession;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
 import com.craigwoodcock.fishingapp.repository.SessionRepository;

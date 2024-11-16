@@ -1,8 +1,8 @@
-package com.craigwoodcock.fishingapp.apiController;
+package com.craigwoodcock.fishingapp.controller.apiController;
 
-import com.craigwoodcock.fishingapp.model.AuthRequest;
-import com.craigwoodcock.fishingapp.model.AuthResponse;
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.dto.AuthRequest;
+import com.craigwoodcock.fishingapp.model.dto.AuthResponse;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.service.UserService;
 import com.craigwoodcock.fishingapp.utils.JwtUtils;
 import org.springframework.http.ResponseEntity;

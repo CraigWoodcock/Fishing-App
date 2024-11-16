@@ -1,7 +1,7 @@
 package com.craigwoodcock.fishingapp.repository;
 
-import com.craigwoodcock.fishingapp.model.AnglerSession;
-import com.craigwoodcock.fishingapp.model.AnglerSessionId;
+import com.craigwoodcock.fishingapp.model.entity.AnglerSession;
+import com.craigwoodcock.fishingapp.model.id.AnglerSessionId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,6 +1,6 @@
-package com.craigwoodcock.fishingapp.webController;
+package com.craigwoodcock.fishingapp.controller.webController;
 
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

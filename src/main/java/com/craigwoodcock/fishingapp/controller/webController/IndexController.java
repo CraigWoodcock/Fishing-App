@@ -1,4 +1,4 @@
-package com.craigwoodcock.fishingapp.webController;
+package com.craigwoodcock.fishingapp.controller.webController;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

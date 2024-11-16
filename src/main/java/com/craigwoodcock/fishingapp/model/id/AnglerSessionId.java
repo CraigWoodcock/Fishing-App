@@ -1,4 +1,4 @@
-package com.craigwoodcock.fishingapp.model;
+package com.craigwoodcock.fishingapp.model.id;
 
 import jakarta.persistence.Embeddable;
 

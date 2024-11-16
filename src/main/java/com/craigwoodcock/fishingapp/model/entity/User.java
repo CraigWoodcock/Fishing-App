@@ -1,4 +1,4 @@
-package com.craigwoodcock.fishingapp.model;
+package com.craigwoodcock.fishingapp.model.entity;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;

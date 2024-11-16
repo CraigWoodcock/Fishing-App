@@ -1,7 +1,7 @@
-package com.craigwoodcock.fishingapp.webController;
+package com.craigwoodcock.fishingapp.controller.webController;
 
-import com.craigwoodcock.fishingapp.model.Session;
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.entity.Session;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
 import com.craigwoodcock.fishingapp.service.SessionService;
 import com.craigwoodcock.fishingapp.service.UserService;

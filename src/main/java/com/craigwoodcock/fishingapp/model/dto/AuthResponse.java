@@ -1,4 +1,4 @@
-package com.craigwoodcock.fishingapp.model;
+package com.craigwoodcock.fishingapp.model.dto;
 
 public class AuthResponse {
     private String token;

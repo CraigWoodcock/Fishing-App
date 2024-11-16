@@ -1,7 +1,7 @@
-package com.craigwoodcock.fishingapp.webController;
+package com.craigwoodcock.fishingapp.controller.webController;
 
 import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

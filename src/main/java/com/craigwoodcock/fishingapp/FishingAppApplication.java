@@ -1,7 +1,7 @@
 package com.craigwoodcock.fishingapp;
 
-import com.craigwoodcock.fishingapp.model.Role;
-import com.craigwoodcock.fishingapp.model.User;
+import com.craigwoodcock.fishingapp.model.entity.Role;
+import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.UserRepository;
 import com.craigwoodcock.fishingapp.utils.DateFormatter;
 import org.springframework.boot.CommandLineRunner;
