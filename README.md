@@ -1,3 +1,19 @@
+- [Fishing Session Tracker 🎣](#fishing-session-tracker-)
+  - [Features](#features)
+  - [Tech Stack](#tech-stack)
+  - [Project Structure](#project-structure)
+  - [Key Components](#key-components)
+    - [Web Interface](#web-interface)
+    - [REST API](#rest-api)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Upcoming Features](#upcoming-features)
+  - [Security](#security)
+
+
+
+
 # Fishing Session Tracker 🎣
 
 A comprehensive Spring Boot application for tracking fishing sessions, managing catches, and analyzing fishing history. Features both a web interface and REST API support.
@@ -65,10 +81,14 @@ com.craigwoodcock.fishingapp
 
 ### Installation
 1. Clone the repository
-2. Configure MySQL connection in `application.properties`
-3. Run the database migration scripts
-4. Build the project: `mvn clean install`
-5. Run the application: `mvn spring-boot:run`
+2. Install MySQL Workbench
+3. Configure MySQL Workbench and run `FishingApp.sql` file to create database.
+4. Configure MySQL connection in `application.properties`:
+     - `spring.datasource.url=jdbc:mysql://<ip or localhost>:3306/fishing_app`
+     - `spring.datasource.username=<MySQL DB Username>`
+     - `spring.datasource.password=<MySQL DB Password>`
+5. Build the project: `mvn clean install`
+6. Run the application: `mvn spring-boot:run`
 
 ## Upcoming Features
 
@@ -85,18 +105,12 @@ com.craigwoodcock.fishingapp
 - Role-based access control
 - Session management
 
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
----
 
 For more information about the frameworks and libraries used:
 - [Spring Framework Documentation](https://docs.spring.io/spring-framework/reference/)
 - [Spring Security Reference](https://docs.spring.io/spring-security/reference/index.html)
 - [Spring Data JPA Documentation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
+- [Thymeleaf Documentation](https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html)
+- [Tailwind Documentation](https://tailwindcss.com/docs)
+- [Maven Documentation](https://maven.apache.org/guides/getting-started/index.html)
 
