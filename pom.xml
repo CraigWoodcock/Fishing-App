@@ -141,38 +141,29 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.6.3</version>
                 <configuration>
-                    <!-- Generate docs in project root /docs directory -->
+                    <outputDirectory>${project.basedir}</outputDirectory>
                     <reportOutputDirectory>${project.basedir}</reportOutputDirectory>
                     <destDir>docs</destDir>
-
-                    <!-- Documentation settings -->
-                    <show>private</show>
-                    <nohelp>true</nohelp>
-                    <source>17</source>
-
-                    <!-- External API documentation links -->
                     <links>
-                        <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
-                        <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
                         <link>https://docs.spring.io/spring-boot/docs/current/api/</link>
                     </links>
-
-                    <!-- Customize documentation appearance -->
-                    <doctitle>Fishing App API Documentation</doctitle>
-                    <windowtitle>Fishing App Javadoc</windowtitle>
-                    <author>true</author>
-                    <version>true</version>
-                    <use>true</use>
+                    <show>private</show>
+                    <nohelp>true</nohelp>
+                    <failOnError>false</failOnError>
                 </configuration>
                 <executions>
                     <execution>
                         <id>generate-javadoc</id>
-                        <phase>package</phase>
+                        <phase>initialize</phase>
                         <goals>
                             <goal>javadoc</goal>
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
