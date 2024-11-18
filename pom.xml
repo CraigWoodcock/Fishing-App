@@ -136,6 +136,44 @@
                     <nodeVersion>v14.17.0</nodeVersion>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <!-- Generate docs in project root /docs directory -->
+                    <reportOutputDirectory>${project.basedir}</reportOutputDirectory>
+                    <destDir>docs</destDir>
+
+                    <!-- Documentation settings -->
+                    <show>private</show>
+                    <nohelp>true</nohelp>
+                    <source>17</source>
+
+                    <!-- External API documentation links -->
+                    <links>
+                        <link>https://docs.oracle.com/en/java/javase/17/docs/api/</link>
+                        <link>https://docs.spring.io/spring-framework/docs/current/javadoc-api/</link>
+                        <link>https://docs.spring.io/spring-boot/docs/current/api/</link>
+                    </links>
+
+                    <!-- Customize documentation appearance -->
+                    <doctitle>Fishing App API Documentation</doctitle>
+                    <windowtitle>Fishing App Javadoc</windowtitle>
+                    <author>true</author>
+                    <version>true</version>
+                    <use>true</use>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>generate-javadoc</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
