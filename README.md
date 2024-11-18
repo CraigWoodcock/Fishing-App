@@ -1,22 +1,24 @@
 - [Fishing Session Tracker 🎣](#fishing-session-tracker-)
-  - [Features](#features)
-  - [Tech Stack](#tech-stack)
-  - [Project Structure](#project-structure)
-  - [Key Components](#key-components)
-    - [Web Interface](#web-interface)
-    - [REST API](#rest-api)
-  - [Getting Started](#getting-started)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-  - [Upcoming Features](#upcoming-features)
-  - [Security](#security)
-
-
-
+    - [Features](#features)
+    - [Tech Stack](#tech-stack)
+    - [Project Structure](#project-structure)
+    - [Key Components](#key-components)
+        - [Web Interface](#web-interface)
+        - [REST API](#rest-api)
+    - [Getting Started](#getting-started)
+        - [Prerequisites](#prerequisites)
+        - [Installation](#installation)
+    - [Upcoming Features](#upcoming-features)
+    - [Security](#security)
 
 # Fishing Session Tracker 🎣
 
-A comprehensive Spring Boot application for tracking fishing sessions, managing catches, and analyzing fishing history. Features both a web interface and REST API support.
+A Spring Boot application for tracking fishing sessions, managing catches, and analyzing fishing history. Features both
+a web interface and REST API support.
+
+## Documentation
+
+- [Click here to view documentation ](https://craigwoodcock.github.io/Fishing-App/)
 
 ## Features
 
@@ -61,12 +63,14 @@ com.craigwoodcock.fishingapp
 ## Key Components
 
 ### Web Interface
+
 - User registration and authentication
 - Dashboard with fishing history
 - Session management interface
 - Catch logging system
 
 ### REST API
+
 - JWT-based authentication
 - User management endpoints
 - Session and catch management
@@ -75,18 +79,20 @@ com.craigwoodcock.fishingapp
 ## Getting Started
 
 ### Prerequisites
+
 - Java 17
 - MySQL
 - Maven
 
 ### Installation
+
 1. Clone the repository
 2. Install MySQL Workbench
 3. Configure MySQL Workbench and run `FishingApp.sql` file to create database.
 4. Configure MySQL connection in `application.properties`:
-     - `spring.datasource.url=jdbc:mysql://<ip or localhost>:3306/fishing_app`
-     - `spring.datasource.username=<MySQL DB Username>`
-     - `spring.datasource.password=<MySQL DB Password>`
+    - `spring.datasource.url=jdbc:mysql://<ip or localhost>:3306/fishing_app`
+    - `spring.datasource.username=<MySQL DB Username>`
+    - `spring.datasource.password=<MySQL DB Password>`
 5. Build the project: `mvn clean install`
 6. Run the application: `mvn spring-boot:run`
 
@@ -105,8 +111,8 @@ com.craigwoodcock.fishingapp
 - Role-based access control
 - Session management
 
-
 For more information about the frameworks and libraries used:
+
 - [Spring Framework Documentation](https://docs.spring.io/spring-framework/reference/)
 - [Spring Security Reference](https://docs.spring.io/spring-security/reference/index.html)
 - [Spring Data JPA Documentation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/)
