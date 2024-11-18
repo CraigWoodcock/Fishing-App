@@ -2,6 +2,8 @@
 
 !docs/
 
+### EXCLUDE ALL: ###
+
 HELP.md
 target/
 
