@@ -1,5 +1,6 @@
 com.craigwoodcock.fishingapp.config
 com.craigwoodcock.fishingapp.controller.apiController
+com.craigwoodcock.fishingapp.controller
 com.craigwoodcock.fishingapp.controller.webController
 com.craigwoodcock.fishingapp.exception
 com.craigwoodcock.fishingapp

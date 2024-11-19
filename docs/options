@@ -6,7 +6,7 @@
 --release
 17
 -sourcepath
-'C:/Users/craig/Documents/IdeaProjects/Fishing-App/src/main/java'
+'C:/Users/craig/Documents/IdeaProjects/Fishing-App/src/main/java;C:/Users/craig/Documents/IdeaProjects/Fishing-App/target/generated-sources/annotations'
 -author
 -bottom
 'Copyright &#169; 2024. All rights reserved.'
@@ -17,11 +17,11 @@
 -docencoding
 'UTF-8'
 -doctitle
-'Fishing-App 0.0.1-SNAPSHOT API'
+'Fishing Session Tracker API Docs'
 -link
 'https://docs.spring.io/spring-boot'
 -nohelp
 -use
 -version
 -windowtitle
-'Fishing-App 0.0.1-SNAPSHOT API'
+'Fishing API Docs'

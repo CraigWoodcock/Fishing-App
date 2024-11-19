@@ -1,1 +1,1 @@
-cmd.exe /X /C ""C:\Program Files\Java\jdk-17\bin\javadoc.exe" @options @packages"
+cmd.exe /X /C "C:\Users\craig\.jdks\temurin-17.0.12\bin\javadoc.exe @options @packages"

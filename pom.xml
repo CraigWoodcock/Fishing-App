@@ -147,6 +147,8 @@
                     <links>
                         <link>https://docs.spring.io/spring-boot/docs/current/api/</link>
                     </links>
+                    <doctitle>Fishing Session Tracker API Docs</doctitle>
+                    <windowtitle>Fishing API Docs</windowtitle>
                     <show>private</show>
                     <nohelp>true</nohelp>
                     <failOnError>false</failOnError>
@@ -154,7 +156,7 @@
                 <executions>
                     <execution>
                         <id>generate-javadoc</id>
-                        <phase>initialize</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>javadoc</goal>
                         </goals>
