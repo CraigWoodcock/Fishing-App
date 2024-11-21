@@ -1,15 +1,16 @@
 - [Fishing Session Tracker 🎣](#fishing-session-tracker-)
-    - [Features](#features)
-    - [Tech Stack](#tech-stack)
-    - [Project Structure](#project-structure)
-    - [Key Components](#key-components)
-        - [Web Interface](#web-interface)
-        - [REST API](#rest-api)
-    - [Getting Started](#getting-started)
-        - [Prerequisites](#prerequisites)
-        - [Installation](#installation)
-    - [Upcoming Features](#upcoming-features)
-    - [Security](#security)
+  - [Documentation](#documentation)
+  - [Features](#features)
+  - [Tech Stack](#tech-stack)
+  - [Project Structure](#project-structure)
+  - [Key Components](#key-components)
+    - [Web Interface](#web-interface)
+    - [REST API](#rest-api)
+  - [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [Upcoming Features](#upcoming-features)
+  - [Security](#security)
 
 # Fishing Session Tracker 🎣
 
@@ -90,11 +91,60 @@ com.craigwoodcock.fishingapp
 2. Install MySQL Workbench
 3. Configure MySQL Workbench and run `FishingApp.sql` file to create database.
 4. Configure MySQL connection in `application.properties`:
-    - `spring.datasource.url=jdbc:mysql://<ip or localhost>:3306/fishing_app`
-    - `spring.datasource.username=<MySQL DB Username>`
-    - `spring.datasource.password=<MySQL DB Password>`
+    ```
+     spring.datasource.url=jdbc:mysql://<ip or localhost>:3306/fishing_app
+     spring.datasource.username=<MySQL DB Username>
+     spring.datasource.password=<MySQL DB Password>
+    ```
 5. Build the project: `mvn clean install`
 6. Run the application: `mvn spring-boot:run`
+
+API Usage
+Authentication API
+1. Register a New User
+To register a new user, send a POST request to /api/auth/register with the following JSON body:
+    ```
+    {
+
+    "name": "Your Name",
+    "username": "yourUsername",
+    "email": "your.email@example.com",
+    "password": "yourSecurePassword"
+    }
+    ```
+
+Ensure the Content-Type header is set to application/json. If the request is successful, you will receive a confirmation response.
+
+2. Login
+Once registered, log in by sending a POST request to /api/auth/login with the following JSON body:
+    ```
+    {
+    "username": "yourUsername",
+    "password": "yourSecurePassword"
+    }
+    ```
+
+
+    The response will contain a token in the following format:
+
+        ```
+
+            {
+            "token": "yourJWTTokenHere"
+            }
+
+        ```
+
+3. Access Secured Endpoints
+Use the token from the login response to access secured endpoints. Add an Authorization header with the value Bearer {token} to your requests:
+    ```
+    Authorization: Bearer yourJWTTokenHere
+    ```
+
+Notes:
+   - All API requests and responses use application/json.
+   - Tokens may expire; re-login or refresh the token as needed.
+   - Use a REST client like Postman or curl for testing API calls.
 
 ## Upcoming Features
 
