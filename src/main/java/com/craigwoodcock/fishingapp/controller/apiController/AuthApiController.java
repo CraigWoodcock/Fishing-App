@@ -5,6 +5,8 @@ import com.craigwoodcock.fishingapp.model.dto.AuthResponse;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.service.UserService;
 import com.craigwoodcock.fishingapp.utils.JwtUtils;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +42,9 @@ public class AuthApiController {
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody User user) {
         userService.registerUser(user);
-        return ResponseEntity.ok(new AuthResponse(jwtUtils.generateToken(user.getUsername()), user.getUsername()));
+        // return ResponseEntity.ok(new AuthResponse(jwtUtils.generateToken(user.getUsername()), user.getUsername()));
+        return ResponseEntity.status(HttpStatus.CREATED)
+        .body(new AuthResponse(jwtUtils.generateToken(user.getUsername()),user.getUsername()));
 
 
     }
