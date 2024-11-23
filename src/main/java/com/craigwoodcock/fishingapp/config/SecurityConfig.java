@@ -123,7 +123,7 @@ public class SecurityConfig {
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login", "/index", "/register", "/js/**", "/css/**", "error/**", ("/docs")).permitAll()  // Public resources
+                        .requestMatchers("/", "/login", "/index", "/register", "/js/**", "/css/**", "error/**", "/docs", "/actuator/health").permitAll()  // Public resources
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // Admin-only endpoints
                         .anyRequest().hasRole("USER")                   // All other endpoints require USER role
                 )
