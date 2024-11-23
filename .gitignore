@@ -39,7 +39,8 @@ build/
 .vscode/
 
 ### node modules ###
-
+node_modules
+node
 src/main/resources/static/css/output.css
 
 
