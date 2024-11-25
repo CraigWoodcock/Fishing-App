@@ -23,7 +23,7 @@ public class UserController {
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("user", new User());
-        return "/register";
+        return "register";
     }
 
     @PostMapping("/register")
@@ -35,7 +35,7 @@ public class UserController {
         try {
             userService.registerUser(user);
             model.addAttribute("message", "User has been registered successfully");
-            return "/login";
+            return "login";
         } catch (UserAlreadyExistsException e) {
             model.addAttribute("error", e.getMessage());
             return "register";
