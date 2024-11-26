@@ -1,6 +1,7 @@
 ### INLCUDE ###
 
 !docs/
+!.gitlab-ci.yml
 
 ### EXCLUDE ALL: ###
 
