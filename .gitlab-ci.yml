@@ -21,12 +21,15 @@ unit-test-job: # This job runs in the test stage.
   #  before_script:
   #    - apk --no-cache add curl
   script:
-    - cat src/main/resources/application.properties
-    - echo "Running unit tests... This will take about 5 seconds."
+    - echo "Renaming File..."
+    - mv src/main/resources/application.properties.bk src/main/resources/application.properties
+    - echo "Done..."
+    - echo "Starting Application...This will Take Around 30 Seconds..."
     - java -jar target/*.jar &
     - sleep 30
+    - echo "Testing '/actuator' Endpoint... "
     - curl http://localhost:8080/actuator/health | grep "UP"
-    - echo "The app started successfully"
+    - echo "THE APP STARTED SUCCESSFULLY!!..."
 
 lint-test-job: # This job also runs in the test stage.
   stage: test    # It can run at the same time as unit-test-job (in parallel).
