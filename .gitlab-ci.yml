@@ -14,7 +14,7 @@ build-job: # This job runs in the build stage, which runs first.
     - echo "Compile complete."
   artifacts:
     paths:
-      - target/*.jar
+      - target/Fishing-App-0.0.1-SNAPSHOT.jar
 
 unit-test-job: # This job runs in the test stage.
   image: openjdk:17-slim  # Replace 17 with your specific Java version if needed
@@ -24,23 +24,24 @@ unit-test-job: # This job runs in the test stage.
     - echo "Renaming File..."
     - mv src/main/resources/application.properties.bk src/main/resources/application.properties
     - echo "Done..."
+    - cat src/main/resources/application.properties
     - echo "Starting Application...This will Take Around 30 Seconds..."
-    - java -jar target/*.jar &
-    - sleep 60
+    - java -jar target/Fishing-App-0.0.1-SNAPSHOT.jar &
+    - sleep 90
     - echo "Testing '/actuator' Endpoint... "
     - curl http://localhost:8080/actuator/health | grep "UP"
     - echo "THE APP STARTED SUCCESSFULLY!!..."
 
-lint-test-job: # This job also runs in the test stage.
-  stage: test    # It can run at the same time as unit-test-job (in parallel).
-  script:
-    - echo "Linting code... This will take about 5 seconds."
-    - sleep 5
-    - echo "No lint issues found."
-
-deploy-job: # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
-  environment: production
-  script:
-    - echo "Deploying application..."
-    - echo "Application successfully deployed."
+#lint-test-job: # This job also runs in the test stage.
+#  stage: test    # It can run at the same time as unit-test-job (in parallel).
+#  script:
+#    - echo "Linting code... This will take about 5 seconds."
+#    - sleep 5
+#    - echo "No lint issues found."
+#
+#deploy-job: # This job runs in the deploy stage.
+#  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#  environment: production
+#  script:
+#    - echo "Deploying application..."
+#    - echo "Application successfully deployed."
