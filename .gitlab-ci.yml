@@ -8,7 +8,7 @@ stages: # List of stages for jobs, and their order of execution
 build-job: # This job runs in the build stage, which runs first.
   stage: build
   script:
-    - mv src/main/resources/application.properties.bk src/main/resources/application.properties
+    - mv src/main/resources/application.properties.bk.b.bk.b src/main/resources/application.properties.bk.b.bk
     - echo "Compiling the code..."
     - mvn package
     - echo "Compile complete."
