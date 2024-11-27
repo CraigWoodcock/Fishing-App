@@ -10,7 +10,7 @@ build-job: # This job runs in the build stage, which runs first.
   script:
     - mv src/main/resources/application.properties.bk src/main/resources/application.properties
     - echo "Compiling the code..."
-    - mvn package
+    - mvn clean install
     - echo "Compile complete."
   artifacts:
     paths:
