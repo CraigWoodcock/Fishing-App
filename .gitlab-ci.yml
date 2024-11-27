@@ -17,16 +17,16 @@ build-job: # This job runs in the build stage, which runs first.
       - target/*.jar
 
 unit-test-job: # This job runs in the test stage.
-  stage: test  # It only starts when the job in the build stage completes successfully.
-  #  before_script:
-  #    - apk --no-cache add curl
+  image: openjdk:17-slim  # Replace 17 with your specific Java version if needed
+  before_script:
+    - apt-get update && apt-get install -y curl
   script:
     - echo "Renaming File..."
     - mv src/main/resources/application.properties.bk src/main/resources/application.properties
     - echo "Done..."
     - echo "Starting Application...This will Take Around 30 Seconds..."
     - java -jar target/*.jar &
-    - sleep 30
+    - sleep 60
     - echo "Testing '/actuator' Endpoint... "
     - curl http://localhost:8080/actuator/health | grep "UP"
     - echo "THE APP STARTED SUCCESSFULLY!!..."
