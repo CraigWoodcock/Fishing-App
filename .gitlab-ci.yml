@@ -30,7 +30,7 @@ unit-test-job: # This job runs in the test stage.
     - sleep 90
     - echo "Testing '/actuator' Endpoint... "
     - curl http://localhost:8080/actuator/health | grep "UP"
-    - echo "THE APP STARTED SUCCESSFULLY!!..."
+    - echo "THE APP STARTED SUCCESSFULLY!! or not we shall see"
 
 #lint-test-job: # This job also runs in the test stage.
 #  stage: test    # It can run at the same time as unit-test-job (in parallel).
