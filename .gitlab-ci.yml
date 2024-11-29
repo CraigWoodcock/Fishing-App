@@ -25,8 +25,8 @@ unit-test-job: # This job runs in the test stage.
     - mv src/main/resources/application.properties.bk src/main/resources/application.properties
     - echo "Done..."
     - echo "$DB_NAME"
-    - echo "DB_USER"
-    - echo "DB_HOST"
+    - echo "$DB_USER"
+    - echo "$DB_HOST"
     - echo "Starting Application...This will Take Around 30 Seconds..."
     - java -jar target/Fishing-App-0.0.1-SNAPSHOT.jar &
     - sleep 30
