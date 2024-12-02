@@ -2,6 +2,8 @@
   - [Documentation](#documentation)
   - [Features](#features)
   - [Tech Stack](#tech-stack)
+  - [Deployment](#deployment)
+    - [Workflow Outline with ASG:](#workflow-outline-with-asg)
   - [Project Structure](#project-structure)
   - [Key Components](#key-components)
     - [Web Interface](#web-interface)
@@ -41,6 +43,24 @@ a web interface and REST API support.
 - [MySQL](https://www.mysql.com/)
 - [Maven](https://maven.apache.org/)
 - AWS S3 (upcoming)
+
+## Deployment
+
+- Github(for version control)
+- Github Actions(triggers a push to Gitlab-CI autonomously)
+- Gitlab-CI(to automate build, test and deployment to AWS)
+- AWS S3(for .jar storage)
+- AWS RDS(for database instance)
+- AWS VPC(virtual private cloud - ensures secure instances)
+- AWS ASG(auto scaling group – to achieve zero downtime when pushing updates)
+
+### Workflow Outline with ASG:
+1.	Code Commit: Push code to GitHub and trigger the GitHub Actions workflow.
+2.	Build and Test: Build the JAR in GitLab CI, run tests, and upload the artifact to S3.
+3.	Update ASG: Update the launch template with the new S3 JAR path and trigger an Instance Refresh.
+4.	Instance Refresh: ASG replaces instances with the new launch template configuration.
+5.	Validation: Verify that the new instances are healthy and serving traffic before terminating old instances.
+
 
 ## Project Structure
 
