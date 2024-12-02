@@ -35,18 +35,20 @@ unit-test-job: # This job runs in the test stage.
     - echo "THE APP STARTED SUCCESSFULLY!!.."
 
 upload-to-s3-job:
-  image: amazon/aws-cli
+  image: 
+    name: amazon/aws-cli
+    entrypoint: ['']
   stage: upload
   script:
     #configure aws credentials
     - echo "setting access key id"
-    - aws configure set aws_access_key_id=$AWS_ACCESS_KEY_ID
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
     - echo "setting access key"
-    - aws configure set aws_secret_access_key=$AWS_SECRET_ACCESS_KEY
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - echo "setting region"
-    - aws configure set default.region=$AWS_DEFAULT_REGION
+    - aws configure set default.region $AWS_DEFAULT_REGION
     - echo "copying to s3"
-    - aws s3 cp target/Fishing-App-0.0.1-SNAPSHOT.jar s3://fishingappjars
+    - aws s3 cp target/Fishing-App-0.0.1-SNAPSHOT.jar s3://fishingappjars/fishingAppJar$CI_COMMIT_SHORT_SHA.jar
     - aws s3 ls s3://fishingappjars
 
 
