@@ -3,7 +3,7 @@ image: maven:3.9.9-eclipse-temurin-17
 stages: # List of stages for jobs, and their order of execution
   - build
   - test
-  - deploy
+  - upload
 
 build-job: # This job runs in the build stage, which runs first.
   stage: build
@@ -33,6 +33,19 @@ unit-test-job: # This job runs in the test stage.
     - echo "Testing '/actuator' Endpoint... "
     - curl -s http://localhost:8080/actuator/health | grep "UP"
     - echo "THE APP STARTED SUCCESSFULLY!!.."
+
+upload-to-s3-job:
+  image: amazon/aws-cli
+  stage: upload
+  script:
+    #configure aws credentials
+    - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+    - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+    - aws configure set default.region $AWS_DEFAULT_REGION
+    - aws s3 cp target/Fishing-App-0.0.1-SNAPSHOT.jar s3://fishingappjars
+    - aws s3 ls s3://fishingappjars
+
+
 
 #lint-test-job: # This job also runs in the test stage.
 #  stage: test    # It can run at the same time as unit-test-job (in parallel).
