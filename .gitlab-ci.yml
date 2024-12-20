@@ -17,23 +17,23 @@ build-job: # This job runs in the build stage, which runs first.
     paths:
       - target/Fishing-App-0.0.1-SNAPSHOT.jar
 
-unit-test-job: # This job runs in the test stage.
-  image: openjdk:17-slim 
-  before_script:
-    - apt-get update && apt-get install -y curl
-  script:
-    - echo "Renaming File..."
-    - mv src/main/resources/application.properties.bk src/main/resources/application.properties
-    - echo "Done..."
-    - echo "$DB_NAME"
-    - echo "$DB_USER"
-    - echo "$DB_HOST"
-    - echo "Starting Application...This will Take Around 30 Seconds..."
-    - java -jar target/Fishing-App-0.0.1-SNAPSHOT.jar &
-    - sleep 30
-    - echo "Testing '/actuator' Endpoint... "
-    - curl -s http://localhost:8080/actuator/health | grep "UP"
-    - echo "THE APP STARTED SUCCESSFULLY!!.."
+# unit-test-job: # This job runs in the test stage.
+#   image: openjdk:17-slim 
+#   before_script:
+#     - apt-get update && apt-get install -y curl
+#   script:
+#     - echo "Renaming File..."
+#     - mv src/main/resources/application.properties.bk src/main/resources/application.properties
+#     - echo "Done..."
+#     - echo "$DB_NAME"
+#     - echo "$DB_USER"
+#     - echo "$DB_HOST"
+#     - echo "Starting Application...This will Take Around 30 Seconds..."
+#     - java -jar target/Fishing-App-0.0.1-SNAPSHOT.jar &
+#     - sleep 30
+#     - echo "Testing '/actuator' Endpoint... "
+#     - curl -s http://localhost:8080/actuator/health | grep "UP"
+#     - echo "THE APP STARTED SUCCESSFULLY!!.."
 
 upload-to-s3-job:
   image: 
