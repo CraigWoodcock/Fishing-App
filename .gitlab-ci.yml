@@ -62,9 +62,15 @@ deploy-to-aws-job:
     - |
       USERDATA=$(echo -n "#!/bin/bash
       aws s3 cp s3://fishingappjars/fishingAppJar$CI_COMMIT_SHORT_SHA.jar /opt/app/app.jar
-      export DB_NAME=$DB_NAME
-      export DB_USER=$DB_USER
       export DB_HOST=$DB_HOST
+      export DB_USER=$DB_USER
+      export DB_PASS=$DB_PASS
+      export DB_IP=$DB_IP
+      export DB_NAME=$DB_NAME
+      export JWT_SECRET=$JWT_SECRET
+      export MYSQL_PWD=$MYSQLPWD
+      
+      
       java -jar /opt/app/app.jar" | base64 -w 0)
     
      # Get the latest version number
