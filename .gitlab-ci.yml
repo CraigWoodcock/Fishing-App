@@ -74,7 +74,7 @@ deploy-to-aws-job:
       java -jar /opt/app/app.jar" | base64 -w 0)
     
      # Get the latest version number
-    - LATEST_VERSION=$(aws ec2 describe-launch-templates --launch-template-names FishingApp-LT | jq -r '.LaunchTemplates[0].LatestVersionNumber')
+    - LATEST_VERSION=$(aws ec2 describe-launch-templates --launch-template-names FishingApp-LT --query 'LaunchTemplates[0].LatestVersionNumber' --output text)
 
     # Create new version with updated user data
     - |
