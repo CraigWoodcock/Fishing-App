@@ -44,6 +44,9 @@ upload-to-s3-job:
     - echo "copying to s3"
     - aws s3 cp target/Fishing-App-0.0.1-SNAPSHOT.jar s3://fishingappjars/fishingAppJar$CI_COMMIT_SHORT_SHA.jar
     - aws s3 ls s3://fishingappjars
+  only:
+    - main
+  
 
 deploy-to-aws-job:
   image:
@@ -97,6 +100,8 @@ deploy-to-aws-job:
       aws autoscaling start-instance-refresh \
         --auto-scaling-group-name Fishing-App-ASG \
         --preferences '{"MinHealthyPercentage": 100, "InstanceWarmup": 300}'
+  only:
+    - main
 
 #lint-test-job: # This job also runs in the test stage.
 #  stage: test    # It can run at the same time as unit-test-job (in parallel).
