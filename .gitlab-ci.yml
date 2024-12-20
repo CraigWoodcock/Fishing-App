@@ -4,6 +4,7 @@ stages: # List of stages for jobs, and their order of execution
   - build
   - test
   - upload
+  - deploy
 
 build-job: # This job runs in the build stage, which runs first.
   stage: build
@@ -17,7 +18,7 @@ build-job: # This job runs in the build stage, which runs first.
       - target/Fishing-App-0.0.1-SNAPSHOT.jar
 
 unit-test-job: # This job runs in the test stage.
-  image: openjdk:17-slim  # Replace 17 with your specific Java version if needed
+  image: openjdk:17-slim 
   before_script:
     - apt-get update && apt-get install -y curl
   script:
@@ -40,18 +41,56 @@ upload-to-s3-job:
     entrypoint: ['']
   stage: upload
   script:
-    #configure aws credentials
+    - echo "copying to s3"
+    - aws s3 cp target/Fishing-App-0.0.1-SNAPSHOT.jar s3://fishingappjars/fishingAppJar$CI_COMMIT_SHORT_SHA.jar
+    - aws s3 ls s3://fishingappjars
+
+deploy-to-aws-job:
+  image:
+    name: amazon/aws-cli
+    entrypoint: ['']
+  stage: deploy
+  script:
     - echo "setting access key id"
     - aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
     - echo "setting access key"
     - aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
     - echo "setting region"
     - aws configure set default.region $AWS_DEFAULT_REGION
-    - echo "copying to s3"
-    - aws s3 cp target/Fishing-App-0.0.1-SNAPSHOT.jar s3://fishingappjars/fishingAppJar$CI_COMMIT_SHORT_SHA.jar
-    - aws s3 ls s3://fishingappjars
 
+    # Create a new launch template version with embedded user data
+    - |
+      USERDATA=$(echo -n "#!/bin/bash
+      aws s3 cp s3://fishingappjars/fishingAppJar$CI_COMMIT_SHORT_SHA.jar /opt/app/app.jar
+      export DB_NAME=$DB_NAME
+      export DB_USER=$DB_USER
+      export DB_HOST=$DB_HOST
+      java -jar /opt/app/app.jar" | base64 -w 0)
+    
+     # Get the latest version number
+    - LATEST_VERSION=$(aws ec2 describe-launch-templates --launch-template-names FishingApp-LT | jq -r '.LaunchTemplates[0].LatestVersionNumber')
 
+    # Create new version with updated user data
+    - |
+      NEW_VERSION=$(aws ec2 create-launch-template-version \
+        --launch-template-name FishingApp-LT \
+        --version-description "Updated with latest JAR from $CI_COMMIT_SHORT_SHA" \
+        --source-version $LATEST_VERSION \
+        --launch-template-data "{\"UserData\": \"$USERDATA\"}" \
+        --query 'LaunchTemplateVersion.VersionNumber' \
+        --output text)
+
+    # Set the new version as default
+    - |
+      aws ec2 modify-launch-template \
+        --launch-template-name FishingApp-LT \
+        --default-version $NEW_VERSION
+
+    # Start an instance refresh with 100% minimum healthy percentage
+    - |
+      aws autoscaling start-instance-refresh \
+        --auto-scaling-group-name Fishing-App-ASG \
+        --preferences '{"MinHealthyPercentage": 100, "InstanceWarmup": 300}'
 
 #lint-test-job: # This job also runs in the test stage.
 #  stage: test    # It can run at the same time as unit-test-job (in parallel).
