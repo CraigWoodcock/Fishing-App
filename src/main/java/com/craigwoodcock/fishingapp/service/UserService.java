@@ -58,17 +58,17 @@ public class UserService {
         user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
         log.info("Updated at: " + user.getUpdatedAt());
         userRepository.save(user);
-        log.info("User saved");
-        log.info("Generating JWT token");
-        String token = jwtUtils.generateToken(user.getUsername());
-        JwtToken jwtToken = new JwtToken();
-        log.info("JWT token Created!!");
-        jwtToken.setToken(token);
-        jwtToken.setUser(user);
-        jwtToken.setExpiryDate(LocalDateTime.now().plusDays(10));
-        jwtToken.setRevoked(false);
-        jwtTokenRepository.save(jwtToken);
-        log.info("JWT token saved for user: " + user.getUsername());
+//        log.info("User saved");
+//        log.info("Generating JWT token");
+//        String token = jwtUtils.generateToken(user.getUsername());
+//        JwtToken jwtToken = new JwtToken();
+//        log.info("JWT token Created!!");
+//        jwtToken.setToken(token);
+//        jwtToken.setUser(user);
+//        jwtToken.setExpiryDate(LocalDateTime.now().plusDays(10));
+//        jwtToken.setRevoked(false);
+//        jwtTokenRepository.save(jwtToken);
+//        log.info("JWT token saved for user: " + user.getUsername());
     }
 
     public List<String> getUserTokens(User user) {

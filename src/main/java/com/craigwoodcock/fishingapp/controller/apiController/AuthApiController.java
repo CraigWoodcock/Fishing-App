@@ -84,11 +84,10 @@ public class AuthApiController {
      * - Username of the registered user
      */
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody User user) {
+    public ResponseEntity<String> register(@RequestBody User user) {
         userService.registerUser(user);
-        // return ResponseEntity.ok(new AuthResponse(jwtUtils.generateToken(user.getUsername()), user.getUsername()));
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new AuthResponse(jwtUtils.generateToken(user.getUsername()), user.getUsername()));
+                .body("user: " + user.getUsername() + " Created Successfully");
 
 
     }
