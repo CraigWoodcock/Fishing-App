@@ -1,54 +1,65 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Common Head Section -->
     <meta charset="UTF-8">
-    <meta content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
-          name="viewport">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
-    <title>Dashboard</title>
+    <title>Page Title - Fishing Session Tracker</title>
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body class="bg-black text-white">
-<div class="container mx-auto px-4 py-8">
+    <!-- Common Header -->
+    <header class="text-center p-4 pb-0 mb-6 w-full">
+        <h1 class="text-3xl font-bold mb-0.5">Fishing Session Tracker</h1>
+    </header>
 
-    <div class="dashboard-heading">
-        <h1 class="text-3xl font-semibold mb-6">Welcome, <span th:text="${#authentication.name}"></span>!</h1>
-        <form method="post" th:action="@{/logout}">
-            <input class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-8 inline-block"
-                   type="submit" value="Logout"/>
-        </form>
-    </div>
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8">
 
-    <h2 class="text-2xl font-semibold mb-4">Your Sessions</h2>
-    <div class="session-button">
-        <a class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded inline-block" href="/sessions/new">
-            Add New Session
-        </a>
-
-    </div>
-
-    <div th:if="${sessions.isEmpty()}">
-        <p>You haven't created any sessions yet.</p>
-    </div>
-    <div class="bg-green-500 text-white p-3 rounded mb-4" role="alert" th:if="${message}">
-        <p th:text="${message}"></p>
-    </div>
-
-
-    <div class="session-list bg-gray-800 p-4 rounded-lg" th:each="sess : ${sessions}">
-        <h3 class="text-xl font-semibold mb-2" th:text="${sess.venue}"></h3>
-        <p class="mb-1" th:text="${'Date: ' + #temporals.format(sess.startDate, 'dd-MM-yyyy')}"></p>
-        <p class="mb-1" th:text="${'Duration: ' + sess.durationHours + ' hours'}"></p>
-        <div th:with="anglersList=${@sessionService.getAnglersForSession(sess.id)}">
-            <p class="mb-2" th:text="${'Anglers: ' + anglersList.size()}"></p>
+        <div class="dashboard-heading">
+            <h1 class="text-3xl font-semibold mb-6">Welcome, <span th:text="${#authentication.name}"></span>!</h1>
+            <form method="post" th:action="@{/logout}">
+                <input class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mb-8 inline-block"
+                       type="submit" value="Logout"/>
+            </form>
         </div>
 
-        <a class="text-red-400 bg-red-600 hover:text-red-300" th:href="@{/sessions/{id}(id=${sess.id})}">View
-            Details</a>
-        <hr class="red">
-    </div>
+        <h2 class="text-2xl font-semibold mb-4">Your Sessions</h2>
+        <div class="session-button">
+            <a class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded inline-block" href="/sessions/new">
+                Add New Session
+            </a>
 
-</div>
+        </div>
+
+        <div th:if="${sessions.isEmpty()}">
+            <p>You haven't created any sessions yet.</p>
+        </div>
+        <div class="bg-green-500 text-white p-3 rounded mb-4" role="alert" th:if="${message}">
+            <p th:text="${message}"></p>
+        </div>
+
+
+        <div class="session-list bg-gray-800 p-4 rounded-lg" th:each="sess : ${sessions}">
+            <h3 class="text-xl font-semibold mb-2" th:text="${sess.venue}"></h3>
+            <p class="mb-1" th:text="${'Date: ' + #temporals.format(sess.startDate, 'dd-MM-yyyy')}"></p>
+            <p class="mb-1" th:text="${'Duration: ' + sess.durationHours + ' hours'}"></p>
+            <div th:with="anglersList=${@sessionService.getAnglersForSession(sess.id)}">
+                <p class="mb-2" th:text="${'Anglers: ' + anglersList.size()}"></p>
+            </div>
+
+            <a class="text-red-400 bg-red-600 hover:text-red-300" th:href="@{/sessions/{id}(id=${sess.id})}">View
+                Details</a>
+            <hr class="red">
+        </div>
+
+    </main>
+
+    <!-- Common Footer -->
+    <footer class="text-center p-4 h-20 bottom-0 bg-gray-800 w-full">
+        <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
+    </footer>
 </body>
 </html>

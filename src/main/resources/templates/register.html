@@ -1,38 +1,7 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Register</title>-->
-<!--    <link rel="stylesheet" th:href="@{/css/output.css}">-->
-<!--</head>-->
-<!--<body>-->
-<!--<h2>Register</h2>-->
-<!--<form th:action="@{/register}" th:object="${user}" method="post">-->
-
-<!--    <input id="username" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />-->
-<!--    <p>-->
-<!--        <label for="userinput">Username :</label>-->
-<!--        <input id="userinput" type="text" th:field="${user.username}" placeholder="Enter a Username" required>-->
-<!--    </p>-->
-<!--    <p>-->
-<!--        <label for="name">Name :</label>-->
-<!--        <input id="name" type="text" th:field="${user.name}" placeholder="Enter Full Name" required>-->
-<!--    </p>-->
-<!--    <p>-->
-<!--        <label for="passwordinput">Password :</label>-->
-<!--        <input id="passwordinput" type="password" th:field="${user.password}" placeholder="Choose a Password" required>-->
-<!--    </p>-->
-<!--<p>-->
-<!--    <label for="passwordinput">Email :</label>-->
-<!--    <input type="email" th:field="${user.email}" placeholder="Enter Email Address" required>-->
-<!--</p>-->
-<!--    <button type="submit">Register</button>-->
-<!--</form>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <!-- Common Head Section -->
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Register - Fishing Session Tracker | Start Logging Your Catches</title>
@@ -42,52 +11,57 @@
     <meta content="index, follow" name="robots">
 </head>
 <body class="bg-black text-white">
-<header class="p-4 text-center">
-    <h1 class="text-3xl font-bold">Fishing Session Tracker</h1>
-</header>
-<main class="min-h-screen flex items-center justify-center">
-    <section class="bg-gray-900 p-8 rounded shadow-md w-96">
-        <h2 class="text-2xl font-semibold mb-6">Create Your Account</h2>
-        <form method="post" th:action="@{/register}" th:object="${user}">
-            <input id="username" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
-            <div class="mb-4">
-                <label class="block mb-2" for="usernameInput">Username</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="usernameInput" required th:field="${user.username}"
-                       type="text">
+    <!-- Common Header -->
+    <header class="text-center p-4 pb-0 mb-6 w-full">
+        <h1 class="text-3xl font-bold mb-0.5">Fishing Session Tracker</h1>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="min-h-screen flex items-center justify-center">
+        <section class="bg-gray-900 p-8 rounded shadow-md w-96">
+            <h2 class="text-2xl font-semibold mb-6">Create Your Account</h2>
+            <form method="post" th:action="@{/register}" th:object="${user}">
+                <input id="username" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
+                <div class="mb-4">
+                    <label class="block mb-2" for="usernameInput">Username</label>
+                    <input class="w-full px-3 py-2 bg-gray-800 rounded" id="usernameInput" required th:field="${user.username}"
+                           type="text">
+                </div>
+                <div class="mb-4">
+                    <label class="block mb-2" for="name">Name</label>
+                    <input class="w-full px-3 py-2 bg-gray-800 rounded" id="name" required th:field="${user.name}"
+                           type="text">
+                </div>
+                <div class="mb-4">
+                    <label class="block mb-2" for="email">Email</label>
+                    <input class="w-full px-3 py-2 bg-gray-800 rounded" id="email" required th:field="${user.email}"
+                           type="email">
+                </div>
+                <div class="mb-6">
+                    <label class="block mb-2" for="password">Password</label>
+                    <input class="w-full px-3 py-2 bg-gray-800 rounded" id="password" required th:field="${user.password}"
+                           type="password">
+                </div>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert"
+                     th:if="${error}">
+                    <span class="block sm:inline" th:text="${error}"></span>
+                </div>
+                <button class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+                        type="submit">
+                    Register
+                </button>
+            </form>
+            <div class="mt-4 text-center">
+                <a class="text-blue-400 hover:underline" href="/login">
+                    Already have an account? Login here
+                </a>
             </div>
-            <div class="mb-4">
-                <label class="block mb-2" for="name">Name</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="name" required th:field="${user.name}"
-                       type="text">
-            </div>
-            <div class="mb-4">
-                <label class="block mb-2" for="email">Email</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="email" required th:field="${user.email}"
-                       type="email">
-            </div>
-            <div class="mb-6">
-                <label class="block mb-2" for="password">Password</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="password" required th:field="${user.password}"
-                       type="password">
-            </div>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert"
-                 th:if="${error}">
-                <span class="block sm:inline" th:text="${error}"></span>
-            </div>
-            <button class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
-                    type="submit">
-                Register
-            </button>
-        </form>
-        <div class="mt-4 text-center">
-            <a class="text-blue-400 hover:underline" href="/login">
-                Already have an account? Login here
-            </a>
-        </div>
-    </section>
-</main>
-<footer class="text-center p-4">
-    <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
-</footer>
+        </section>
+    </main>
+
+    <!-- Common Footer -->
+    <footer class="text-center p-4 h-20 bottom-0 bg-gray-800 w-full">
+        <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
+    </footer>
 </body>
 </html>
