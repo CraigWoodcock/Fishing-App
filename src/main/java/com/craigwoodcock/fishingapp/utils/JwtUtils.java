@@ -3,8 +3,7 @@ package com.craigwoodcock.fishingapp.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -12,20 +11,27 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-    private static final long EXPIRATION_TIME = 864_000_000; // 10 days
-    private static final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
+    private final long expirationTime; // 10 days
+
+    private final SecretKey secretKey;
+
+
+    public JwtUtils(@Value("${jwt.expiration}") long expirationTime, SecretKey secretKey) {
+        this.expirationTime = expirationTime;
+        this.secretKey = secretKey;
+    }
 
     public String generateToken(String username) {
 
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
+        Date expiryDate = new Date(now.getTime() + expirationTime);
 
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(expiryDate)
-                .signWith(SECRET_KEY)
+                .signWith(secretKey)
                 .compact();
     }
 
@@ -37,7 +43,7 @@ public class JwtUtils {
 
     private Claims extractAllClaims(String token) {
         return Jwts.parser()
-                .verifyWith(SECRET_KEY)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
