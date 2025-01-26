@@ -28,24 +28,24 @@ public class FishingAppApplication {
             public void run(String... args) throws Exception {
 
 
-                // create/update initial USER account
-                User user = userRepository.findByUsername("craig").orElse(new User());
-                log.info("Updating user account for" + user.getUsername());
-                user.setUsername("craig");
-                user.setName("craig");
-                user.setEmail("craig@craig.com");
-
-                user.setPassword(passwordEncoder.encode("craig"));
-                if (user.getCreatedAt() == null) {
-                    user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-                }
-                user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-                user.setRole(Role.USER);
-                userRepository.save(user);
-                log.info("Demo user account " + user.getUsername() + " has been created/updated with the role " + user.getRole());
+//                // create/update initial USER account
+//                User user = userRepository.findByUsername("craig").orElse(new User());
+//                log.info("Updating user account for" + user.getUsername());
+//                user.setUsername("craig");
+//                user.setName("craig");
+//                user.setEmail("craig@craig.com");
+//
+//                user.setPassword(passwordEncoder.encode("craig"));
+//                if (user.getCreatedAt() == null) {
+//                    user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
+//                }
+//                user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
+//                user.setRole(Role.USER);
+//                userRepository.save(user);
+//                log.info("Demo user account " + user.getUsername() + " has been created/updated with the role " + user.getRole());
 
                 //Create/Update ADMIN account
-                user = userRepository.findByUsername("admin").orElse(new User());
+                User user = userRepository.findByUsername("admin").orElse(new User());
                 log.info("Creating/Updating admin account");
                 user.setUsername("admin");
                 user.setName("admin");
