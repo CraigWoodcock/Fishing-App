@@ -26,21 +26,39 @@ public class FishingAppApplication {
         return new CommandLineRunner() {
             @Override
             public void run(String... args) throws Exception {
-                if (!userRepository.existsByUsername("craig123")) {
-                    User user = new User();
-                    log.info("cr");
-                    user.setUsername("craig123");
-                    user.setName("craig");
-                    user.setEmail("craig@gmail.com");
-                    user.setPassword(passwordEncoder.encode("craig"));
+
+
+                // create/update initial USER account
+                User user = userRepository.findByUsername("craig").orElse(new User());
+                log.info("Updating user account for" + user.getUsername());
+                user.setUsername("craig");
+                user.setName("craig");
+                user.setEmail("craig@craig.com");
+
+                user.setPassword(passwordEncoder.encode("craig"));
+                if (user.getCreatedAt() == null) {
                     user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-                    user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-                    user.setRole(Role.USER);
-                    userRepository.save(user);
-                } else {
-                    log.info("This user already exists");
-                    log.info("starting application");
                 }
+                user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
+                user.setRole(Role.USER);
+                userRepository.save(user);
+                log.info("Demo user account " + user.getUsername() + " has been created/updated with the role " + user.getRole());
+
+                //Create/Update ADMIN account
+                user = userRepository.findByUsername("admin").orElse(new User());
+                log.info("Creating/Updating admin account");
+                user.setUsername("admin");
+                user.setName("admin");
+                user.setEmail("admin@admin.com");
+                user.setPassword(passwordEncoder.encode("admin"));
+                if (user.getCreatedAt() == null) {
+                    user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
+                }
+                user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
+                user.setRole(Role.ADMIN);
+                userRepository.save(user);
+                log.info("Admin account has been created/updated with the role " + user.getRole());
+
             }
         };
     }
