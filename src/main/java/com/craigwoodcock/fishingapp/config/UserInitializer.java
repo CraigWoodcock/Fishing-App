@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.logging.Logger;
@@ -17,11 +16,11 @@ import java.util.logging.Logger;
  * Initializes default users in the application upon startup.
  * This component is responsible for creating or resetting the admin user
  * based on application properties.
- * 
+ *
  * @author Craig Woodcock
  * @version 1.0
  */
-@Component
+
 public class UserInitializer {
 
     private static final Logger log = Logger.getLogger(UserInitializer.class.getName());
