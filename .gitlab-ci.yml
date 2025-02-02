@@ -71,7 +71,7 @@ deploy-to-aws-job:
       export DB_IP=$DB_IP
       export DB_NAME=$DB_NAME
       export JWT_SECRET=$JWT_SECRET
-      export MYSQL_PWD=$MYSQLPWD
+      export MYSQL_PWD=$MYSQL_PWD
       export ADMIN_PASS=$ADMIN_PASS
       
       
