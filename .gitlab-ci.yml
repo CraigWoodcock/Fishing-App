@@ -36,9 +36,9 @@ build-job: # This job runs in the build stage, which runs first.
 #     - echo "THE APP STARTED SUCCESSFULLY!!.."
 
 upload-to-s3-job:
-  image: 
+  image:
     name: amazon/aws-cli
-    entrypoint: ['']
+    entrypoint: [ '' ]
   stage: upload
   script:
     - echo "copying to s3"
@@ -46,12 +46,12 @@ upload-to-s3-job:
     - aws s3 ls s3://fishingappjars
   only:
     - main
-  
+
 
 deploy-to-aws-job:
   image:
     name: amazon/aws-cli
-    entrypoint: ['']
+    entrypoint: [ '' ]
   stage: deploy
   script:
     - echo "setting access key id"
@@ -72,11 +72,12 @@ deploy-to-aws-job:
       export DB_NAME=$DB_NAME
       export JWT_SECRET=$JWT_SECRET
       export MYSQL_PWD=$MYSQLPWD
+      export ADMIN_PASS=$ADMIN_PASS
       
       
       java -jar /opt/app/app.jar" | base64 -w 0)
-    
-     # Get the latest version number
+      
+      # Get the latest version number
     - LATEST_VERSION=$(aws ec2 describe-launch-templates --launch-template-names FishingApp-LT --query 'LaunchTemplates[0].LatestVersionNumber' --output text)
 
     # Create new version with updated user data
