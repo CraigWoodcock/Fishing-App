@@ -118,11 +118,15 @@ public class UserService {
 
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-        for (User user : users) {
-            userDtos.add(new UserDto(user));
-        }
+        try {
+            for (User user : users) {
+                userDtos.add(new UserDto(user));
+            }
 
-        return userDtos;
+            return userDtos;
+        } catch (UserNotFoundException ex) {
+            throw new UserNotFoundException("No registered users found!");
+        }
     }
 
     public User findById(Long id) throws UserNotFoundException {

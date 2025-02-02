@@ -16,6 +16,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.logging.Logger;
 
+/**
+ * Controller handling fishing session management operations for the web interface.
+ * Provides functionality for creating, viewing, updating, and deleting fishing sessions.
+ * 
+ * @author Craig Woodcock
+ * @version 1.0
+ */
 @Controller
 @RequestMapping("/sessions")
 public class SessionController {
@@ -32,13 +39,29 @@ public class SessionController {
         this.anglerRepository = anglerRepository;
     }
 
+    /**
+     * Displays the form for creating a new fishing session.
+     *
+     * @param model The Spring MVC model
+     * @return The new session form view
+     */
     @GetMapping("/new")
     public String newSessionForm(Model model) {
         model.addAttribute("session", new Session());
         return "new-session";
     }
 
-
+    /**
+     * Creates a new fishing session.
+     *
+     * @param venue The fishing venue name
+     * @param startDate The start date of the session
+     * @param durationHours Duration of the session in hours
+     * @param anglersList List of anglers participating
+     * @param authentication Current user's authentication
+     * @param redirectAttributes Redirect attributes for flash messages
+     * @return Redirect to dashboard
+     */
     @PostMapping("/create")
     public String createSession(@RequestParam String venue,
                                 @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
@@ -57,16 +80,14 @@ public class SessionController {
 
     @GetMapping("/{id}")
     public String viewSession(@PathVariable Long id, Model model) {
-        Session session = sessionService.getSessionById(id)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+        Session session = sessionService.getSessionById(id);
         model.addAttribute("sess", session);
         return "view-session";
     }
 
     @GetMapping("/{id}/edit")
     public String editSessionForm(@PathVariable Long id, Model model) {
-        Session session = sessionService.getSessionById(id)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+        Session session = sessionService.getSessionById(id);
         model.addAttribute("sessions", session);
         return "sessions/form";
     }

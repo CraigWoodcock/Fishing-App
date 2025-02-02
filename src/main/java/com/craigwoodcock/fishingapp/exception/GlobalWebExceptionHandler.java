@@ -3,9 +3,32 @@ package com.craigwoodcock.fishingapp.exception;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-@ControllerAdvice(basePackages = "com.craigwoodcock.fishingapp.webController")
+@ControllerAdvice(basePackages = "com.craigwoodcock.fishingapp.controller.webController")
 public class GlobalWebExceptionHandler {
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ModelAndView handleNotFound(NoHandlerFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView("error/404");
+        modelAndView.addObject("message", "We don't seem to have a page there!");
+        return modelAndView;
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ModelAndView handleNoResourceFound(NoResourceFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView("error/404");
+        modelAndView.addObject("message", "Page not found");
+        return modelAndView;
+    }
+
+    @ExceptionHandler(SessionNotFoundException.class)
+    public ModelAndView handleSessionNotFound(SessionNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView("error/404");
+        modelAndView.addObject("message", ex.getMessage());
+        return modelAndView;
+    }
 
     @ExceptionHandler(UserNotFoundException.class)
     public ModelAndView handleUserNotFoundException(UserNotFoundException ex) {

@@ -120,10 +120,11 @@ public class SecurityConfig {
      * @throws Exception if an error occurs during security configuration
      */
     @Bean
+    @Order(2)
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login", "/index", "/register", "/js/**", "/css/**", "error/**", "/docs", "/actuator/health").permitAll()  // Public resources
+                        .requestMatchers("/", "/login", "/index", "/register", "/js/**", "/css/**", "/error", "/error/**", "/docs", "/actuator/health", "/swagger-ui/", "/swagger-ui/**").permitAll()  // Public resources
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // Admin-only endpoints
                         .anyRequest().hasRole("USER")                   // All other endpoints require USER role
                 )
@@ -139,6 +140,9 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")           // Clean up session cookie
                         .invalidateHttpSession(true)           // Invalidate session
                         .permitAll())
+                .exceptionHandling(exceptions -> exceptions
+                        .accessDeniedPage("/error/403")  // Handle forbidden access attempts
+                )
                 .userDetailsService(customUserDetailsService);
 
         return http.build();

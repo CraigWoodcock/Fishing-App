@@ -1,5 +1,6 @@
 package com.craigwoodcock.fishingapp.service;
 
+import com.craigwoodcock.fishingapp.exception.SessionNotFoundException;
 import com.craigwoodcock.fishingapp.model.entity.Angler;
 import com.craigwoodcock.fishingapp.model.entity.AnglerSession;
 import com.craigwoodcock.fishingapp.model.entity.Session;
@@ -15,7 +16,6 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -80,8 +80,10 @@ public class SessionService {
         anglerSessionRepository.save(anglerSession);
     }
 
-    public Optional<Session> getSessionById(long id) {
-        return sessionRepository.findById(id);
+    public Session getSessionById(long id) throws SessionNotFoundException {
+
+        return sessionRepository.findById(id).orElseThrow(() -> new SessionNotFoundException("That session no longer exists!"));
+
     }
 
     public List<Session> getAllSessionsByUser(User user) {
