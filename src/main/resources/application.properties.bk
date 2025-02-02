@@ -8,3 +8,6 @@ jwt.expiration=864000000
 admin.username=admin
 admin.password=${ADMIN_PASS}
 admin.email=admin@admin.com
+springdoc.api-docs.path=/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.swagger-ui.operationsSorter=method
