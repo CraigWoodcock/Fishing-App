@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -29,6 +30,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  */
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final CustomUserDetailsService customUserDetailsService;
@@ -96,7 +98,8 @@ public class SecurityConfig {
         http
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**").permitAll()  // Public authentication endpoints
+                        .requestMatchers("/api/auth/**", "/api/admin/login").permitAll()  // Public authentication endpoints
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()                  // All other API endpoints require authentication
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))  // No session management for API
@@ -125,6 +128,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/login", "/index", "/register", "/js/**", "/css/**", "/error", "/error/**", "/docs", "/actuator/health", "/swagger-ui/", "/swagger-ui/**").permitAll()  // Public resources
+                        .requestMatchers("/api/**").permitAll() //exclude api endpoints from web security filter
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // Admin-only endpoints
                         .anyRequest().hasRole("USER")                   // All other endpoints require USER role
                 )
