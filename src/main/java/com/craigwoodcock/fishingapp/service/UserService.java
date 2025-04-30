@@ -1,6 +1,8 @@
 package com.craigwoodcock.fishingapp.service;
 
+import com.craigwoodcock.fishingapp.exception.InvalidCredentialsException;
 import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
+import com.craigwoodcock.fishingapp.exception.UserForbiddenException;
 import com.craigwoodcock.fishingapp.exception.UserNotFoundException;
 import com.craigwoodcock.fishingapp.model.dto.UserDto;
 import com.craigwoodcock.fishingapp.model.entity.JwtToken;
@@ -155,7 +157,7 @@ public class UserService {
     public void deleteUserByUsername(String username) throws UserNotFoundException {
         try {
             User user = findByUsername(username);
-            userRepository.delete(user);
+            deleteUserAndAssociatedData(user);
         } catch (UserNotFoundException ex) {
             throw new UserNotFoundException("No User Found");
         }
@@ -203,5 +205,26 @@ public class UserService {
 
         userRepository.delete(user);
         log.info("User Deleted: " + user.getUsername());
+    }
+
+    /**
+     * Authenticate an admin user
+     *
+     * @throws UserNotFoundException       if user doesn't exist
+     * @throws UserForbiddenException      if user is not an admin
+     * @throws InvalidCredentialsException if passowrd is wrong
+     */
+
+    public User authenticateAdminUser(String username, String password) {
+        User user = findByUsername(username);
+
+        // check password matches
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new InvalidCredentialsException("Incorrect Password");
+        }
+        if (user.getRole() != Role.ADMIN) {
+            throw new UserForbiddenException("Admin access is required");
+        }
+        return user;
     }
 }

@@ -1,10 +1,8 @@
 package com.craigwoodcock.fishingapp.controller.apiController;
 
-import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.model.dto.AuthRequest;
 import com.craigwoodcock.fishingapp.model.dto.AuthResponse;
 import com.craigwoodcock.fishingapp.model.dto.UserDto;
-import com.craigwoodcock.fishingapp.model.entity.Role;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.service.UserService;
 import com.craigwoodcock.fishingapp.utils.JwtUtils;
@@ -41,33 +39,19 @@ public class AdminApiController {
     @PostMapping("/register")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> registerAdminUser(@RequestBody User user) {
-        try {
-            userService.registerAdminUser(user);
-            UserDto createdUser = userService.getByUsername(user.getUsername());
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-        } catch (UserAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error registering admin user: " + e.getMessage());
-        }
+        userService.registerAdminUser(user);
+        UserDto createdUser = userService.getByUsername(user.getUsername());
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> adminLogin(@RequestBody AuthRequest request) {
-        User user = userService.findByUsername(request.getUsername());
-        if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            // Explicitly check for ADMIN role
-            if (user.getRole() == Role.ADMIN) {
-                String token = jwtUtils.generateToken(user.getUsername());
-                return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));
-            } else {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(new AuthResponse("Admin access denied", user.getUsername()));
-            }
-        }
-        return ResponseEntity.badRequest()
-                .body(new AuthResponse("Invalid username or password", null));
+        User user = userService.authenticateAdminUser(request.getUsername(), request.getPassword());
+
+        String token = jwtUtils.generateToken(user.getUsername());
+        return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));
+
     }
 
     /**
@@ -78,11 +62,11 @@ public class AdminApiController {
      * @return ResponseEntity with a success message
      */
 
-    @DeleteMapping("/users/username/{username}")
+    @DeleteMapping("/users/deleteByUsername/{username}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUserByUsername(@PathVariable String username) {
         userService.deleteUserByUsername(username);
-        return ResponseEntity.ok("User deleted " + username);
+        return ResponseEntity.ok("User deleted: " + username);
     }
 
     /**
@@ -92,7 +76,7 @@ public class AdminApiController {
      * @param userId The ID of the user to be deleted
      * @return ResponseEntity with a success message
      */
-    @DeleteMapping("/users/id/{userId}")
+    @DeleteMapping("/users/deleteById/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteUserById(@PathVariable Long userId) {
         userService.deleteUserById(userId);

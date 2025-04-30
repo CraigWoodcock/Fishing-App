@@ -51,6 +51,16 @@ public class GlobalApiExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseBody
+    public ResponseEntity<ApiErrorResponse> handleInvalidCredentials(InvalidCredentialsException ex) {
+        ApiErrorResponse error = new ApiErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(UserForbiddenException.class)
     @ResponseBody
     public ResponseEntity<ApiErrorResponse> handleForbidden(UserForbiddenException ex) {
