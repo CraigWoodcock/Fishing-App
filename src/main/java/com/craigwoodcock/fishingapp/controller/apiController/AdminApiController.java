@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +19,10 @@ import java.util.List;
 public class AdminApiController {
 
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
 
-    public AdminApiController(UserService userService, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
+    public AdminApiController(UserService userService, JwtUtils jwtUtils) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
     }
 
@@ -42,16 +39,15 @@ public class AdminApiController {
         userService.registerAdminUser(user);
         UserDto createdUser = userService.getByUsername(user.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
-
     }
 
     @PostMapping("/login")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<AuthResponse> adminLogin(@RequestBody AuthRequest request) {
         User user = userService.authenticateAdminUser(request.getUsername(), request.getPassword());
 
         String token = jwtUtils.generateToken(user.getUsername());
         return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));
-
     }
 
     /**

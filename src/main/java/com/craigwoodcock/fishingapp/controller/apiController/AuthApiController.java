@@ -62,8 +62,8 @@ public class AuthApiController {
      */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
-        User user = userService.findByUsername(request.getUsername());
-        if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        User user = userService.findByUsername(request.getUsername().toLowerCase());
+        if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword()) && user.getRole().equals("USER")) {
             String token = jwtUtils.generateToken(user.getUsername());
 
             return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));

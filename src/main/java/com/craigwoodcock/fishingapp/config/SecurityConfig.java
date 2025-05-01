@@ -98,7 +98,7 @@ public class SecurityConfig {
         http
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**", "/api/admin/login").permitAll()  // Public authentication endpoints
+                        .requestMatchers("/api/auth/**").permitAll()  // Public authentication endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()                  // All other API endpoints require authentication
                 )

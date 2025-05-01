@@ -46,13 +46,14 @@ public class UserService {
 
     @Transactional
     public void registerUser(User user) throws UserAlreadyExistsException {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(user.getUsername().toLowerCase()).isPresent()) {
             throw new UserAlreadyExistsException("Username already exists");
         }
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Email already exists");
         }
         log.info("Registering user: " + user.getUsername());
+        user.setUsername(user.getUsername().toLowerCase());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("encoded password");
         user.setRole(Role.USER);
@@ -69,13 +70,14 @@ public class UserService {
 
     @Transactional
     public void registerAdminUser(User user) throws UserAlreadyExistsException {
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+        if (userRepository.findByUsername(user.getUsername().toLowerCase()).isPresent()) {
             throw new UserAlreadyExistsException("Username already exists");
         }
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Email already exists");
         }
         log.info("Registering user: " + user.getUsername());
+        user.setUsername(user.getUsername().toLowerCase());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("encoded password");
         user.setRole(Role.ADMIN);
@@ -108,7 +110,7 @@ public class UserService {
     }
 
     public UserDto getByUsername(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UserNotFoundException("Username : " + username + "  not found"));
+        User user = userRepository.findByUsername(username.toLowerCase()).orElseThrow(() -> new UserNotFoundException("Username : " + username + "  not found"));
         return new UserDto(user);
 
     }
@@ -120,7 +122,7 @@ public class UserService {
 
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsername(username.toLowerCase())
                 .orElseThrow(() -> new UserNotFoundException("Username not found"));
     }
 
