@@ -2,29 +2,32 @@
 /**
  * Web controllers package handling all web interface endpoints for the Fishing Application.
  *
- * <p>This package contains controllers that:
+ * <p>This package contains Spring MVC controllers that:
  * <ul>
  *   <li>Handle web page requests</li>
- *   <li>Return view templates</li>
  *   <li>Process form submissions</li>
- *   <li>Manage session-based authentication</li>
- *   <li>Handle web-specific business logic</li>
+ *   <li>Manage web sessions</li>
+ *   <li>Return view templates</li>
  * </ul>
  *
- * <p>Web controllers use Spring MVC's view resolution to render templates and handle
- * traditional web application flows. Authentication is handled through form-based
- * login as configured in the security package.
- *
- * <p>These controllers manage the user interface aspects of the application, including:
+ * <p>Key controllers:
  * <ul>
- *   <li>User dashboard</li>
- *   <li>Registration and login pages</li>
- *   <li>Profile management</li>
- *   <li>Administrative interfaces</li>
+ *   <li>AuthController - Login and registration pages</li>
+ *   <li>SessionController - Fishing session management views</li>
+ *   <li>DashboardController - User dashboard and statistics</li>
+ * </ul>
+ *
+ * <p>View templates used by these controllers are located in src/main/resources/templates
+ * and include:
+ * <ul>
+ *   <li>login.html - User authentication</li>
+ *   <li>register.html - New user registration</li>
+ *   <li>dashboard.html - User dashboard</li>
+ *   <li>new-session.html - Create fishing session</li>
+ *   <li>view-session.html - View session details</li>
  * </ul>
  *
  * @author Craig Woodcock
  * @version 1.0
- * @since 1.0
  */
 package com.craigwoodcock.fishingapp.controller.webController;

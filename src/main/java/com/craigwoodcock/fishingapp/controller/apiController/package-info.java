@@ -1,21 +1,29 @@
 // File: com/craigwoodcock/fishingapp/controller/apiController/package-info.java
 /**
- * REST API controllers package handling all API endpoints for the Fishing Application.
+ * REST API controllers package for the Fishing Application.
  *
- * <p>This package contains controllers that:
+ * <p>This package contains REST controllers that handle API requests and return JSON responses.
+ * These controllers:
  * <ul>
- *   <li>Process RESTful API requests</li>
- *   <li>Return JSON/XML responses</li>
- *   <li>Handle API authentication and authorization</li>
- *   <li>Implement API versioning</li>
- *   <li>Process API-specific business logic</li>
+ *   <li>Handle API authentication</li>
+ *   <li>Process JSON requests</li>
+ *   <li>Return JSON responses</li>
+ *   <li>Use JWT for authorization</li>
  * </ul>
  *
- * <p>API endpoints follow RESTful conventions and are secured using JWT authentication
- * as configured in the security package. All responses follow standardized API
- * response formats for consistency.
+ * <p>Key controllers:
+ * <ul>
+ *   <li>AuthApiController - Handles authentication endpoints</li>
+ *   <li>UserApiController - User management endpoints</li>
+ * </ul>
  *
- * <p>Common URL prefix for all API endpoints: /api/
+ * <p>API endpoints follow REST conventions and use standard HTTP methods:
+ * <ul>
+ *   <li>GET - Retrieve resources</li>
+ *   <li>POST - Create new resources</li>
+ *   <li>PUT - Update existing resources</li>
+ *   <li>DELETE - Remove resources</li>
+ * </ul>
  *
  * @author Craig Woodcock
  * @version 1.0
