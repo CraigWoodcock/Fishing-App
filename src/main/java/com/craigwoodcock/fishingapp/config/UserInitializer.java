@@ -6,6 +6,7 @@ import com.craigwoodcock.fishingapp.repository.UserRepository;
 import com.craigwoodcock.fishingapp.utils.DateFormatter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -20,7 +21,7 @@ import java.util.logging.Logger;
  * @author Craig Woodcock
  * @version 1.0
  */
-
+@Configuration
 public class UserInitializer {
 
     private static final Logger log = Logger.getLogger(UserInitializer.class.getName());

@@ -7,12 +7,15 @@
     <link rel="stylesheet" th:href="@{/css/output.css}">
 </head>
 <body class="bg-black text-white">
-    <main class="min-h-screen flex items-center justify-center">
-        <section class="bg-gray-900 p-8 rounded shadow-md w-96 text-center">
-            <h1 class="text-2xl font-semibold mb-6">403 - Forbidden</h1>
-            <p class="mb-4">You do not have permission to access this page.</p>
-            <a href="/dashboard" class="text-red-400 hover:text-red-300">Back to Dashboard</a>
-        </section>
-    </main>
+<main class="min-h-screen flex items-center justify-center">
+    <section class="bg-gray-900 p-8 rounded shadow-md w-96 text-center">
+        <h1 class="text-2xl font-semibold mb-6">403 - Forbidden</h1>
+        <p class="mb-4">You do not have permission to access this page.</p>
+        <p class="mb-6 text-gray-400" th:if="${message}" th:text="${message}"></p>
+        <div class="mt-4">
+            <a class="text-gray-400 hover:text-gray-300 text-sm" href="/login">Return to Login</a>
+        </div>
+    </section>
+</main>
 </body>
 </html>
