@@ -214,7 +214,7 @@ public class UserService {
      *
      * @throws UserNotFoundException       if user doesn't exist
      * @throws UserForbiddenException      if user is not an admin
-     * @throws InvalidCredentialsException if passowrd is wrong
+     * @throws InvalidCredentialsException if password is wrong
      */
 
     public User authenticateAdminUser(String username, String password) {

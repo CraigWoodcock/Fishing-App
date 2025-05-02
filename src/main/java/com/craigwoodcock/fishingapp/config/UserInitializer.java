@@ -55,7 +55,7 @@ public class UserInitializer {
      */
     @EventListener(ApplicationReadyEvent.class)
     public void initializeUsers() {
-        createUserIfNotExists(adminUsername, adminEmail, adminPassword, Role.ADMIN);
+        createUserIfNotExists(adminUsername, adminEmail, adminPassword);
     }
 
     /**
@@ -64,12 +64,11 @@ public class UserInitializer {
      * @param username The username for the user
      * @param email    The email address for the user
      * @param password The password for the user
-     * @param role     The role to assign to the user
      */
-    private void createUserIfNotExists(String username, String email, String password, Role role) {
+    private void createUserIfNotExists(String username, String email, String password) {
         if (!userRepository.findByUsername(username).isPresent()) {
             User user = new User();
-            user.setUsername(username);
+            user.setUsername(username.toLowerCase());
             user.setName(username);
             user.setEmail(email);
             user.setPassword(passwordEncoder.encode(password));
@@ -77,14 +76,14 @@ public class UserInitializer {
             user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
             user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
             userRepository.save(user);
-            log.info("Created " + role + " account with username " + username);
+            log.info("Created " + Role.ADMIN + " account with username " + username);
         } else {
             log.info("Resetting existing user " + username);
-            User user = userRepository.findByUsername(username).orElse(null);
+            User user = userRepository.findByUsername(username.toLowerCase()).orElse(null);
             user.setPassword(passwordEncoder.encode(password));
             user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
             userRepository.save(user);
-            log.info(role + " account with username " + username + " has been reset");
+            log.info(Role.ADMIN + " account with username " + username.toLowerCase() + " has been reset");
         }
     }
 }
