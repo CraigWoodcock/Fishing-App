@@ -28,7 +28,7 @@ public class AdminApiController {
 
     /**
      * Endpoint to register a new admin user.
-     * Only accessible by users with ADMIN role.
+     * Only accessible by users with ADMIN role .
      *
      * @param user The user object containing admin registration details
      * @return ResponseEntity with the created UserDto or error message

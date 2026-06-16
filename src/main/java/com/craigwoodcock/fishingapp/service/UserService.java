@@ -168,8 +168,13 @@ public class UserService {
 
     @Transactional
     public void deleteUserById(Long id) {
-        User user = findById(id);
-        deleteUserAndAssociatedData(user);
+
+        try {
+            User user = findById(id);
+            deleteUserAndAssociatedData(user);
+        } catch (UserNotFoundException ex) {
+            throw new UserNotFoundException("No User Found With The ID of: " + id);
+        }
     }
 
     @Transactional
@@ -179,7 +184,7 @@ public class UserService {
         List<User> users = userRepository.findAll();
         for (User user : users) {
             // Only delete users with USER role
-            if (!user.getUsername().equals(loggedInAdmin)) {
+            if (!user.getUsername().equals(loggedInAdmin) && !user.getRole().equals(Role.ADMIN)) {
                 deleteUserAndAssociatedData(user);
             }
 
