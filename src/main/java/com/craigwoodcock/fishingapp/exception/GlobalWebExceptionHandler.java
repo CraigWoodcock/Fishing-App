@@ -30,6 +30,20 @@ public class GlobalWebExceptionHandler {
         return modelAndView;
     }
 
+    @ExceptionHandler(CatchNotFoundException.class)
+    public ModelAndView handleCatchNotFound(CatchNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView("error/404");
+        modelAndView.addObject("message", ex.getMessage());
+        return modelAndView;
+    }
+
+    @ExceptionHandler(AnglerNotFoundException.class)
+    public ModelAndView handleAnglerNotFound(AnglerNotFoundException ex) {
+        ModelAndView modelAndView = new ModelAndView("error/404");
+        modelAndView.addObject("message", ex.getMessage());
+        return modelAndView;
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ModelAndView handleUserNotFoundException(UserNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView("error/404");

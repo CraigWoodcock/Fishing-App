@@ -13,12 +13,6 @@ public class Angler {
     @Column(name = "id", nullable = false)
     private Long id;
 
-//    @ManyToMany
-//    @JoinTable(name = "angler_session",
-//            joinColumns = @JoinColumn(name = "angler_id"),
-//            inverseJoinColumns = @JoinColumn(name = "session_id"))
-//    private List<Session> sessions = new LinkedList();
-
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
@@ -39,7 +33,6 @@ public class Angler {
 
     }
 
-
     public Set<AnglerSession> getAnglerSessions() {
         return anglerSessions;
     }
@@ -55,15 +48,6 @@ public class Angler {
     public void setId(Long id) {
         this.id = id;
     }
-
-//    public List<Session> getSessions() {
-//        return sessions;
-//    }
-//
-//    public void setSessions(List<Session> sessions) {
-//        this.sessions = sessions;
-//    }
-
 
     public String getName() {
         return name;

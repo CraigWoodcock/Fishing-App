@@ -27,11 +27,6 @@ public class Session {
     @Column(name = "duration_hours", nullable = false)
     private Integer durationHours;
 
-//    @ManyToMany
-//    @JoinTable(name = "angler_session",
-//            joinColumns = @JoinColumn(name = "session_id"),
-//            inverseJoinColumns = @JoinColumn(name = "angler_id"))
-//    private Set<Angler> anglers = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Catch> catches = new LinkedHashSet<>();
@@ -100,14 +95,6 @@ public class Session {
     public void setDurationHours(Integer durationHours) {
         this.durationHours = durationHours;
     }
-
-//    public Set<Angler> getAnglers() {
-//        return anglers;
-//    }
-//
-//    public void setAnglers(Set<Angler> anglers) {
-//        this.anglers = anglers;
-//    }
 
     public Set<Catch> getCatches() {
         return catches;
