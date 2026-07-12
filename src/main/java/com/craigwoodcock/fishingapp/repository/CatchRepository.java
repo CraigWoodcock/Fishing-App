@@ -12,7 +12,15 @@ import java.util.List;
 public interface CatchRepository extends JpaRepository<Catch, Long> {
     List<Catch> findByAngler(Angler angler);
 
+
     List<Catch> findBySession(Session session);
 
+    /**
+     * Finds all catches recorded against a given session, so the session
+     * view page can list every fish caught during that trip.
+     *
+     * @param sessionId the id of the session
+     * @return the list of catches belonging to that session
+     */
     List<Catch> findBySessionId(Long sessionId);
 }
