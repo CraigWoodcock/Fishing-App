@@ -118,19 +118,5 @@ public class SessionService {
         return anglers;
     }
 
-//    public Catch addCatchToSession(Long sessionId, Long anglerId, Catch capture) {
-//        Session session = sessionRepository.findById(sessionId).orElseThrow(()-> new RuntimeException("Session not found"));
-//        Angler angler = anglerRepository.findById(anglerId).orElseThrow(()-> new RuntimeException("Angler not found"));
-//        capture.setSession(session);
-//        capture.setAngler(angler);
-//        return catchRepository.save(capture);
-//    }
-//
-//    public List<Catch> getCatchesBySession(Long sessionId) {
-//        return catchRepository.findBySessionId(sessionId);
-//    }
-//
-//    public void removeCatchFromSession(Long sessionId, Long catchId) {
-//        catchRepository.deleteById(catchId);
-//    }
+
 }

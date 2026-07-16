@@ -109,12 +109,7 @@ public class SessionController {
         redirectAttributes.addFlashAttribute("message", "Session Deleted Successfully");
         return "redirect:/dashboard";
     }
-
-//    @PostMapping("/{id}/anglers")
-//    public String addAngler(@PathVariable Long id, @ModelAttribute Angler angler) {
-//        sessionService.addAnglerToSession(id, angler);
-//        return "redirect:/sessions/" + id;
-//    }
+    
 
     @PostMapping("/{sessionId}/anglers/{anglerId}/delete")
     public String removeAngler(@PathVariable Long sessionId, @PathVariable Long anglerId) {
@@ -122,15 +117,4 @@ public class SessionController {
         return "redirect:/sessions/" + sessionId;
     }
 
-//    @PostMapping("/{sessionId}/anglers/{anglerId}/catches")
-//    public String addCatch(@PathVariable Long sessionId, @PathVariable Long anglerId, @ModelAttribute Catch capture) {
-//        sessionService.addCatchToSession(sessionId, anglerId, capture);
-//        return "redirect:/sessions/" + sessionId;
-//    }
-
-//    @PostMapping("/{sessionId}/catches/{catchId}/delete")
-//    public String removeCatch(@PathVariable Long sessionId, @PathVariable Long catchId) {
-//        sessionService.removeCatchFromSession(sessionId, catchId);
-//        return "redirect:/sessions/" + sessionId;
-//    }
 }
