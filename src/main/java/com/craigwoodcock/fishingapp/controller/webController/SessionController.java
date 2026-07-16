@@ -3,6 +3,7 @@ package com.craigwoodcock.fishingapp.controller.webController;
 import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
+import com.craigwoodcock.fishingapp.service.CatchService;
 import com.craigwoodcock.fishingapp.service.SessionService;
 import com.craigwoodcock.fishingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
 /**
  * Controller handling fishing session management operations for the web interface.
  * Provides functionality for creating, viewing, updating, and deleting fishing sessions.
- * 
+ *
  * @author Craig Woodcock
  * @version 1.0
  */
@@ -31,12 +32,14 @@ public class SessionController {
     private final SessionService sessionService;
     private final UserService userService;
     private final AnglerRepository anglerRepository;
+    private final CatchService catchService;
 
     @Autowired
-    public SessionController(SessionService sessionService, UserService userService, AnglerRepository anglerRepository) {
+    public SessionController(SessionService sessionService, UserService userService, AnglerRepository anglerRepository, CatchService catchService) {
         this.sessionService = sessionService;
         this.userService = userService;
         this.anglerRepository = anglerRepository;
+        this.catchService = catchService;
     }
 
     /**
@@ -54,11 +57,11 @@ public class SessionController {
     /**
      * Creates a new fishing session.
      *
-     * @param venue The fishing venue name
-     * @param startDate The start date of the session
-     * @param durationHours Duration of the session in hours
-     * @param anglersList List of anglers participating
-     * @param authentication Current user's authentication
+     * @param venue              The fishing venue name
+     * @param startDate          The start date of the session
+     * @param durationHours      Duration of the session in hours
+     * @param anglersList        List of anglers participating
+     * @param authentication     Current user's authentication
      * @param redirectAttributes Redirect attributes for flash messages
      * @return Redirect to dashboard
      */
@@ -82,6 +85,7 @@ public class SessionController {
     public String viewSession(@PathVariable Long id, Model model) {
         Session session = sessionService.getSessionById(id);
         model.addAttribute("sess", session);
+        model.addAttribute("catches", catchService.getCatchesForSession(id));
         return "view-session";
     }
 
