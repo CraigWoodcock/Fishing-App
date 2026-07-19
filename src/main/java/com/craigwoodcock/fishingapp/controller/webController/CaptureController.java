@@ -4,12 +4,14 @@ import com.craigwoodcock.fishingapp.model.entity.Angler;
 import com.craigwoodcock.fishingapp.model.entity.Catch;
 import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.service.CatchService;
+import com.craigwoodcock.fishingapp.service.S3Service;
 import com.craigwoodcock.fishingapp.service.SessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.math.BigDecimal;
@@ -18,8 +20,8 @@ import java.util.List;
 import java.util.logging.Logger;
 
 /**
- * Controller handling the recording, editing, and deletion of fish catches
- * against an existing fishing session.
+ * Controller handling the recording, viewing, editing, and deletion of fish
+ * catches against an existing fishing session, including S3 photo storage.
  *
  * @author Craig Woodcock
  * @version 1.0
@@ -32,10 +34,13 @@ public class CaptureController {
     private final CatchService catchService;
     private final SessionService sessionService;
 
+    private final S3Service s3Service;
+
     @Autowired
-    public CaptureController(CatchService catchService, SessionService sessionService) {
+    public CaptureController(CatchService catchService, SessionService sessionService, S3Service s3Service) {
         this.catchService = catchService;
         this.sessionService = sessionService;
+        this.s3Service = s3Service;
     }
 
     /**
@@ -49,14 +54,16 @@ public class CaptureController {
         Session session = sessionService.getSessionById(sessionId);
         List<Angler> anglers = sessionService.getAnglersForSession(sessionId);
 
-        model.addAttribute("session", session);
+        model.addAttribute("sess", session);
         model.addAttribute("anglers", anglers);
         model.addAttribute("catchRecord", new Catch());
         return "catches/new-catch";
     }
 
+
     /**
-     * Creates a new catch record for the session.
+     * Creates a new catch, uploading the supplied photo to S3 first (if any)
+     * and storing the resulting object key against the catch record.
      */
     @PostMapping
     public String createCatch(@PathVariable Long sessionId,
@@ -66,11 +73,28 @@ public class CaptureController {
                               @RequestParam String fishType,
                               @RequestParam BigDecimal weight,
                               @RequestParam(required = false) String notes,
-                              @RequestParam(required = false) String photoUrl,
+                              @RequestParam(required = false) MultipartFile photo,
                               RedirectAttributes redirectAttributes) {
-        catchService.createCatch(sessionId, anglerId, catchTime, pegOrSwim, fishType, weight, notes, photoUrl);
+        String photoKey = s3Service.uploadCatchPhoto(photo);
+        catchService.createCatch(sessionId, anglerId, catchTime, pegOrSwim, fishType, weight, notes, photoKey);
         redirectAttributes.addFlashAttribute("message", "Catch Logged");
         return "redirect:/sessions/" + sessionId;
+    }
+
+
+    /**
+     * Displays a single catch in full detail, with a full-quality signed
+     * image URL resolved for the view.
+     */
+    @GetMapping("/{catchId}")
+    public String viewCatch(@PathVariable Long sessionId, @PathVariable Long catchId, Model model) {
+        Session session = sessionService.getSessionById(sessionId);
+        Catch catchRecord = catchService.getCatchById(catchId);
+
+        model.addAttribute("sess", session);
+        model.addAttribute("catchRecord", catchRecord);
+        model.addAttribute("photoUrl", s3Service.getPhotoUrl(catchRecord.getPhotoUrl()));
+        return "catches/view-catch";
     }
 
     /**
@@ -82,14 +106,17 @@ public class CaptureController {
         Catch catchRecord = catchService.getCatchById(catchId);
         List<Angler> anglers = sessionService.getAnglersForSession(sessionId);
 
-        model.addAttribute("session", session);
+        model.addAttribute("sess", session);
         model.addAttribute("catchRecord", catchRecord);
         model.addAttribute("anglers", anglers);
+        model.addAttribute("photoUrl", s3Service.getPhotoUrl(catchRecord.getPhotoUrl()));
         return "catches/edit-catch";
     }
 
     /**
-     * Applies edits to an existing catch record.
+     * Applies edits to an existing catch. If a new photo is uploaded, the
+     * old one is deleted from S3 and replaced; otherwise the existing photo
+     * key is left untouched.
      */
     @PostMapping("/{catchId}")
     public String updateCatch(@PathVariable Long sessionId,
@@ -100,19 +127,29 @@ public class CaptureController {
                               @RequestParam String fishType,
                               @RequestParam BigDecimal weight,
                               @RequestParam(required = false) String notes,
-                              @RequestParam(required = false) String photoUrl,
+                              @RequestParam(required = false) MultipartFile photo,
                               RedirectAttributes redirectAttributes) {
-        catchService.updateCatch(catchId, anglerId, catchTime, pegOrSwim, fishType, weight, notes, photoUrl);
+        Catch existing = catchService.getCatchById(catchId);
+        String photoKey = existing.getPhotoUrl();
+
+        if (photo != null && !photo.isEmpty()) {
+            s3Service.deletePhoto(existing.getPhotoUrl());
+            photoKey = s3Service.uploadCatchPhoto(photo);
+        }
+
+        catchService.updateCatch(catchId, anglerId, catchTime, pegOrSwim, fishType, weight, notes, photoKey);
         redirectAttributes.addFlashAttribute("message", "Catch Updated");
         return "redirect:/sessions/" + sessionId;
     }
 
     /**
-     * Deletes a catch record from a session.
+     * Deletes a catch record and its associated photo from S3.
      */
     @PostMapping("/{catchId}/delete")
     public String deleteCatch(@PathVariable Long sessionId, @PathVariable Long catchId,
                               RedirectAttributes redirectAttributes) {
+        Catch catchRecord = catchService.getCatchById(catchId);
+        s3Service.deletePhoto(catchRecord.getPhotoUrl());
         catchService.deleteCatch(catchId);
         redirectAttributes.addFlashAttribute("message", "Catch Removed");
         return "redirect:/sessions/" + sessionId;

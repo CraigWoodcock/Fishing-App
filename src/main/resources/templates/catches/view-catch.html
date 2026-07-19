@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>Catch Details - Fishing Session Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-black text-white">
+<header class="text-center p-4 pb-0 mb-6 w-full">
+    <h1 class="text-3xl font-bold mb-0.5">Fishing Session Tracker</h1>
+</header>
+
+<main class="container mx-auto px-4 py-8 max-w-lg">
+    <h1 class="text-3xl font-bold mb-8" th:text="${catchRecord.fishType}"></h1>
+
+    <img alt="Catch photo" class="w-full rounded-lg mb-6" th:if="${photoUrl}" th:src="${photoUrl}">
+    <div class="w-full h-64 bg-gray-800 rounded-lg mb-6 flex items-center justify-center text-gray-400"
+         th:unless="${photoUrl}">No photo
+    </div>
+
+    <div class="bg-gray-800 p-6 rounded-lg mb-8">
+        <p class="mb-2"><strong>Angler:</strong> <span th:text="${catchRecord.angler.name}"></span></p>
+        <p class="mb-2"><strong>Weight:</strong> <span th:text="${catchRecord.weight + ' lb'}"></span></p>
+        <p class="mb-2"><strong>Caught:</strong>
+            <span th:text="${#temporals.format(catchRecord.catchTime, 'dd-MM-yyyy HH:mm')}"></span></p>
+        <p class="mb-2" th:if="${catchRecord.pegOrSwim}"><strong>Peg / Swim:</strong>
+            <span th:text="${catchRecord.pegOrSwim}"></span></p>
+        <p class="mb-2" th:if="${catchRecord.notes}"><strong>Notes:</strong>
+            <span th:text="${catchRecord.notes}"></span></p>
+    </div>
+
+    <div class="flex gap-4 mb-4">
+        <a class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded flex-1 text-center"
+           th:href="@{/sessions/{sessionId}/catches/{catchId}/edit(sessionId=${sess.id},catchId=${catchRecord.id})}">
+            Edit
+        </a>
+        <form class="flex-1" method="post" onsubmit="return confirm('Delete this catch?');"
+              th:action="@{/sessions/{sessionId}/catches/{catchId}/delete(sessionId=${sess.id},catchId=${catchRecord.id})}">
+            <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full" type="submit">
+                Delete
+            </button>
+        </form>
+    </div>
+
+    <a class="text-red-400 hover:text-red-300" th:href="@{/sessions/{id}(id=${sess.id})}">Back to Session</a>
+</main>
+
+<footer class="text-center p-4 h-20 bottom-0 bg-gray-800 w-full">
+    <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
+</footer>
+</body>
+</html>

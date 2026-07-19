@@ -4,6 +4,7 @@ import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.service.CatchService;
+import com.craigwoodcock.fishingapp.service.S3Service;
 import com.craigwoodcock.fishingapp.service.SessionService;
 import com.craigwoodcock.fishingapp.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,15 @@ public class SessionController {
     private final UserService userService;
     private final AnglerRepository anglerRepository;
     private final CatchService catchService;
+    private final S3Service s3Service;
 
     @Autowired
-    public SessionController(SessionService sessionService, UserService userService, AnglerRepository anglerRepository, CatchService catchService) {
+    public SessionController(SessionService sessionService, UserService userService, AnglerRepository anglerRepository, CatchService catchService, S3Service s3Service) {
         this.sessionService = sessionService;
         this.userService = userService;
         this.anglerRepository = anglerRepository;
         this.catchService = catchService;
+        this.s3Service = s3Service;
     }
 
     /**
@@ -86,6 +89,7 @@ public class SessionController {
         Session session = sessionService.getSessionById(id);
         model.addAttribute("sess", session);
         model.addAttribute("catches", catchService.getCatchesForSession(id));
+        model.addAttribute("s3Service", s3Service);
         return "view-session";
     }
 
@@ -109,7 +113,7 @@ public class SessionController {
         redirectAttributes.addFlashAttribute("message", "Session Deleted Successfully");
         return "redirect:/dashboard";
     }
-    
+
 
     @PostMapping("/{sessionId}/anglers/{anglerId}/delete")
     public String removeAngler(@PathVariable Long sessionId, @PathVariable Long anglerId) {

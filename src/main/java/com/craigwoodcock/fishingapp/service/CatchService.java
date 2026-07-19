@@ -40,11 +40,11 @@ public class CatchService {
      * @param fishType  the species caught
      * @param weight    the weight of the fish
      * @param notes     free-text notes, may be null
-     * @param photoUrl  a URL to a photo of the catch, may be null
+     * @param photoKey  a URL to a photo of the catch, may be null
      * @return the saved Catch entity
      */
     public Catch createCatch(Long sessionId, Long anglerId, LocalDateTime catchTime, String pegOrSwim,
-                             String fishType, BigDecimal weight, String notes, String photoUrl) {
+                             String fishType, BigDecimal weight, String notes, String photoKey) {
         log.info("Creating new catch for session " + sessionId);
 
         Session session = sessionService.getSessionById(sessionId);
@@ -59,7 +59,7 @@ public class CatchService {
         capture.setFishType(fishType);
         capture.setWeight(weight);
         capture.setNotes(notes);
-        capture.setPhotoUrl(photoUrl);
+        capture.setPhotoUrl(photoKey);
 
         capture = catchRepository.save(capture);
         log.info("Catch created with id " + capture.getId());
@@ -86,11 +86,11 @@ public class CatchService {
      * @param fishType  the species caught
      * @param weight    the weight of the fish
      * @param notes     free-text notes, may be null
-     * @param photoUrl  a URL to a photo of the catch, may be null
+     * @param photoKey  a URL to a photo of the catch, may be null
      * @return the updated Catch entity
      */
     public Catch updateCatch(Long catchId, Long anglerId, LocalDateTime catchTime, String pegOrSwim,
-                             String fishType, BigDecimal weight, String notes, String photoUrl) {
+                             String fishType, BigDecimal weight, String notes, String photoKey) {
         Catch capture = getCatchById(catchId);
         Angler angler = anglerRepository.findById(anglerId)
                 .orElseThrow(() -> new AnglerNotFoundException("That angler could not be found!"));
@@ -101,7 +101,7 @@ public class CatchService {
         capture.setFishType(fishType);
         capture.setWeight(weight);
         capture.setNotes(notes);
-        capture.setPhotoUrl(photoUrl);
+        capture.setPhotoUrl(photoKey);
 
         return catchRepository.save(capture);
     }

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>Log Catch - Fishing Session Tracker</title>
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="bg-black text-white">
+<header class="text-center p-4 pb-0 mb-6 w-full">
+    <h1 class="text-3xl font-bold mb-0.5">Fishing Session Tracker</h1>
+</header>
+
+<main class="container mx-auto px-4 py-8 max-w-lg">
+    <h1 class="text-3xl font-bold mb-8">Log Catch — <span th:text="${sess.venue}"></span></h1>
+
+    <form class="bg-gray-800 p-6 rounded-lg space-y-4" enctype="multipart/form-data" method="post"
+          th:action="@{/sessions/{id}/catches(id=${sess.id})}">
+
+        <div>
+            <label class="block mb-1" for="anglerId">Angler</label>
+            <select class="w-full p-2 rounded bg-gray-700 text-white" id="anglerId" name="anglerId" required>
+                <option th:each="angler : ${anglers}" th:text="${angler.name}" th:value="${angler.id}"></option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block mb-1" for="catchTime">Catch Time</label>
+            <input class="w-full p-2 rounded bg-gray-700 text-white" id="catchTime" name="catchTime"
+                   required type="datetime-local">
+        </div>
+
+        <div>
+            <label class="block mb-1" for="fishType">Fish Type</label>
+            <input class="w-full p-2 rounded bg-gray-700 text-white" id="fishType" name="fishType" required
+                   type="text">
+        </div>
+
+        <div>
+            <label class="block mb-1" for="weight">Weight (lb)</label>
+            <input class="w-full p-2 rounded bg-gray-700 text-white" id="weight" name="weight" required
+                   step="0.01" type="number">
+        </div>
+
+        <div>
+            <label class="block mb-1" for="pegOrSwim">Peg / Swim</label>
+            <input class="w-full p-2 rounded bg-gray-700 text-white" id="pegOrSwim" name="pegOrSwim"
+                   type="text">
+        </div>
+
+        <div>
+            <label class="block mb-1" for="notes">Notes</label>
+            <textarea class="w-full p-2 rounded bg-gray-700 text-white" id="notes" name="notes"
+                      rows="3"></textarea>
+        </div>
+
+        <div>
+            <label class="block mb-1" for="photo">Photo</label>
+            <input accept="image/*" class="w-full text-white" id="photo" name="photo" type="file">
+        </div>
+
+        <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full" type="submit">
+            Log Catch
+        </button>
+    </form>
+
+    <a class="text-red-400 hover:text-red-300 block mt-4" th:href="@{/sessions/{id}(id=${sess.id})}">
+        Back to Session
+    </a>
+</main>
+
+<footer class="text-center p-4 h-20 bottom-0 bg-gray-800 w-full">
+    <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
+</footer>
+</body>
+</html>
