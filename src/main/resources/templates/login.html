@@ -12,37 +12,37 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <meta content="index, follow" name="robots">
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col">
+<body class="bg-ink text-paper min-h-screen flex flex-col">
 
 <div th:replace="~{fragments/layout :: header}"></div>
 
 <main class="flex-grow flex items-center justify-center px-4 py-8">
-    <section class="bg-gray-900 p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
+    <section class="bg-surface p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
         <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-center">Login to Your Account</h2>
         <form method="post" th:action="@{/login}" th:object="${user}">
             <div class="mb-4">
                 <label class="block mb-2 text-sm sm:text-base" for="username">Username</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="username" name="username"
+                <input class="w-full px-3 py-2 bg-surface rounded" id="username" name="username"
                        placeholder="Enter Username" required th:field="${user.username}" type="text">
             </div>
             <div class="mb-6">
                 <label class="block mb-2 text-sm sm:text-base" for="password">Password</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="password" name="password"
+                <input class="w-full px-3 py-2 bg-surface rounded" id="password" name="password"
                        placeholder="Enter Password" required th:field="${user.password}" type="password">
             </div>
-            <button class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 font-bold"
+            <button class="w-full bg-accent text-paper py-2 px-4 rounded-md hover:bg-accent-hover font-bold"
                     type="submit">
                 Login
             </button>
         </form>
-        <div class="bg-red-500 text-white p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${error}">
+        <div class="bg-red-500 text-paper p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${error}">
             <p th:text="${error}"></p>
         </div>
-        <div class="bg-green-500 text-white p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${message}">
+        <div class="bg-green-500 text-paper p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${message}">
             <p th:text="${message}"></p>
         </div>
         <div class="mt-4 text-center">
-            <a class="text-blue-400 hover:underline text-sm sm:text-base" href="/register">
+            <a class="text-accent hover:text-accent-hover hover:underline text-sm sm:text-base" href="/register">
                 Don't have an account? Register here
             </a>
         </div>

@@ -11,46 +11,46 @@
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <meta content="index, follow" name="robots">
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col">
+<body class="bg-ink text-paper min-h-screen flex flex-col">
 
 <div th:replace="~{fragments/layout :: header}"></div>
 
 <main class="flex-grow flex items-center justify-center px-4 py-8">
-    <section class="bg-gray-900 p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
+    <section class="bg-surface p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
         <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-center">Create Your Account</h2>
         <form method="post" th:action="@{/register}" th:object="${user}">
             <input id="username" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" type="hidden"/>
             <div class="mb-4">
                 <label class="block mb-2 text-sm sm:text-base" for="usernameInput">Username</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="usernameInput" required
+                <input class="w-full px-3 py-2 bg-surface rounded" id="usernameInput" required
                        th:field="${user.username}" type="text">
             </div>
             <div class="mb-4">
                 <label class="block mb-2 text-sm sm:text-base" for="name">Name</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="name" required
+                <input class="w-full px-3 py-2 bg-surface rounded" id="name" required
                        th:field="${user.name}" type="text">
             </div>
             <div class="mb-4">
                 <label class="block mb-2 text-sm sm:text-base" for="email">Email</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="email" required
+                <input class="w-full px-3 py-2 bg-surface rounded" id="email" required
                        th:field="${user.email}" type="email">
             </div>
             <div class="mb-6">
                 <label class="block mb-2 text-sm sm:text-base" for="password">Password</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="password" required
+                <input class="w-full px-3 py-2 bg-surface rounded" id="password" required
                        th:field="${user.password}" type="password">
             </div>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 text-sm sm:text-base"
+            <div class="bg-accent/10 border border-accent text-accent px-4 py-3 rounded relative mb-4 text-sm sm:text-base"
                  role="alert" th:if="${error}">
                 <span th:text="${error}"></span>
             </div>
-            <button class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 font-bold"
+            <button class="w-full bg-accent text-paper py-2 px-4 rounded-md hover:bg-accent-hover font-bold"
                     type="submit">
                 Register
             </button>
         </form>
         <div class="mt-4 text-center">
-            <a class="text-blue-400 hover:underline text-sm sm:text-base" href="/login">
+            <a class="text-accent hover:text-accent-hover hover:underline text-sm sm:text-base" href="/login">
                 Already have an account? Login here
             </a>
         </div>

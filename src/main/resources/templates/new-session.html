@@ -9,49 +9,49 @@
     <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col">
+<body class="bg-ink text-paper min-h-screen flex flex-col">
 
 <div th:replace="~{fragments/layout :: header}"></div>
 
 <main class="flex-grow container mx-auto px-4 py-6 sm:py-8">
     <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8 text-center sm:text-left">Create New Session</h2>
 
-    <form class="bg-gray-800 p-6 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-lg mx-auto sm:mx-0"
+    <form class="bg-surface p-6 sm:p-8 rounded-lg w-full max-w-sm sm:max-w-lg mx-auto sm:mx-0"
           method="post" th:action="@{/sessions/create}">
         <div class="mb-4">
             <label class="block mb-2 text-sm sm:text-base" for="venue">Venue</label>
-            <input class="w-full px-3 py-2 bg-gray-700 rounded" id="venue" name="venue" required type="text">
+            <input class="w-full px-3 py-2 bg-surface-alt rounded" id="venue" name="venue" required type="text">
         </div>
 
         <div class="mb-4">
             <label class="block mb-2 text-sm sm:text-base" for="startDate">Start Date and Time</label>
-            <input class="w-full px-3 py-2 bg-gray-700 rounded" id="startDate" name="startDate" required
+            <input class="w-full px-3 py-2 bg-surface-alt rounded" id="startDate" name="startDate" required
                    type="date">
         </div>
 
         <div class="mb-4">
             <label class="block mb-2 text-sm sm:text-base" for="durationHours">Duration (hours)</label>
-            <input class="w-full px-3 py-2 bg-gray-700 rounded" id="durationHours" min="1" name="durationHours"
+            <input class="w-full px-3 py-2 bg-surface-alt rounded" id="durationHours" min="1" name="durationHours"
                    required type="number">
         </div>
 
         <div class="mb-6">
             <label class="block mb-2 text-sm sm:text-base" for="anglersList">Anglers (comma-separated)</label>
-            <p class="text-sm text-gray-400 mb-2">
+            <p class="text-sm text-faint mb-2">
                 If you would like to add other Anglers to this session, enter their names here.
                 Otherwise leave this field blank.
             </p>
-            <input class="w-full px-3 py-2 bg-gray-700 rounded" id="anglersList" name="anglersList" type="text">
-            <p class="text-sm text-gray-400 mt-1">Example: John Doe, Jane Smith, Mike Johnson</p>
+            <input class="w-full px-3 py-2 bg-surface-alt rounded" id="anglersList" name="anglersList" type="text">
+            <p class="text-sm text-faint mt-1">Example: John Doe, Jane Smith, Mike Johnson</p>
         </div>
 
-        <button class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" type="submit">
+        <button class="w-full bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded" type="submit">
             Create Session
         </button>
     </form>
 
     <div class="max-w-sm sm:max-w-lg mx-auto sm:mx-0">
-        <a class="inline-block mt-4 text-red-400 hover:text-red-300" href="/dashboard">Back to Dashboard</a>
+        <a class="inline-block mt-4 text-accent hover:text-accent-hover" href="/dashboard">Back to Dashboard</a>
     </div>
 </main>
 

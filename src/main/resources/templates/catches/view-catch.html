@@ -9,7 +9,7 @@
     <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col">
+<body class="bg-ink text-paper min-h-screen flex flex-col">
 
 <div th:replace="~{fragments/layout :: header}"></div>
 
@@ -17,11 +17,11 @@
     <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8" th:text="${catchRecord.fishType}"></h2>
 
     <img alt="Catch photo" class="w-full max-h-96 object-cover rounded-lg mb-6" th:if="${photoUrl}" th:src="${photoUrl}">
-    <div class="w-full h-48 sm:h-64 bg-gray-800 rounded-lg mb-6 flex items-center justify-center text-gray-400"
+    <div class="w-full h-48 sm:h-64 bg-surface rounded-lg mb-6 flex items-center justify-center text-faint"
          th:unless="${photoUrl}">No photo
     </div>
 
-    <div class="bg-gray-800 p-4 sm:p-6 rounded-lg mb-8">
+    <div class="bg-surface p-4 sm:p-6 rounded-lg mb-8">
         <p class="mb-2 text-sm sm:text-base"><strong>Angler:</strong> <span th:text="${catchRecord.angler.name}"></span></p>
         <p class="mb-2 text-sm sm:text-base"><strong>Weight:</strong> <span th:text="${catchRecord.weight + ' lb'}"></span></p>
         <p class="mb-2 text-sm sm:text-base"><strong>Caught:</strong>
@@ -33,19 +33,19 @@
     </div>
 
     <div class="flex flex-col sm:flex-row gap-4 mb-4">
-        <a class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded flex-1 text-center"
+        <a class="bg-surface-alt hover:bg-surface-alt text-paper font-bold py-2 px-4 rounded flex-1 text-center"
            th:href="@{/sessions/{sessionId}/catches/{catchId}/edit(sessionId=${sess.id},catchId=${catchRecord.id})}">
             Edit
         </a>
         <form class="flex-1" method="post" onsubmit="return confirm('Delete this catch?');"
               th:action="@{/sessions/{sessionId}/catches/{catchId}/delete(sessionId=${sess.id},catchId=${catchRecord.id})}">
-            <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full" type="submit">
+            <button class="bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded w-full" type="submit">
                 Delete
             </button>
         </form>
     </div>
 
-    <a class="text-red-400 hover:text-red-300" th:href="@{/sessions/{id}(id=${sess.id})}">Back to Session</a>
+    <a class="text-accent hover:text-accent-hover" th:href="@{/sessions/{id}(id=${sess.id})}">Back to Session</a>
 </main>
 
 <div th:replace="~{fragments/layout :: footer}"></div>

@@ -9,7 +9,7 @@
     <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col">
+<body class="bg-ink text-paper min-h-screen flex flex-col">
 
 <div th:replace="~{fragments/layout :: header}"></div>
 
@@ -20,36 +20,36 @@
             Welcome, <span th:text="${#authentication.name}"></span>!
         </h2>
         <form method="post" th:action="@{/logout}">
-            <input class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded cursor-pointer"
+            <input class="w-full sm:w-auto bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded cursor-pointer"
                    type="submit" value="Logout"/>
         </form>
     </div>
 
-    <div class="bg-green-500 text-white p-3 rounded mb-4" role="alert" th:if="${message}">
+    <div class="bg-green-500 text-paper p-3 rounded mb-4" role="alert" th:if="${message}">
         <p th:text="${message}"></p>
     </div>
 
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <h3 class="text-xl sm:text-2xl font-semibold">Your Sessions</h3>
-        <a class="block sm:inline-block text-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        <a class="block sm:inline-block text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
            href="/sessions/new">
             Add New Session
         </a>
     </div>
 
-    <p class="text-gray-400" th:if="${sessions.isEmpty()}">You haven't created any sessions yet.</p>
+    <p class="text-faint" th:if="${sessions.isEmpty()}">You haven't created any sessions yet.</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="bg-gray-800 p-4 rounded-lg flex flex-col" th:each="sess : ${sessions}">
+        <div class="bg-surface p-4 rounded-lg flex flex-col" th:each="sess : ${sessions}">
             <h4 class="text-lg sm:text-xl font-semibold mb-2" th:text="${sess.venue}"></h4>
-            <p class="text-sm text-gray-300 mb-1"
+            <p class="text-sm text-faint mb-1"
                th:text="${'Date: ' + #temporals.format(sess.startDate, 'dd-MM-yyyy')}"></p>
-            <p class="text-sm text-gray-300 mb-1"
+            <p class="text-sm text-faint mb-1"
                th:text="${'Duration: ' + sess.durationHours + ' hours'}"></p>
             <div th:with="anglersList=${@sessionService.getAnglersForSession(sess.id)}">
-                <p class="text-sm text-gray-300 mb-3" th:text="${'Anglers: ' + anglersList.size()}"></p>
+                <p class="text-sm text-faint mb-3" th:text="${'Anglers: ' + anglersList.size()}"></p>
             </div>
-            <a class="mt-auto inline-block text-center bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            <a class="mt-auto inline-block text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
                th:href="@{/sessions/{id}(id=${sess.id})}">
                 View Details
             </a>

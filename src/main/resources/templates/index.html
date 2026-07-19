@@ -13,13 +13,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <meta content="index, follow" name="robots">
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col">
+<body class="bg-ink text-paper min-h-screen flex flex-col">
 
 <div th:replace="~{fragments/layout :: header}"></div>
 
 <main class="flex-grow flex items-center justify-center w-full px-4 py-8">
-    <section class="bg-gray-900 p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
-        <img alt="Carpy Couple" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover mx-auto mb-4 border-2 border-red-600"
+    <section class="bg-surface p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
+        <img alt="Carpy Couple" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover mx-auto mb-4 border-2 border-accent"
              th:src="@{/images/favicon.png}">
         <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-center">Welcome to the Fishing Tracker</h2>
         <p class="mb-4 text-sm sm:text-base">If you haven't already, please add the app to your home screen:</p>
@@ -27,12 +27,12 @@
             <li>Press <i class="fas fa-ellipsis-vertical"></i> (menu)</li>
             <li>Then press <i class="fas fa-plus-square"></i> (Add to Home Screen)</li>
         </ol>
-        <a class="block w-full bg-red-600 text-white py-2 px-3 rounded-md hover:bg-red-700 text-center font-bold mb-4"
+        <a class="block w-full bg-accent text-paper py-2 px-3 rounded-md hover:bg-accent-hover text-center font-bold mb-4"
            href="/login">
             Login
         </a>
         <div class="text-center">
-            <a class="text-blue-400 hover:underline text-sm sm:text-base" href="/register">
+            <a class="text-accent hover:text-accent-hover hover:underline text-sm sm:text-base" href="/register">
                 Don't have an account? Register here
             </a>
         </div>

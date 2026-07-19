@@ -9,62 +9,62 @@
     <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col">
+<body class="bg-ink text-paper min-h-screen flex flex-col">
 
 <div th:replace="~{fragments/layout :: header}"></div>
 
 <main class="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-sm sm:max-w-lg">
     <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Log Catch — <span th:text="${sess.venue}"></span></h2>
 
-    <form class="bg-gray-800 p-6 sm:p-8 rounded-lg space-y-4" enctype="multipart/form-data" method="post"
+    <form class="bg-surface p-6 sm:p-8 rounded-lg space-y-4" enctype="multipart/form-data" method="post"
           th:action="@{/sessions/{id}/catches(id=${sess.id})}">
 
         <div>
             <label class="block mb-1 text-sm sm:text-base" for="anglerId">Angler</label>
-            <select class="w-full p-2 rounded bg-gray-700 text-white" id="anglerId" name="anglerId" required>
+            <select class="w-full p-2 rounded bg-surface-alt text-paper" id="anglerId" name="anglerId" required>
                 <option th:each="angler : ${anglers}" th:text="${angler.name}" th:value="${angler.id}"></option>
             </select>
         </div>
 
         <div>
             <label class="block mb-1 text-sm sm:text-base" for="catchTime">Catch Time</label>
-            <input class="w-full p-2 rounded bg-gray-700 text-white" id="catchTime" name="catchTime"
+            <input class="w-full p-2 rounded bg-surface-alt text-paper" id="catchTime" name="catchTime"
                    required type="datetime-local">
         </div>
 
         <div>
             <label class="block mb-1 text-sm sm:text-base" for="fishType">Fish Type</label>
-            <input class="w-full p-2 rounded bg-gray-700 text-white" id="fishType" name="fishType" required
+            <input class="w-full p-2 rounded bg-surface-alt text-paper" id="fishType" name="fishType" required
                    type="text">
         </div>
 
         <div>
             <label class="block mb-1 text-sm sm:text-base" for="weight">Weight (lb)</label>
-            <input class="w-full p-2 rounded bg-gray-700 text-white" id="weight" name="weight" required
+            <input class="w-full p-2 rounded bg-surface-alt text-paper" id="weight" name="weight" required
                    step="0.01" type="number">
         </div>
 
         <div>
             <label class="block mb-1 text-sm sm:text-base" for="pegOrSwim">Peg / Swim</label>
-            <input class="w-full p-2 rounded bg-gray-700 text-white" id="pegOrSwim" name="pegOrSwim" type="text">
+            <input class="w-full p-2 rounded bg-surface-alt text-paper" id="pegOrSwim" name="pegOrSwim" type="text">
         </div>
 
         <div>
             <label class="block mb-1 text-sm sm:text-base" for="notes">Notes</label>
-            <textarea class="w-full p-2 rounded bg-gray-700 text-white" id="notes" name="notes" rows="3"></textarea>
+            <textarea class="w-full p-2 rounded bg-surface-alt text-paper" id="notes" name="notes" rows="3"></textarea>
         </div>
 
         <div>
             <label class="block mb-1 text-sm sm:text-base" for="photo">Photo</label>
-            <input accept="image/*" class="w-full text-white text-sm" id="photo" name="photo" type="file">
+            <input accept="image/*" class="w-full text-paper text-sm" id="photo" name="photo" type="file">
         </div>
 
-        <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full" type="submit">
+        <button class="bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded w-full" type="submit">
             Log Catch
         </button>
     </form>
 
-    <a class="text-red-400 hover:text-red-300 block mt-4" th:href="@{/sessions/{id}(id=${sess.id})}">
+    <a class="text-accent hover:text-accent-hover block mt-4" th:href="@{/sessions/{id}(id=${sess.id})}">
         Back to Session
     </a>
 </main>

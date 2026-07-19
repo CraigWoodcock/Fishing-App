@@ -7,7 +7,7 @@
     <div th:replace="~{fragments/layout :: header}"></div>
   Keeps the logo/title markup in one place instead of copy-pasted 9 times.
 -->
-<header th:fragment="header" class="w-full bg-gray-900 border-b border-gray-800">
+<header th:fragment="header" class="w-full bg-surface border-b border-line">
     <div class="max-w-4xl mx-auto flex items-center justify-center gap-3 px-4 py-3 sm:py-4">
         <img alt="Carpy Couple logo" class="h-10 sm:h-12 w-auto flex-shrink-0"
              th:src="@{/images/logo.png}">
@@ -24,8 +24,8 @@
   sits at the bottom of the viewport on short pages, but scrolls normally on
   long ones.
 -->
-<footer th:fragment="footer" class="w-full bg-gray-800 text-center py-4 mt-auto">
-    <p class="text-xs sm:text-sm text-gray-400">&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
+<footer th:fragment="footer" class="w-full bg-surface text-center py-4 mt-auto">
+    <p class="text-xs sm:text-sm text-faint">&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
 </footer>
 
 </body>
