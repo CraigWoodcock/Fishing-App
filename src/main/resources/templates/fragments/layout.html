@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+  Shared header. Include on every page with:
+    <div th:replace="~{fragments/layout :: header}"></div>
+  Keeps the logo/title markup in one place instead of copy-pasted 9 times.
+-->
+<header th:fragment="header" class="w-full bg-gray-900 border-b border-gray-800">
+    <div class="max-w-4xl mx-auto flex items-center justify-center gap-3 px-4 py-3 sm:py-4">
+        <img alt="Carpy Couple logo" class="h-10 sm:h-12 w-auto flex-shrink-0"
+             th:src="@{/images/logo.png}">
+        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-center leading-tight">
+            Fishing Session Tracker
+        </h1>
+    </div>
+</header>
+
+<!--
+  Shared footer. Uses a normal document-flow footer (not position:fixed) so it
+  never overlaps page content on short mobile screens. Pair with
+  "min-h-screen flex flex-col" on <body> and "flex-grow" on <main> so it still
+  sits at the bottom of the viewport on short pages, but scrolls normally on
+  long ones.
+-->
+<footer th:fragment="footer" class="w-full bg-gray-800 text-center py-4 mt-auto">
+    <p class="text-xs sm:text-sm text-gray-400">&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -5,34 +5,34 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <title>Catch Details - Fishing Session Tracker</title>
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="bg-black text-white">
-<header class="text-center p-4 pb-0 mb-6 w-full">
-    <h1 class="text-3xl font-bold mb-0.5">Fishing Session Tracker</h1>
-</header>
+<body class="bg-black text-white min-h-screen flex flex-col">
 
-<main class="container mx-auto px-4 py-8 max-w-lg">
-    <h1 class="text-3xl font-bold mb-8" th:text="${catchRecord.fishType}"></h1>
+<div th:replace="~{fragments/layout :: header}"></div>
 
-    <img alt="Catch photo" class="w-full rounded-lg mb-6" th:if="${photoUrl}" th:src="${photoUrl}">
-    <div class="w-full h-64 bg-gray-800 rounded-lg mb-6 flex items-center justify-center text-gray-400"
+<main class="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-sm sm:max-w-xl">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8" th:text="${catchRecord.fishType}"></h2>
+
+    <img alt="Catch photo" class="w-full max-h-96 object-cover rounded-lg mb-6" th:if="${photoUrl}" th:src="${photoUrl}">
+    <div class="w-full h-48 sm:h-64 bg-gray-800 rounded-lg mb-6 flex items-center justify-center text-gray-400"
          th:unless="${photoUrl}">No photo
     </div>
 
-    <div class="bg-gray-800 p-6 rounded-lg mb-8">
-        <p class="mb-2"><strong>Angler:</strong> <span th:text="${catchRecord.angler.name}"></span></p>
-        <p class="mb-2"><strong>Weight:</strong> <span th:text="${catchRecord.weight + ' lb'}"></span></p>
-        <p class="mb-2"><strong>Caught:</strong>
+    <div class="bg-gray-800 p-4 sm:p-6 rounded-lg mb-8">
+        <p class="mb-2 text-sm sm:text-base"><strong>Angler:</strong> <span th:text="${catchRecord.angler.name}"></span></p>
+        <p class="mb-2 text-sm sm:text-base"><strong>Weight:</strong> <span th:text="${catchRecord.weight + ' lb'}"></span></p>
+        <p class="mb-2 text-sm sm:text-base"><strong>Caught:</strong>
             <span th:text="${#temporals.format(catchRecord.catchTime, 'dd-MM-yyyy HH:mm')}"></span></p>
-        <p class="mb-2" th:if="${catchRecord.pegOrSwim}"><strong>Peg / Swim:</strong>
+        <p class="mb-2 text-sm sm:text-base" th:if="${catchRecord.pegOrSwim}"><strong>Peg / Swim:</strong>
             <span th:text="${catchRecord.pegOrSwim}"></span></p>
-        <p class="mb-2" th:if="${catchRecord.notes}"><strong>Notes:</strong>
+        <p class="mb-2 text-sm sm:text-base" th:if="${catchRecord.notes}"><strong>Notes:</strong>
             <span th:text="${catchRecord.notes}"></span></p>
     </div>
 
-    <div class="flex gap-4 mb-4">
+    <div class="flex flex-col sm:flex-row gap-4 mb-4">
         <a class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded flex-1 text-center"
            th:href="@{/sessions/{sessionId}/catches/{catchId}/edit(sessionId=${sess.id},catchId=${catchRecord.id})}">
             Edit
@@ -48,8 +48,7 @@
     <a class="text-red-400 hover:text-red-300" th:href="@{/sessions/{id}(id=${sess.id})}">Back to Session</a>
 </main>
 
-<footer class="text-center p-4 h-20 bottom-0 bg-gray-800 w-full">
-    <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
-</footer>
+<div th:replace="~{fragments/layout :: footer}"></div>
+
 </body>
 </html>

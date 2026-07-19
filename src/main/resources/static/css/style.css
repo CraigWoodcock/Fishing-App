@@ -1,41 +1,8 @@
-/*Dashboard styles*/
-
-hr {
-    background-color: #ff1e26;
-    border: none;
-    height: 2px;
-    width: 100%;
-}
-
-.position-fixed {
-    position: fixed;
-    bottom: 0;
-    margin-bottom: 0;
-    color: blue;
-}
-
-.dashboard-heading {
-    margin: 2px auto;
-    padding: 2px;
-    display: flex;
-    justify-content: space-between;
-    justify-items: center;
-    align-items: center;
-}
-
-.session-button {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.session-button > a {
-    height: 100%;
-    text-align: center;
-    padding: 4px;
-}
-
-.session-list {
-    margin-top: 5px;
-}
+/*
+ * Custom overrides that go beyond what Tailwind utility classes cover.
+ * The old .position-fixed, .dashboard-heading, .session-button, .session-list
+ * and .hr rules were removed — that layout is now handled directly with
+ * Tailwind classes in the templates (flex/grid utilities), which keeps the
+ * markup and its styling in one place and avoids the old fixed-footer bug
+ * where the footer overlapped page content on short mobile screens.
+ */

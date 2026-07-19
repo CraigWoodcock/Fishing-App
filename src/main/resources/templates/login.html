@@ -6,49 +6,50 @@
     <title>Login - Fishing Session Tracker | Record Your Fishing Adventures</title>
     <meta content="Log in to your Fishing Session Tracker account to record and manage your fishing adventures. Keep track of your catches, locations, and more."
           name="description">
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <meta content="index, follow" name="robots">
 </head>
-<body class="bg-black text-white">
-<header class="text-center p-4 pb-0 mb-0">
-    <h1 class="text-3xl font-bold mb-0.5">Fishing Session Tracker</h1>
-</header>
-<main class="min-h-screen flex items-center justify-center ">
-    <section class="bg-gray-900 p-8 rounded shadow-md w-96">
-        <h2 class="text-2xl font-semibold mb-6">Login to Your Account</h2>
+<body class="bg-black text-white min-h-screen flex flex-col">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="flex-grow flex items-center justify-center px-4 py-8">
+    <section class="bg-gray-900 p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
+        <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-center">Login to Your Account</h2>
         <form method="post" th:action="@{/login}" th:object="${user}">
             <div class="mb-4">
-                <label class="block mb-2" for="username">Username</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="username" name="username" placeholder="Enter Username"
-                       required th:field="${user.username}"
-                       type="text">
+                <label class="block mb-2 text-sm sm:text-base" for="username">Username</label>
+                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="username" name="username"
+                       placeholder="Enter Username" required th:field="${user.username}" type="text">
             </div>
             <div class="mb-6">
-                <label class="block mb-2" for="password">Password</label>
-                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="password" name="password" placeholder="Enter Password"
-                       required th:field="${user.password}"
-                       type="password">
+                <label class="block mb-2 text-sm sm:text-base" for="password">Password</label>
+                <input class="w-full px-3 py-2 bg-gray-800 rounded" id="password" name="password"
+                       placeholder="Enter Password" required th:field="${user.password}" type="password">
             </div>
-            <button class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+            <button class="w-full bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 font-bold"
                     type="submit">
                 Login
             </button>
         </form>
-        <div class="bg-red-500 text-white p-3 rounded mb-4" role="alert" th:if="${error}">
+        <div class="bg-red-500 text-white p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${error}">
             <p th:text="${error}"></p>
         </div>
-        <div class="bg-green-500 text-white p-3 rounded mb-4" role="alert" th:if="${message}">
+        <div class="bg-green-500 text-white p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${message}">
             <p th:text="${message}"></p>
         </div>
         <div class="mt-4 text-center">
-            <a class="text-blue-400 hover:underline" href="/register">
+            <a class="text-blue-400 hover:underline text-sm sm:text-base" href="/register">
                 Don't have an account? Register here
             </a>
         </div>
     </section>
 </main>
-<footer class="text-center p-4 h-20 bottom-0 bg-gray-800 w-full position-fixed">
-    <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
-</footer>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
 </body>
 </html>

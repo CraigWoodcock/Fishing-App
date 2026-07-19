@@ -6,39 +6,40 @@
     <title>Welcome - Fishing Session Tracker | Record Your Fishing Adventures</title>
     <meta content="Welcome to Fishing Session Tracker. Add our app to your home screen for quick access to record and manage your fishing adventures."
           name="description">
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <meta content="index, follow" name="robots">
 </head>
-<body class="bg-black text-white">
-    <header class="text-center p-4 pb-0 mb-6 w-full">
-        <h1 class="text-3xl font-bold mb-0.5">Fishing Session Tracker</h1>
-    </header>
-    <main class="flex-grow flex items-center justify-center w-full mt-8">
-        <section class="bg-gray-900 p-8 rounded shadow-md w-96">
-            <h2 class="text-2xl font-semibold mb-6">Welcome to the Fishing Tracker</h2>
-            <p class="mb-4">If you haven't already, please add the app to your home screen:</p>
-            <ol class="list-decimal list-inside mb-6">
-                <li class="mb-2">Press <i class="fas fa-ellipsis-vertical"></i> (menu)</li>
-                <li>Then press <i class="fas fa-plus-square"></i> (Add to Home Screen)</li>
-            </ol>
-            <div class="w-full mx-2 my-2 flex items-center justify-center ">
-                <a class="w-full bg-red-600 text-white mx-1 my-2 py-2 px-3 rounded-md hover:bg-red-700 text-center"
-                   href="/login">
-                    Login
-                </a>
-            </div>
-            <div class="mt-4 text-center">
-                <a class="text-blue-400 hover:underline" href="/register">
-                    Don't have an account? Register here
-                </a>
-            </div>
+<body class="bg-black text-white min-h-screen flex flex-col">
 
-        </section>
-    </main>
-    <footer class="text-center p-4 h-20 bottom-0 bg-gray-800 w-full position-fixed">
-        <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
-    </footer>
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="flex-grow flex items-center justify-center w-full px-4 py-8">
+    <section class="bg-gray-900 p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
+        <img alt="Carpy Couple" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover mx-auto mb-4 border-2 border-red-600"
+             th:src="@{/images/favicon.png}">
+        <h2 class="text-xl sm:text-2xl font-semibold mb-6 text-center">Welcome to the Fishing Tracker</h2>
+        <p class="mb-4 text-sm sm:text-base">If you haven't already, please add the app to your home screen:</p>
+        <ol class="list-decimal list-inside mb-6 text-sm sm:text-base space-y-1">
+            <li>Press <i class="fas fa-ellipsis-vertical"></i> (menu)</li>
+            <li>Then press <i class="fas fa-plus-square"></i> (Add to Home Screen)</li>
+        </ol>
+        <a class="block w-full bg-red-600 text-white py-2 px-3 rounded-md hover:bg-red-700 text-center font-bold mb-4"
+           href="/login">
+            Login
+        </a>
+        <div class="text-center">
+            <a class="text-blue-400 hover:underline text-sm sm:text-base" href="/register">
+                Don't have an account? Register here
+            </a>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
 </body>
 </html>

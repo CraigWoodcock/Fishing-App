@@ -5,24 +5,25 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="ie=edge" http-equiv="X-UA-Compatible">
     <title>Edit Catch - Fishing Session Tracker</title>
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="bg-black text-white">
-<header class="text-center p-4 pb-0 mb-6 w-full">
-    <h1 class="text-3xl font-bold mb-0.5">Fishing Session Tracker</h1>
-</header>
+<body class="bg-black text-white min-h-screen flex flex-col">
 
-<main class="container mx-auto px-4 py-8 max-w-lg">
-    <h1 class="text-3xl font-bold mb-8">Edit Catch — <span th:text="${sess.venue}"></span></h1>
+<div th:replace="~{fragments/layout :: header}"></div>
 
-    <img alt="Current photo" class="w-32 h-32 object-cover rounded mb-4" th:if="${photoUrl}" th:src="${photoUrl}">
+<main class="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-sm sm:max-w-lg">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Edit Catch — <span th:text="${sess.venue}"></span></h2>
 
-    <form class="bg-gray-800 p-6 rounded-lg space-y-4" enctype="multipart/form-data" method="post"
+    <img alt="Current photo" class="w-28 h-28 sm:w-32 sm:h-32 object-cover rounded mb-4"
+         th:if="${photoUrl}" th:src="${photoUrl}">
+
+    <form class="bg-gray-800 p-6 sm:p-8 rounded-lg space-y-4" enctype="multipart/form-data" method="post"
           th:action="@{/sessions/{sessionId}/catches/{catchId}(sessionId=${sess.id},catchId=${catchRecord.id})}">
 
         <div>
-            <label class="block mb-1" for="anglerId">Angler</label>
+            <label class="block mb-1 text-sm sm:text-base" for="anglerId">Angler</label>
             <select class="w-full p-2 rounded bg-gray-700 text-white" id="anglerId" name="anglerId" required>
                 <option th:each="angler : ${anglers}"
                         th:selected="${angler.id == catchRecord.angler.id}"
@@ -31,38 +32,38 @@
         </div>
 
         <div>
-            <label class="block mb-1" for="catchTime">Catch Time</label>
+            <label class="block mb-1 text-sm sm:text-base" for="catchTime">Catch Time</label>
             <input class="w-full p-2 rounded bg-gray-700 text-white" id="catchTime" name="catchTime"
                    required th:value="${catchRecord.catchTime}" type="datetime-local">
         </div>
 
         <div>
-            <label class="block mb-1" for="fishType">Fish Type</label>
+            <label class="block mb-1 text-sm sm:text-base" for="fishType">Fish Type</label>
             <input class="w-full p-2 rounded bg-gray-700 text-white" id="fishType" name="fishType" required
                    th:value="${catchRecord.fishType}" type="text">
         </div>
 
         <div>
-            <label class="block mb-1" for="weight">Weight (lb)</label>
+            <label class="block mb-1 text-sm sm:text-base" for="weight">Weight (lb)</label>
             <input class="w-full p-2 rounded bg-gray-700 text-white" id="weight" name="weight" required
                    step="0.01" th:value="${catchRecord.weight}" type="number">
         </div>
 
         <div>
-            <label class="block mb-1" for="pegOrSwim">Peg / Swim</label>
+            <label class="block mb-1 text-sm sm:text-base" for="pegOrSwim">Peg / Swim</label>
             <input class="w-full p-2 rounded bg-gray-700 text-white" id="pegOrSwim" name="pegOrSwim"
                    th:value="${catchRecord.pegOrSwim}" type="text">
         </div>
 
         <div>
-            <label class="block mb-1" for="notes">Notes</label>
+            <label class="block mb-1 text-sm sm:text-base" for="notes">Notes</label>
             <textarea class="w-full p-2 rounded bg-gray-700 text-white" id="notes" name="notes"
                       rows="3" th:text="${catchRecord.notes}"></textarea>
         </div>
 
         <div>
-            <label class="block mb-1" for="photo">Replace Photo</label>
-            <input accept="image/*" class="w-full text-white" id="photo" name="photo" type="file">
+            <label class="block mb-1 text-sm sm:text-base" for="photo">Replace Photo</label>
+            <input accept="image/*" class="w-full text-white text-sm" id="photo" name="photo" type="file">
         </div>
 
         <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full" type="submit">
@@ -76,8 +77,7 @@
     </a>
 </main>
 
-<footer class="text-center p-4 h-20 bottom-0 bg-gray-800 w-full">
-    <p>&copy; 2024 Fishing Session Tracker. All rights reserved.</p>
-</footer>
+<div th:replace="~{fragments/layout :: footer}"></div>
+
 </body>
 </html>
