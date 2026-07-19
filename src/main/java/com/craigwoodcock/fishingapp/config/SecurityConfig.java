@@ -127,7 +127,7 @@ public class SecurityConfig {
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/", "/login", "/index", "/register", "/js/**", "/css/**", "/error", "/error/**", "/docs", "/actuator/health", "/swagger-ui/", "/swagger-ui/**").permitAll()  // Public resources
+                        .requestMatchers("/", "/fragments/**", "/images/**", "/login", "/index", "/register", "/js/**", "/css/**", "/error", "/error/**", "/docs", "/actuator/health", "/swagger-ui/", "/swagger-ui/**").permitAll()  // Public resources
                         .requestMatchers("/api/**").permitAll() //exclude api endpoints from web security filter
                         .requestMatchers("/admin/**").hasRole("ADMIN")  // Admin-only endpoints
                         .anyRequest().hasRole("USER")                   // All other endpoints require USER role
