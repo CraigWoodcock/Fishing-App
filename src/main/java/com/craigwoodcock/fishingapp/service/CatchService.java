@@ -114,5 +114,24 @@ public class CatchService {
     public void deleteCatch(Long catchId) {
         catchRepository.deleteById(catchId);
     }
+
+    /**
+     * Calculates the total weight caught by a specific angler during a
+     * specific session, for display next to their name on the session view.
+     *
+     * @param sessionId the id of the session
+     * @param anglerId  the id of the angler
+     * @return the angler's total weight for that session, e.g. "8lb 4oz"
+     */
+    public String getTotalWeightForAnglerInSession(Long sessionId, Long anglerId) {
+        List<Catch> catches = catchRepository.findBySessionIdAndAnglerId(sessionId, anglerId);
+
+        long totalOunces = 0;
+        for (Catch c : catches) {
+            totalOunces += weightConverter.toTotalOunces(c.getWeight());
+        }
+
+        return weightConverter.formatTotalOunces(totalOunces);
+    }
 }
 

@@ -23,4 +23,15 @@ public interface CatchRepository extends JpaRepository<Catch, Long> {
      * @return the list of catches belonging to that session
      */
     List<Catch> findBySessionId(Long sessionId);
+
+    /**
+     * Finds all catches recorded by a specific angler during a specific
+     * session, so a per-angler weight total can be shown alongside the
+     * angler's name on the session view page.
+     *
+     * @param sessionId the id of the session
+     * @param anglerId  the id of the angler
+     * @return the list of catches that angler made during that session
+     */
+    List<Catch> findBySessionIdAndAnglerId(Long sessionId, Long anglerId);
 }

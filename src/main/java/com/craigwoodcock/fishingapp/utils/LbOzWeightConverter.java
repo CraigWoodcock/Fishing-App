@@ -78,4 +78,17 @@ public class LbOzWeightConverter {
         BigDecimal fractional = weight.subtract(BigDecimal.valueOf(weight.longValue()));
         return fractional.movePointRight(2).setScale(0, RoundingMode.HALF_UP).intValueExact();
     }
+
+    /**
+     * Formats a single catch's lb.oz weight for display, e.g. 5.08 becomes
+     * "5lb 8oz".
+     *
+     * @param weight a validated weight in lb.oz notation
+     * @return a formatted "Xlb Yoz" string
+     */
+    public String format(BigDecimal weight) {
+        long pounds = weight.longValue();
+        int ounces = extractOunces(weight);
+        return pounds + "lb " + ounces + "oz";
+    }
 }

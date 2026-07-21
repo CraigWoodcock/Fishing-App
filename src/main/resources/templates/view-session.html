@@ -23,8 +23,13 @@
             <span th:text="${sess.durationHours + ' hours'}"></span></p>
         <p class="mb-4 text-sm sm:text-base"><strong>Anglers:</strong></p>
         <ul class="list-disc pl-6 mb-4 text-sm sm:text-base">
-            <li th:each="angler : ${@sessionService.getAnglersForSession(sess.id)}" th:text="${angler.name}"></li>
+            <li th:each="angler : ${@sessionService.getAnglersForSession(sess.id)}">
+                <span th:text="${angler.name}"></span> —
+                <span th:text="${@catchService.getTotalWeightForAnglerInSession(sess.id, angler.id)}"></span>
+            </li>
         </ul>
+        <p class="mb-4 text-sm sm:text-base"><strong>Total Weight:</strong>
+            <span th:text="${@sessionService.getTotalWeightForSession(sess.id)}"></span></p>
 
         <form method="post" onsubmit="return confirm('Are you sure you want to delete this session?');"
               th:action="@{/sessions/{id}/delete(id=${sess.id})}">
@@ -57,7 +62,7 @@
                 <p class="font-bold truncate" th:text="${catchRecord.angler.name}"></p>
                 <p class="text-sm text-faint truncate" th:text="${catchRecord.fishType}"></p>
             </div>
-            <p class="font-bold flex-shrink-0" th:text="${catchRecord.weight + ' lb'}"></p>
+            <p class="font-bold flex-shrink-0" th:text="${@lbOzWeightConverter.format(catchRecord.weight)}"></p>
         </a>
     </div>
 
