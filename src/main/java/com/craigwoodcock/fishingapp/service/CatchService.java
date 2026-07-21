@@ -7,6 +7,7 @@ import com.craigwoodcock.fishingapp.model.entity.Catch;
 import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.repository.CatchRepository;
+import com.craigwoodcock.fishingapp.utils.LbOzWeightConverter;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -22,11 +23,13 @@ public class CatchService {
     private final CatchRepository catchRepository;
     private final SessionService sessionService;
     private final AnglerRepository anglerRepository;
+    private final LbOzWeightConverter weightConverter;
 
-    public CatchService(CatchRepository catchRepository, SessionService sessionService, AnglerRepository anglerRepository) {
+    public CatchService(CatchRepository catchRepository, SessionService sessionService, AnglerRepository anglerRepository, LbOzWeightConverter weightConverter) {
         this.catchRepository = catchRepository;
         this.sessionService = sessionService;
         this.anglerRepository = anglerRepository;
+        this.weightConverter = weightConverter;
     }
 
     /**
@@ -46,6 +49,7 @@ public class CatchService {
     public Catch createCatch(Long sessionId, Long anglerId, LocalDateTime catchTime, String pegOrSwim,
                              String fishType, BigDecimal weight, String notes, String photoKey) {
         log.info("Creating new catch for session " + sessionId);
+        weightConverter.validate(weight);
 
         Session session = sessionService.getSessionById(sessionId);
         Angler angler = anglerRepository.findById(anglerId)
@@ -91,6 +95,7 @@ public class CatchService {
      */
     public Catch updateCatch(Long catchId, Long anglerId, LocalDateTime catchTime, String pegOrSwim,
                              String fishType, BigDecimal weight, String notes, String photoKey) {
+        weightConverter.validate(weight);
         Catch capture = getCatchById(catchId);
         Angler angler = anglerRepository.findById(anglerId)
                 .orElseThrow(() -> new AnglerNotFoundException("That angler could not be found!"));

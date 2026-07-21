@@ -1,14 +1,13 @@
 package com.craigwoodcock.fishingapp.service;
 
 import com.craigwoodcock.fishingapp.exception.SessionNotFoundException;
-import com.craigwoodcock.fishingapp.model.entity.Angler;
-import com.craigwoodcock.fishingapp.model.entity.AnglerSession;
-import com.craigwoodcock.fishingapp.model.entity.Session;
-import com.craigwoodcock.fishingapp.model.entity.User;
+import com.craigwoodcock.fishingapp.model.entity.*;
 import com.craigwoodcock.fishingapp.model.id.AnglerSessionId;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
+import com.craigwoodcock.fishingapp.repository.CatchRepository;
 import com.craigwoodcock.fishingapp.repository.SessionRepository;
+import com.craigwoodcock.fishingapp.utils.LbOzWeightConverter;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -27,13 +26,17 @@ public class SessionService {
     private final AnglerRepository anglerRepository;
     private final AnglerSessionRepository anglerSessionRepository;
     private final AnglerService anglerService;
+    private final CatchRepository catchRepository;
+    private final LbOzWeightConverter weightConverter;
 
 
-    public SessionService(SessionRepository sessionRepository, AnglerRepository anglerRepository, AnglerSessionRepository anglerSessionRepository, AnglerService anglerService) {
+    public SessionService(SessionRepository sessionRepository, AnglerRepository anglerRepository, AnglerSessionRepository anglerSessionRepository, AnglerService anglerService, CatchRepository catchRepository, LbOzWeightConverter weightConverter) {
         this.sessionRepository = sessionRepository;
         this.anglerRepository = anglerRepository;
         this.anglerSessionRepository = anglerSessionRepository;
         this.anglerService = anglerService;
+        this.catchRepository = catchRepository;
+        this.weightConverter = weightConverter;
     }
 
 
@@ -87,7 +90,7 @@ public class SessionService {
     }
 
     public List<Session> getAllSessionsByUser(User user) {
-        return sessionRepository.findByUser(user);
+        return sessionRepository.findByUserOrderByStartDateDesc(user);
     }
 
     public Session updateSession(Session session) {
@@ -116,6 +119,24 @@ public class SessionService {
             anglers.add(anglerSession.getAngler());
         }
         return anglers;
+    }
+
+    /**
+     * Calculates the total weight caught during a session, expressed in the
+     * app's lb.oz notation.
+     *
+     * @param sessionId the id of the session
+     * @return the total weight caught during the session, e.g. "11lb 0oz"
+     */
+    public String getTotalWeightForSession(Long sessionId) {
+        List<Catch> catches = catchRepository.findBySessionId(sessionId);
+
+        long totalOunces = 0;
+        for (Catch c : catches) {
+            totalOunces += weightConverter.toTotalOunces(c.getWeight());
+        }
+
+        return weightConverter.formatTotalOunces(totalOunces);
     }
 
 
