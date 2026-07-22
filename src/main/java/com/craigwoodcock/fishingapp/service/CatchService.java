@@ -2,6 +2,7 @@ package com.craigwoodcock.fishingapp.service;
 
 import com.craigwoodcock.fishingapp.exception.AnglerNotFoundException;
 import com.craigwoodcock.fishingapp.exception.CatchNotFoundException;
+import com.craigwoodcock.fishingapp.exception.InvalidCatchTimeException;
 import com.craigwoodcock.fishingapp.model.entity.Angler;
 import com.craigwoodcock.fishingapp.model.entity.Catch;
 import com.craigwoodcock.fishingapp.model.entity.Session;
@@ -52,6 +53,9 @@ public class CatchService {
         weightConverter.validate(weight);
 
         Session session = sessionService.getSessionById(sessionId);
+        if (catchTime.isBefore(session.getStartDate().atStartOfDay())) {
+            throw new InvalidCatchTimeException("Catch time cannot be before the session start date.");
+        }
         Angler angler = anglerRepository.findById(anglerId)
                 .orElseThrow(() -> new AnglerNotFoundException("That angler could not be found!"));
 
@@ -97,6 +101,11 @@ public class CatchService {
                              String fishType, BigDecimal weight, String notes, String photoKey) {
         weightConverter.validate(weight);
         Catch capture = getCatchById(catchId);
+
+        if (catchTime.isBefore(capture.getSession().getStartDate().atStartOfDay())) {
+            throw new InvalidCatchTimeException("Catch time cannot be before the session start date.");
+        }
+
         Angler angler = anglerRepository.findById(anglerId)
                 .orElseThrow(() -> new AnglerNotFoundException("That angler could not be found!"));
 

@@ -57,6 +57,7 @@ public class CaptureController {
         model.addAttribute("sess", session);
         model.addAttribute("anglers", anglers);
         model.addAttribute("catchRecord", new Catch());
+        model.addAttribute("sessionStartDateTime", session.getStartDate().atStartOfDay());
         return "catches/new-catch";
     }
 
@@ -110,6 +111,7 @@ public class CaptureController {
         model.addAttribute("catchRecord", catchRecord);
         model.addAttribute("anglers", anglers);
         model.addAttribute("photoUrl", s3Service.getPhotoUrl(catchRecord.getPhotoUrl()));
+        model.addAttribute("sessionStartDateTime", session.getStartDate().atStartOfDay());
         return "catches/edit-catch";
     }
 

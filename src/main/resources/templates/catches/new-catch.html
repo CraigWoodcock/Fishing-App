@@ -31,7 +31,9 @@
         <div>
             <label class="block mb-1 text-sm sm:text-base" for="catchTime">Catch Time</label>
             <input class="w-full p-2 rounded bg-surface-alt text-paper" id="catchTime" name="catchTime"
-                   required type="datetime-local">
+                   required th:min="${#temporals.format(sessionStartDateTime, 'yyyy-MM-dd''T''HH:mm')}"
+                   th:value="${#temporals.format(sessionStartDateTime, 'yyyy-MM-dd''T''HH:mm')}"
+                   type="datetime-local">
         </div>
 
         <div>

@@ -62,6 +62,18 @@ public class GlobalWebExceptionHandler {
         return modelAndView;
     }
 
+    /**
+     * Handles a catch time set before the session's start date by redirecting
+     * back to whichever form the user submitted from, with the validation
+     * message carried as a flash attribute.
+     */
+    @ExceptionHandler(InvalidCatchTimeException.class)
+    public ModelAndView handleInvalidCatchTime(InvalidCatchTimeException ex, HttpServletRequest request,
+                                               RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        return new ModelAndView("redirect:" + resolveCatchFormUrl(request));
+    }
+
     @ExceptionHandler(AnglerNotFoundException.class)
     public ModelAndView handleAnglerNotFound(AnglerNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView("error/404");

@@ -16,14 +16,17 @@
 <main class="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-sm sm:max-w-xl">
     <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8" th:text="${catchRecord.fishType}"></h2>
 
-    <img alt="Catch photo" class="w-full max-h-96 object-cover rounded-lg mb-6" th:if="${photoUrl}" th:src="${photoUrl}">
+    <img alt="Catch photo" class="w-full max-h-96 object-cover rounded-lg mb-6" th:if="${photoUrl}"
+         th:src="${photoUrl}">
     <div class="w-full h-48 sm:h-64 bg-surface rounded-lg mb-6 flex items-center justify-center text-faint"
          th:unless="${photoUrl}">No photo
     </div>
 
     <div class="bg-surface p-4 sm:p-6 rounded-lg mb-8">
-        <p class="mb-2 text-sm sm:text-base"><strong>Angler:</strong> <span th:text="${catchRecord.angler.name}"></span></p>
-        <p class="mb-2 text-sm sm:text-base"><strong>Weight:</strong> <span th:text="${catchRecord.weight + ' lb'}"></span></p>
+        <p class="mb-2 text-sm sm:text-base"><strong>Angler:</strong> <span th:text="${catchRecord.angler.name}"></span>
+        </p>
+        <p class="mb-2 text-sm sm:text-base"><strong>Weight:</strong> <span
+                th:text="${@lbOzWeightConverter.format(catchRecord.weight)}"></span></p>
         <p class="mb-2 text-sm sm:text-base"><strong>Caught:</strong>
             <span th:text="${#temporals.format(catchRecord.catchTime, 'dd-MM-yyyy HH:mm')}"></span></p>
         <p class="mb-2 text-sm sm:text-base" th:if="${catchRecord.pegOrSwim}"><strong>Peg / Swim:</strong>
@@ -33,7 +36,7 @@
     </div>
 
     <div class="flex flex-col sm:flex-row gap-4 mb-4">
-        <a class="bg-surface-alt hover:bg-surface-alt text-paper font-bold py-2 px-4 rounded flex-1 text-center"
+        <a class="bg-surface-alt hover:bg-line text-paper font-bold py-2 px-4 rounded flex-1 text-center"
            th:href="@{/sessions/{sessionId}/catches/{catchId}/edit(sessionId=${sess.id},catchId=${catchRecord.id})}">
             Edit
         </a>

@@ -22,6 +22,8 @@ module.exports = {
         // accent: "#4B5320",
         // "accent-hover": "#3A4119",
 
+        danger: "#8B3A3A",
+        "danger-hover": "#722E2E",
         paper: "#F5F1E6",      // primary text
         faint: "#9F9C86",      // secondary/muted text
         line: "#2E301F",       // borders/dividers
