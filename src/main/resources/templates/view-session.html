@@ -73,8 +73,7 @@
         </p>
         <form method="post" onsubmit="return confirm('Are you sure you want to delete this session?');"
               th:action="@{/sessions/{id}/delete(id=${sess.id})}">
-            <button class="text-sm text-faint border border-line hover:bg-danger hover:border-danger hover:text-paper font-bold py-2 px-4 rounded transition-colors"
-                    type="submit">
+            <button class="bg-danger hover:bg-danger-hover text-paper font-bold py-2 px-4 rounded" type="submit">
                 Delete Session
             </button>
         </form>

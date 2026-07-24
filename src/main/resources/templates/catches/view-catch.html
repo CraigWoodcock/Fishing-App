@@ -36,19 +36,22 @@
     </div>
 
     <div class="flex flex-col sm:flex-row gap-4 mb-4">
-        <a class="bg-surface-alt hover:bg-line text-paper font-bold py-2 px-4 rounded flex-1 text-center"
+        <a class="bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded flex-1 text-center"
            th:href="@{/sessions/{sessionId}/catches/{catchId}/edit(sessionId=${sess.id},catchId=${catchRecord.id})}">
             Edit
         </a>
         <form class="flex-1" method="post" onsubmit="return confirm('Delete this catch?');"
               th:action="@{/sessions/{sessionId}/catches/{catchId}/delete(sessionId=${sess.id},catchId=${catchRecord.id})}">
-            <button class="bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded w-full" type="submit">
+            <button class="bg-danger hover:bg-danger-hover text-paper font-bold py-2 px-4 rounded w-full" type="submit">
                 Delete
             </button>
         </form>
     </div>
 
-    <a class="text-accent hover:text-accent-hover" th:href="@{/sessions/{id}(id=${sess.id})}">Back to Session</a>
+    <a class="block text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
+       th:href="@{/sessions/{id}(id=${sess.id})}">
+        Back to Session
+    </a>
 </main>
 
 <div th:replace="~{fragments/layout :: footer}"></div>

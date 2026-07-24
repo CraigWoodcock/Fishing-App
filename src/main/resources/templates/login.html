@@ -35,10 +35,10 @@
                 Login
             </button>
         </form>
-        <div class="bg-red-500 text-paper p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${error}">
+        <div class="bg-danger text-paper p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${error}">
             <p th:text="${error}"></p>
         </div>
-        <div class="bg-green-500 text-paper p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${message}">
+        <div class="bg-accent text-paper p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${message}">
             <p th:text="${message}"></p>
         </div>
         <div class="mt-4 text-center">

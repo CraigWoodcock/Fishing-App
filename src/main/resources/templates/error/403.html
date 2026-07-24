@@ -3,19 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Error - Fishing Session Tracker</title>
+    <title>Forbidden - Fishing Session Tracker</title>
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
     <link rel="stylesheet" th:href="@{/css/output.css}">
 </head>
-<body class="bg-black text-white">
-<main class="min-h-screen flex items-center justify-center">
-    <section class="bg-gray-900 p-8 rounded shadow-md w-96 text-center">
-        <h1 class="text-2xl font-semibold mb-6">403 - Forbidden</h1>
-        <p class="mb-4">You do not have permission to access this page.</p>
-        <p class="mb-6 text-gray-400" th:if="${message}" th:text="${message}"></p>
-        <div class="mt-4">
-            <a class="text-gray-400 hover:text-gray-300 text-sm" href="/login">Return to Login</a>
+<body class="bg-ink text-paper min-h-screen flex flex-col">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="flex-grow flex items-center justify-center px-4 py-8">
+    <section class="bg-surface p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md text-center">
+        <h2 class="text-xl sm:text-2xl font-semibold mb-4">403 - Forbidden</h2>
+        <p class="mb-4 text-sm sm:text-base text-faint">You do not have permission to access this page.</p>
+        <div class="bg-danger text-paper p-3 rounded mb-4 text-sm sm:text-base" role="alert" th:if="${message}">
+            <p th:text="${message}"></p>
         </div>
+        <a class="block w-full bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
+           href="/dashboard">
+            Back to Dashboard
+        </a>
     </section>
 </main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
 </body>
 </html>
