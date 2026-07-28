@@ -9,6 +9,7 @@ import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.repository.CatchRepository;
 import com.craigwoodcock.fishingapp.utils.LbOzWeightConverter;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -142,5 +143,41 @@ public class CatchService {
 
         return weightConverter.formatTotalOunces(totalOunces);
     }
+
+    /**
+     * Reassigns every catch a departing angler made during a session to a
+     * different angler who remains on that session. Used when removing an
+     * angler from a session where they already have logged catches.
+     *
+     * @param sessionId    the session the catches belong to
+     * @param fromAnglerId the angler being removed
+     * @param toAnglerId   the angler to reassign the catches to
+     */
+    @Transactional
+    public void reassignCatches(Long sessionId, Long fromAnglerId, Long toAnglerId) {
+        List<Catch> catches = catchRepository.findBySessionIdAndAnglerId(sessionId, fromAnglerId);
+        Angler newAngler = anglerRepository.findById(toAnglerId)
+                .orElseThrow(() -> new AnglerNotFoundException("That angler could not be found!"));
+
+        for (Catch c : catches) {
+            c.setAngler(newAngler);
+        }
+        catchRepository.saveAll(catches);
+    }
+
+    /**
+     * Deletes every catch a departing angler made during a session. Used
+     * when removing an angler from a session and the user has chosen to
+     * discard their catches rather than reassign them.
+     *
+     * @param sessionId the session the catches belong to
+     * @param anglerId  the angler being removed
+     */
+    @Transactional
+    public void deleteCatchesForAnglerInSession(Long sessionId, Long anglerId) {
+        List<Catch> catches = catchRepository.findBySessionIdAndAnglerId(sessionId, anglerId);
+        catchRepository.deleteAll(catches);
+    }
+
 }
 

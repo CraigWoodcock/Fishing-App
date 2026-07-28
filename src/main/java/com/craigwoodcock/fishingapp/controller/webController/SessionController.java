@@ -1,5 +1,8 @@
 package com.craigwoodcock.fishingapp.controller.webController;
 
+import com.craigwoodcock.fishingapp.exception.AnglerNotFoundException;
+import com.craigwoodcock.fishingapp.model.entity.Angler;
+import com.craigwoodcock.fishingapp.model.entity.Catch;
 import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -93,18 +97,85 @@ public class SessionController {
         return "view-session";
     }
 
+    /**
+     * Displays the form for editing an existing session's details and
+     * managing its anglers.
+     */
     @GetMapping("/{id}/edit")
     public String editSessionForm(@PathVariable Long id, Model model) {
         Session session = sessionService.getSessionById(id);
-        model.addAttribute("sessions", session);
-        return "sessions/form";
+        model.addAttribute("sess", session);
+        model.addAttribute("anglers", sessionService.getAnglersForSession(id));
+        return "edit-session";
     }
 
-    @PostMapping("/{id}")
-    public String updateSession(@PathVariable Long id, @ModelAttribute Session session) {
-        session.setId(id);
-        sessionService.updateSession(session);
-        return "redirect:/dashboard";
+    /**
+     * Applies edits to a session's venue, start date, duration, and adds
+     * any newly-listed anglers, then redirects back to the session view.
+     */
+    @PostMapping("/{id}/edit")
+    public String updateSession(@PathVariable Long id,
+                                @RequestParam String venue,
+                                @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                @RequestParam int durationHours,
+                                @RequestParam(required = false) String anglersList,
+                                RedirectAttributes redirectAttributes) {
+        sessionService.updateSessionDetails(id, venue, startDate, durationHours);
+        sessionService.addAnglersToSession(id, anglersList);
+        redirectAttributes.addFlashAttribute("message", "Session Updated");
+        return "redirect:/sessions/" + id;
+    }
+
+    /**
+     * Attempts to remove an angler from a session. If they have no logged
+     * catches they're removed immediately; otherwise the user is shown a
+     * confirmation page to choose between reassigning or deleting those
+     * catches before the angler can be removed.
+     */
+    @PostMapping("/{sessionId}/anglers/{anglerId}/remove-check")
+    public String checkRemoveAngler(@PathVariable Long sessionId, @PathVariable Long anglerId,
+                                    Model model, RedirectAttributes redirectAttributes) {
+        List<Catch> catches = catchService.getCatchesForSession(sessionId).stream()
+                .filter(c -> c.getAngler().getId().equals(anglerId))
+                .toList();
+
+        if (catches.isEmpty()) {
+            sessionService.removeAnglerFromSession(sessionId, anglerId);
+            redirectAttributes.addFlashAttribute("message", "Angler removed from session");
+            return "redirect:/sessions/" + sessionId + "/edit";
+        }
+
+        Angler angler = anglerRepository.findById(anglerId)
+                .orElseThrow(() -> new AnglerNotFoundException("That angler could not be found!"));
+        List<Angler> otherAnglers = sessionService.getAnglersForSession(sessionId).stream()
+                .filter(a -> !a.getId().equals(anglerId))
+                .toList();
+
+        model.addAttribute("sess", sessionService.getSessionById(sessionId));
+        model.addAttribute("angler", angler);
+        model.addAttribute("catchCount", catches.size());
+        model.addAttribute("otherAnglers", otherAnglers);
+        return "remove-angler-confirm";
+    }
+
+    /**
+     * Finalises the removal of an angler who had logged catches, either
+     * reassigning those catches to another angler on the session or
+     * deleting them, per the user's choice on the confirmation page.
+     */
+    @PostMapping("/{sessionId}/anglers/{anglerId}/remove")
+    public String removeAngler(@PathVariable Long sessionId, @PathVariable Long anglerId,
+                               @RequestParam String action,
+                               @RequestParam(required = false) Long reassignToAnglerId,
+                               RedirectAttributes redirectAttributes) {
+        if ("reassign".equals(action)) {
+            catchService.reassignCatches(sessionId, anglerId, reassignToAnglerId);
+        } else {
+            catchService.deleteCatchesForAnglerInSession(sessionId, anglerId);
+        }
+        sessionService.removeAnglerFromSession(sessionId, anglerId);
+        redirectAttributes.addFlashAttribute("message", "Angler removed from session");
+        return "redirect:/sessions/" + sessionId + "/edit";
     }
 
     @PostMapping("/{id}/delete")
@@ -114,11 +185,5 @@ public class SessionController {
         return "redirect:/dashboard";
     }
 
-
-    @PostMapping("/{sessionId}/anglers/{anglerId}/delete")
-    public String removeAngler(@PathVariable Long sessionId, @PathVariable Long anglerId) {
-        sessionService.removeAnglerFromSession(sessionId, anglerId);
-        return "redirect:/sessions/" + sessionId;
-    }
 
 }

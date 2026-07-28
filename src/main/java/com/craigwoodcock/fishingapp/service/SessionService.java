@@ -52,25 +52,63 @@ public class SessionService {
         session = sessionRepository.save(session);
         log.info("Session created with id " + session.getId());
 
-// Find or create the userAngler, this will be the logged in user.
+        // Find or create the userAngler, this will be the logged in user.
         Angler userAngler = anglerService.findOrCreateAngler(user.getName());
         createAnglerSession(session, userAngler);
 
+        addAnglersToSession(session.getId(), anglersList);
+        return session;
+    }
 
-// Create a String Array of anglers names (seperated by a comma-seperated list)
-// if the anglersList is not empty.
-        if (anglersList != null && !anglersList.trim().isEmpty()) {
-            String[] anglerNames = anglersList.split(",");
+    /**
+     * Adds each named angler in a comma-separated list to a session,
+     * creating any angler that doesn't already exist and skipping anyone
+     * already attached to the session. Shared by session creation and
+     * session editing so the parsing/dedup rule lives in one place.
+     *
+     * @param sessionId   the session to add anglers to
+     * @param anglersList a comma-separated list of angler names, may be null or blank
+     */
+    @Transactional
+    public void addAnglersToSession(Long sessionId, String anglersList) {
+        if (anglersList == null || anglersList.trim().isEmpty()) {
+            return;
+        }
+        Session session = getSessionById(sessionId);
+        List<Angler> existingAnglers = getAnglersForSession(sessionId);
 
-// Find or create each angler in the list
-            for (String anglerName : anglerNames) {
-                if (!anglerName.trim().equals(user.getName())) {
-                    Angler angler = anglerService.findOrCreateAngler(anglerName.trim());
-                    createAnglerSession(session, angler);
-                }
+        for (String anglerName : anglersList.split(",")) {
+            String trimmedName = anglerName.trim();
+            if (trimmedName.isEmpty()) {
+                continue;
+            }
+            boolean alreadyOnSession = existingAnglers.stream()
+                    .anyMatch(a -> a.getName().equalsIgnoreCase(trimmedName));
+            if (!alreadyOnSession) {
+                Angler angler = anglerService.findOrCreateAngler(trimmedName);
+                createAnglerSession(session, angler);
             }
         }
-        return session;
+    }
+
+    /**
+     * Updates a session's venue, start date, and duration. Anglers are
+     * managed separately via addAnglersToSession / removeAnglerFromSession,
+     * so this only ever touches the session's own fields.
+     *
+     * @param sessionId     the id of the session being edited
+     * @param venue         the updated venue
+     * @param startDate     the updated start date
+     * @param durationHours the updated duration in hours
+     * @return the updated Session entity
+     */
+    @Transactional
+    public Session updateSessionDetails(Long sessionId, String venue, LocalDate startDate, int durationHours) {
+        Session session = getSessionById(sessionId);
+        session.setVenue(venue);
+        session.setStartDate(startDate);
+        session.setDurationHours(durationHours);
+        return sessionRepository.save(session);
     }
 
     private void createAnglerSession(Session session, Angler angler) {
