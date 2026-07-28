@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>Remove Angler - Fishing Session Tracker</title>
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+</head>
+<body class="bg-ink text-paper min-h-screen flex flex-col">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-sm sm:max-w-lg">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Remove <span th:text="${angler.name}"></span>?</h2>
+
+    <div class="bg-surface p-6 sm:p-8 rounded-lg">
+        <p class="text-sm sm:text-base mb-6">
+            <span th:text="${angler.name}"></span> has
+            <span th:text="${catchCount}"></span> catch(es) logged on this session.
+            Choose what to do with them before removing this angler.
+        </p>
+
+        <form method="post"
+              th:action="@{/sessions/{sessionId}/anglers/{anglerId}/remove(sessionId=${sess.id},anglerId=${angler.id})}">
+
+            <div class="mb-4" th:if="${not #lists.isEmpty(otherAnglers)}">
+                <label class="flex items-center gap-2 mb-2">
+                    <input checked name="action" type="radio" value="reassign">
+                    Reassign their catches to
+                </label>
+                <select class="w-full p-2 rounded bg-surface-alt text-paper" name="reassignToAnglerId">
+                    <option th:each="other : ${otherAnglers}" th:text="${other.name}" th:value="${other.id}"></option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label class="flex items-center gap-2">
+                    <input name="action" th:checked="${#lists.isEmpty(otherAnglers)}" type="radio" value="delete">
+                    Delete their catches permanently
+                </label>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button class="flex-1 bg-danger hover:bg-danger-hover text-paper font-bold py-2 px-4 rounded"
+                        type="submit">
+                    Confirm Removal
+                </button>
+                <a class="flex-1 text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
+                   th:href="@{/sessions/{id}/edit(id=${sess.id})}">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>

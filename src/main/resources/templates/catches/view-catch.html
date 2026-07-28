@@ -34,24 +34,29 @@
         <p class="mb-2 text-sm sm:text-base" th:if="${catchRecord.notes}"><strong>Notes:</strong>
             <span th:text="${catchRecord.notes}"></span></p>
     </div>
-
-    <div class="flex flex-col sm:flex-row gap-4 mb-4">
-        <a class="bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded flex-1 text-center"
+    
+    <div class="flex flex-col sm:flex-row gap-3 mb-8">
+        <a class="flex-1 text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
            th:href="@{/sessions/{sessionId}/catches/{catchId}/edit(sessionId=${sess.id},catchId=${catchRecord.id})}">
             Edit
         </a>
-        <form class="flex-1" method="post" onsubmit="return confirm('Delete this catch?');"
+        <a class="flex-1 text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
+           th:href="@{/sessions/{id}(id=${sess.id})}">
+            Back
+        </a>
+    </div>
+
+    <div class="border border-line rounded-lg p-4 sm:p-6">
+        <p class="text-sm text-faint mb-3">
+            Deleting a catch permanently removes it, including its photo. This cannot be undone.
+        </p>
+        <form method="post" onsubmit="return confirm('Delete this catch?');"
               th:action="@{/sessions/{sessionId}/catches/{catchId}/delete(sessionId=${sess.id},catchId=${catchRecord.id})}">
-            <button class="bg-danger hover:bg-danger-hover text-paper font-bold py-2 px-4 rounded w-full" type="submit">
+            <button class="bg-danger hover:bg-danger-hover text-paper font-bold py-2 px-4 rounded" type="submit">
                 Delete
             </button>
         </form>
     </div>
-
-    <a class="block text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
-       th:href="@{/sessions/{id}(id=${sess.id})}">
-        Back to Session
-    </a>
 </main>
 
 <div th:replace="~{fragments/layout :: footer}"></div>
