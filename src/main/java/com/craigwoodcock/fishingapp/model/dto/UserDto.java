@@ -15,7 +15,7 @@ public class UserDto {
     private final String email;
     private final Role role;
     private final LocalDateTime createdAt;
-    private final LocalDateTime updatedAt;
+    private final LocalDateTime lastLoginAt;
 
     public UserDto(User user) {
         this.id = user.getId();
@@ -24,7 +24,7 @@ public class UserDto {
         this.email = user.getEmail();
         this.role = user.getRole();
         this.createdAt = user.getCreatedAt();
-        this.updatedAt = user.getUpdatedAt();
+        this.lastLoginAt = user.getLastLoginAt();
     }
 
     public Long getId() {
@@ -51,8 +51,8 @@ public class UserDto {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
     }
 
 
@@ -65,6 +65,6 @@ public class UserDto {
                 "email = " + email + ", " +
                 "role = " + role + ", " +
                 "createdAt = " + createdAt + ", " +
-                "updatedAt = " + updatedAt + ")";
+                "lastLoginAt = " + lastLoginAt + ")";
     }
 }

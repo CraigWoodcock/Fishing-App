@@ -10,4 +10,5 @@ jwt.secret=${JWT_SECRET}
 jwt.expiration=864000000
 admin.username=${ADMIN_USER}
 admin.password=${ADMIN_PASS}
-admin.email=
+admin.reset-password-on-startup=false
+admin.email=${ADMIN-EMAIL}

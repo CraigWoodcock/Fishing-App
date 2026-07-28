@@ -2,6 +2,7 @@ package com.craigwoodcock.fishingapp.controller.apiController;
 
 import com.craigwoodcock.fishingapp.model.dto.AuthRequest;
 import com.craigwoodcock.fishingapp.model.dto.AuthResponse;
+import com.craigwoodcock.fishingapp.model.entity.Role;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.service.UserService;
 import com.craigwoodcock.fishingapp.utils.JwtUtils;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 /**
  * REST API controller responsible for handling authentication-related operations
@@ -63,12 +66,17 @@ public class AuthApiController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
         User user = userService.findByUsername(request.getUsername().toLowerCase());
-        if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword()) && user.getRole().equals("USER")) {
-            String token = jwtUtils.generateToken(user.getUsername());
 
-            return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())
+                || user.getRole() != Role.USER) {
+            return ResponseEntity.badRequest().body(new AuthResponse("Invalid username or password", null));
         }
-        return ResponseEntity.badRequest().body(new AuthResponse("Invalid username or password", user.getUsername()));
+
+        user.setLastLoginAt(LocalDateTime.now());
+        userService.updateUser(user);
+
+        String token = jwtUtils.generateToken(user.getUsername());
+        return ResponseEntity.ok(new AuthResponse(token, user.getUsername()));
     }
 
     /**

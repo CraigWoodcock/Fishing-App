@@ -3,7 +3,6 @@ package com.craigwoodcock.fishingapp.config;
 import com.craigwoodcock.fishingapp.model.entity.Role;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.UserRepository;
-import com.craigwoodcock.fishingapp.utils.DateFormatter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Configuration;
@@ -11,12 +10,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 /**
- * Initializes default users in the application upon startup.
- * This component is responsible for creating or resetting the admin user
- * based on application properties.
+ * Initializes the default admin user on application startup.
+ * Creates the admin account if it does not exist. If it already exists,
+ * the password is only reset when admin.reset-password-on-startup is true.
  *
  * @author Craig Woodcock
  * @version 1.0
@@ -38,6 +38,9 @@ public class UserInitializer {
     @Value("${admin.password}")
     private String adminPassword;
 
+    @Value("${admin.reset-password-on-startup:false}")
+    private boolean resetPasswordOnStartup;
+
     /**
      * Constructor for UserInitializer.
      *
@@ -50,40 +53,42 @@ public class UserInitializer {
     }
 
     /**
-     * Initializes default users when the application starts.
+     * Initializes the default admin user when the application starts.
      * This method is triggered by the ApplicationReadyEvent.
      */
     @EventListener(ApplicationReadyEvent.class)
     public void initializeUsers() {
-        createUserIfNotExists(adminUsername, adminEmail, adminPassword);
+        createOrResetAdmin(adminUsername, adminEmail, adminPassword);
     }
 
     /**
-     * Creates a new user or resets an existing user's password.
+     * Creates the admin user if it does not already exist. If it does exist,
+     * the password is only reset when admin.reset-password-on-startup is true.
      *
-     * @param username The username for the user
-     * @param email    The email address for the user
-     * @param password The password for the user
+     * @param username The username for the admin user
+     * @param email    The email address for the admin user
+     * @param password The password for the admin user
      */
-    private void createUserIfNotExists(String username, String email, String password) {
-        if (!userRepository.findByUsername(username).isPresent()) {
+    private void createOrResetAdmin(String username, String email, String password) {
+        Optional<User> existingUser = userRepository.findByUsername(username.toLowerCase());
+
+        if (existingUser.isEmpty()) {
             User user = new User();
             user.setUsername(username.toLowerCase());
             user.setName(username);
             user.setEmail(email);
             user.setPassword(passwordEncoder.encode(password));
             user.setRole(Role.ADMIN);
-            user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-            user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
+            user.setCreatedAt(LocalDateTime.now());
             userRepository.save(user);
-            log.info("Created " + Role.ADMIN + " account with username " + username);
-        } else {
-            log.info("Resetting existing user " + username);
-            User user = userRepository.findByUsername(username.toLowerCase()).orElse(null);
+            log.info("Created " + Role.ADMIN + " account with username " + username.toLowerCase());
+        } else if (resetPasswordOnStartup) {
+            User user = existingUser.get();
             user.setPassword(passwordEncoder.encode(password));
-            user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
             userRepository.save(user);
             log.info(Role.ADMIN + " account with username " + username.toLowerCase() + " has been reset");
+        } else {
+            log.info(Role.ADMIN + " Account found with username: " + username.toLowerCase() + " Starting Application ");
         }
     }
 }

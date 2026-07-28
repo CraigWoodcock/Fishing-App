@@ -11,7 +11,6 @@ import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.JwtTokenRepository;
 import com.craigwoodcock.fishingapp.repository.UserRepository;
-import com.craigwoodcock.fishingapp.utils.DateFormatter;
 import com.craigwoodcock.fishingapp.utils.JwtUtils;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,16 +57,16 @@ public class UserService {
         log.info("encoded password");
         user.setRole(Role.USER);
         log.info("Role Set: " + user.getRole());
-        userRepository.save(user);
-        log.info("User saved");
-        user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-        log.info("Created at: " + user.getCreatedAt());
-        user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-        log.info("Updated at: " + user.getUpdatedAt());
-        userRepository.save(user);
 
+        LocalDateTime now = LocalDateTime.now();
+        user.setCreatedAt(now);
+        user.setLastLoginAt(now);
+
+        userRepository.save(user);
+        log.info("User saved with id " + user.getId());
     }
 
+    // after
     @Transactional
     public void registerAdminUser(User user) throws UserAlreadyExistsException {
         if (userRepository.findByUsername(user.getUsername().toLowerCase()).isPresent()) {
@@ -76,20 +75,19 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("Email already exists");
         }
-        log.info("Registering user: " + user.getUsername());
+        log.info("Registering admin user: " + user.getUsername());
         user.setUsername(user.getUsername().toLowerCase());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("encoded password");
         user.setRole(Role.ADMIN);
         log.info("Role Set: " + user.getRole());
-        userRepository.save(user);
-        log.info("User saved");
-        user.setCreatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-        log.info("Created at: " + user.getCreatedAt());
-        user.setUpdatedAt(DateFormatter.formatLocalDateTime(LocalDateTime.now()));
-        log.info("Updated at: " + user.getUpdatedAt());
-        userRepository.save(user);
 
+        LocalDateTime now = LocalDateTime.now();
+        user.setCreatedAt(now);
+        user.setLastLoginAt(now);
+
+        userRepository.save(user);
+        log.info("Admin user saved with id " + user.getId());
     }
 
     public List<String> getUserTokens(User user) {
@@ -232,6 +230,20 @@ public class UserService {
         if (user.getRole() != Role.ADMIN) {
             throw new UserForbiddenException("Admin access is required");
         }
+
+        user.setLastLoginAt(LocalDateTime.now());
+        userRepository.save(user);
+
         return user;
+    }
+
+    /**
+     * Persists changes to an existing user, e.g. updating their
+     * last-login timestamp after a successful authentication.
+     *
+     * @param user the user to save
+     */
+    public void updateUser(User user) {
+        userRepository.save(user);
     }
 }

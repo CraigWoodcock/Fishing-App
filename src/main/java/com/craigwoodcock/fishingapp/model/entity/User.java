@@ -42,8 +42,8 @@ public class User {
     private LocalDateTime createdAt;
 
     @ColumnDefault("CURRENT_TIMESTAMP")
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    @Column(name = "last_login_at")
+    private LocalDateTime lastLoginAt;
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -53,12 +53,12 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
+    public LocalDateTime getLastLoginAt() {
+        return lastLoginAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
+    public void setLastLoginAt(LocalDateTime lastLoginAt) {
+        this.lastLoginAt = lastLoginAt;
     }
 
     public List<GrantedAuthority> getAuthorities() {
