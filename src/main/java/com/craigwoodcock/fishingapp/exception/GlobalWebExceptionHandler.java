@@ -88,6 +88,18 @@ public class GlobalWebExceptionHandler {
         return modelAndView;
     }
 
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ModelAndView handleUserAlreadyExistsWeb(UserAlreadyExistsException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        return new ModelAndView("redirect:/account");
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ModelAndView handleInvalidCredentialsWeb(InvalidCredentialsException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        return new ModelAndView("redirect:/account");
+    }
+
     @ExceptionHandler(UserUnauthorizedException.class)
     public ModelAndView handleUnauthorized(UserUnauthorizedException ex) {
         ModelAndView modelAndView = new ModelAndView("error/401");

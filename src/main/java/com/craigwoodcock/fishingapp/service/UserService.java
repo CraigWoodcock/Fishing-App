@@ -246,4 +246,55 @@ public class UserService {
     public void updateUser(User user) {
         userRepository.save(user);
     }
+
+    /**
+     * Updates a user's account details (name, username, email) and
+     * optionally their password. Username and email changes are checked
+     * for uniqueness against other users; a password change requires the
+     * correct current password and a matching confirmation.
+     *
+     * @param userId             the id of the user being updated
+     * @param name               the updated display name
+     * @param username           the updated username (may be unchanged)
+     * @param email              the updated email (may be unchanged)
+     * @param currentPassword    required only if newPassword is supplied
+     * @param newPassword        the new password, or null/blank to leave unchanged
+     * @param confirmNewPassword must match newPassword when changing password
+     * @throws UserAlreadyExistsException  if the new username or email belongs to another user
+     * @throws InvalidCredentialsException if the current password is wrong or the new passwords don't match
+     */
+    @Transactional
+    public void updateAccountDetails(Long userId, String name, String username, String email,
+                                     String currentPassword, String newPassword, String confirmNewPassword) {
+        User user = findById(userId);
+
+        String normalizedUsername = username.toLowerCase();
+        if (!normalizedUsername.equals(user.getUsername())) {
+            if (userRepository.findByUsername(normalizedUsername).isPresent()) {
+                throw new UserAlreadyExistsException("Username already exists");
+            }
+            user.setUsername(normalizedUsername);
+        }
+
+        if (!email.equalsIgnoreCase(user.getEmail())) {
+            if (userRepository.findByEmail(email).isPresent()) {
+                throw new UserAlreadyExistsException("Email already exists");
+            }
+            user.setEmail(email);
+        }
+
+        user.setName(name);
+
+        if (newPassword != null && !newPassword.isBlank()) {
+            if (currentPassword == null || !passwordEncoder.matches(currentPassword, user.getPassword())) {
+                throw new InvalidCredentialsException("Current password is incorrect");
+            }
+            if (!newPassword.equals(confirmNewPassword)) {
+                throw new InvalidCredentialsException("New passwords do not match");
+            }
+            user.setPassword(passwordEncoder.encode(newPassword));
+        }
+
+        userRepository.save(user);
+    }
 }
