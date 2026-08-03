@@ -40,21 +40,24 @@
     <p class="text-faint" th:if="${sessions.isEmpty()}">You haven't created any sessions yet.</p>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <a class="group bg-surface p-4 rounded-lg flex flex-col"
+        <a class="group bg-surface border-t-4 border-accent rounded-lg p-4 sm:p-5 flex flex-col"
            th:each="sess : ${sessions}"
            th:href="@{/sessions/{id}(id=${sess.id})}">
-            <h4 class="text-lg sm:text-xl font-semibold mb-2" th:text="${sess.venue}"></h4>
-            <p class="text-sm text-faint mb-1"
-               th:text="${'Date: ' + #temporals.format(sess.startDate, 'dd-MM-yyyy')}"></p>
-            <p class="text-sm text-faint mb-1"
-               th:text="${'Duration: ' + sess.durationHours + ' hours'}"></p>
-            <div th:with="anglersList=${@sessionService.getAnglersForSession(sess.id)}">
-                <p class="text-sm text-faint mb-1" th:text="${'Anglers: ' + anglersList.size()}"></p>
+            <h4 class="text-lg sm:text-xl font-semibold mb-3" th:text="${sess.venue}"></h4>
+
+            <div class="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-faint mb-4">
+                <p th:text="${'Date: ' + #temporals.format(sess.startDate, 'dd-MM-yyyy')}"></p>
+                <div th:with="anglersList=${@sessionService.getAnglersForSession(sess.id)}">
+                    <p th:text="${'Anglers: ' + anglersList.size()}"></p>
+                </div>
+                <p th:text="${'Duration: ' + sess.durationHours + ' hours'}"></p>
+
+                <div th:with="totalWeight=${@sessionService.getTotalWeightForSession(sess.id)}">
+                    <p th:text="${'Total Weight: ' + totalWeight}"></p>
+                </div>
             </div>
-            <div th:with="totalWeight=${@sessionService.getTotalWeightForSession(sess.id)}">
-                <p class="text-sm text-faint mb-3" th:text="${'Total Weight: ' + totalWeight}"></p>
-            </div>
-            <span class="mt-auto inline-block text-center bg-accent group-hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded">
+
+            <span class="mt-auto sm:self-end sm:w-auto text-center bg-accent group-hover:bg-accent-hover text-paper font-bold py-2 px-6 rounded">
             View Details
         </span>
         </a>
