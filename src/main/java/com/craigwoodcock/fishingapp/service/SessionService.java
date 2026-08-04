@@ -127,6 +127,10 @@ public class SessionService {
 
     }
 
+    public List<Session> getAllSessions() {
+        return sessionRepository.findAll();
+    }
+
     public List<Session> getAllSessionsByUser(User user) {
         return sessionRepository.findByUserOrderByStartDateDesc(user);
     }

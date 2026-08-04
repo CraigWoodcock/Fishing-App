@@ -66,7 +66,6 @@ public class UserService {
         log.info("User saved with id " + user.getId());
     }
 
-    // after
     @Transactional
     public void registerAdminUser(User user) throws UserAlreadyExistsException {
         if (userRepository.findByUsername(user.getUsername().toLowerCase()).isPresent()) {
@@ -88,6 +87,37 @@ public class UserService {
 
         userRepository.save(user);
         log.info("Admin user saved with id " + user.getId());
+    }
+
+    @Transactional
+    public void adminUpdateUser(Long userId, String name, String username, String email, Role role) {
+        User user = findById(userId);
+
+        String normalizedUsername = username.toLowerCase();
+        if (!normalizedUsername.equals(user.getUsername())) {
+            if (userRepository.findByUsername(normalizedUsername).isPresent()) {
+                throw new UserAlreadyExistsException("Username already exists");
+            }
+            user.setUsername(normalizedUsername);
+        }
+
+        if (!email.equalsIgnoreCase(user.getEmail())) {
+            if (userRepository.findByEmail(email).isPresent()) {
+                throw new UserAlreadyExistsException("Email already exists");
+            }
+            user.setEmail(email);
+        }
+
+        user.setName(name);
+        user.setRole(role);
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void adminResetPassword(Long userId, String newPassword) {
+        User user = findById(userId);
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
     }
 
     public List<String> getUserTokens(User user) {

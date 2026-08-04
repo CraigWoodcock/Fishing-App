@@ -113,6 +113,35 @@ public class SecurityConfig {
         return http.build();
     }
 
+    @Bean
+    @Order(2)
+    public SecurityFilterChain adminSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .securityMatcher("/admin/**")
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/admin/login").permitAll()
+                        .anyRequest().hasRole("ADMIN")
+                )
+                .formLogin(form -> form
+                        .loginPage("/admin/login")
+                        .defaultSuccessUrl("/admin/dashboard")
+                        .failureUrl("/admin/login?error=true")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/admin/logout"))
+                        .logoutSuccessUrl("/admin/login?logout")
+                        .deleteCookies("JSESSIONID")
+                        .invalidateHttpSession(true)
+                        .permitAll())
+                .exceptionHandling(exceptions -> exceptions
+                        .accessDeniedPage("/error/403")
+                )
+                .userDetailsService(customUserDetailsService);
+
+        return http.build();
+    }
+
     /**
      * Configures security settings for web interface endpoints.
      * This configuration implements form-based authentication with session management
@@ -123,13 +152,12 @@ public class SecurityConfig {
      * @throws Exception if an error occurs during security configuration
      */
     @Bean
-    @Order(2)
+    @Order(3)
     public SecurityFilterChain webSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/fragments/**", "/images/**", "/login", "/index", "/register", "/js/**", "/css/**", "/error", "/error/**", "/docs", "/actuator/health", "/swagger-ui/", "/swagger-ui/**").permitAll()  // Public resources
                         .requestMatchers("/api/**").permitAll() //exclude api endpoints from web security filter
-                        .requestMatchers("/admin/**").hasRole("ADMIN")  // Admin-only endpoints
                         .anyRequest().hasRole("USER")                   // All other endpoints require USER role
                 )
                 .formLogin(form -> form

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Admin Login - Fishing Session Tracker</title>
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta content="noindex, nofollow" name="robots">
+</head>
+<body class="bg-ink text-paper min-h-screen flex flex-col">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="flex-grow flex items-center justify-center px-4 py-8">
+    <section class="bg-surface p-6 sm:p-8 rounded-lg shadow-md w-full max-w-sm sm:max-w-md">
+        <span class="inline-block bg-danger text-paper text-xs font-bold uppercase tracking-wide px-2 py-1 rounded mb-4">
+            Admin Panel
+        </span>
+        <h2 class="text-xl sm:text-2xl font-semibold mb-6">Admin Login</h2>
+        <form method="post" th:action="@{/admin/login}">
+            <div class="mb-4">
+                <label class="block mb-2 text-sm sm:text-base" for="username">Username</label>
+                <input class="w-full px-3 py-2 bg-surface rounded" id="username" name="username"
+                       placeholder="Enter Username" required type="text">
+            </div>
+            <div class="mb-6">
+                <label class="block mb-2 text-sm sm:text-base" for="password">Password</label>
+                <input class="w-full px-3 py-2 bg-surface rounded" id="password" name="password"
+                       placeholder="Enter Password" required type="password">
+            </div>
+            <button class="w-full bg-accent text-paper py-2 px-4 rounded-md hover:bg-accent-hover font-bold"
+                    type="submit">
+                Login
+            </button>
+        </form>
+        <div class="bg-danger text-paper p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${param.error}">
+            <p>Incorrect username or password, or account is not an admin.</p>
+        </div>
+        <div class="bg-accent text-paper p-3 rounded mt-4 text-sm sm:text-base" role="alert" th:if="${param.logout}">
+            <p>You have been logged out.</p>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>
