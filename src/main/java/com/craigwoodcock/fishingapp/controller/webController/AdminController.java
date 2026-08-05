@@ -1,16 +1,24 @@
 package com.craigwoodcock.fishingapp.controller.webController;
 
+import com.craigwoodcock.fishingapp.exception.InvalidCredentialsException;
 import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.model.entity.Role;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.service.AdminService;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
-
+/**
+ * Handles HTTP routing for the Thymeleaf-based admin panel. This
+ * class contains no business logic of its own — every request is
+ * delegated straight to AdminService, and this controller's job is
+ * limited to reading request parameters, choosing a view, and
+ * carrying flash messages between redirects. All routes under
+ * /admin are restricted to ROLE_ADMIN by SecurityConfig.
+ */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -21,8 +29,10 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+    // ----- Login / dashboard -----
+
     @GetMapping("/login")
-    public String adminLoginForm() {
+    public String loginForm() {
         return "admin/login";
     }
 
@@ -32,6 +42,35 @@ public class AdminController {
         model.addAttribute("sessionCount", adminService.getAllSessionsForAdmin().size());
         return "admin/dashboard";
     }
+
+    // ----- Admin's own account -----
+
+    @GetMapping("/account")
+    public String viewOwnAccount(Model model, Authentication authentication) {
+        model.addAttribute("user", adminService.getOwnAccount(authentication.getName()));
+        return "admin/account";
+    }
+
+    @PostMapping("/account")
+    public String updateOwnAccount(@RequestParam String name,
+                                   @RequestParam String username,
+                                   @RequestParam String email,
+                                   @RequestParam(required = false) String currentPassword,
+                                   @RequestParam(required = false) String newPassword,
+                                   @RequestParam(required = false) String confirmNewPassword,
+                                   Authentication authentication,
+                                   RedirectAttributes redirectAttributes) {
+        try {
+            adminService.updateOwnAccount(authentication.getName(), name, username, email,
+                    currentPassword, newPassword, confirmNewPassword);
+            redirectAttributes.addFlashAttribute("success", "Account updated");
+        } catch (UserAlreadyExistsException | InvalidCredentialsException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/admin/account";
+    }
+
+    // ----- Users -----
 
     @GetMapping("/users")
     public String listUsers(Model model) {
@@ -49,7 +88,7 @@ public class AdminController {
     public String updateUser(@PathVariable Long id,
                              @RequestParam String name,
                              @RequestParam String username,
-                             @RequestParam String email,
+                             @RequestParam(required = false) String email,
                              @RequestParam Role role,
                              RedirectAttributes redirectAttributes) {
         try {
@@ -95,27 +134,12 @@ public class AdminController {
         return "redirect:/admin/users";
     }
 
+    // ----- Sessions (view/delete only, no edit) -----
+
     @GetMapping("/sessions")
     public String listSessions(Model model) {
         model.addAttribute("sessions", adminService.getAllSessionsForAdmin());
         return "admin/sessions/list";
-    }
-
-    @GetMapping("/sessions/{id}/edit")
-    public String editSessionForm(@PathVariable Long id, Model model) {
-        model.addAttribute("session", adminService.getSessionForAdmin(id));
-        return "admin/sessions/edit";
-    }
-
-    @PostMapping("/sessions/{id}")
-    public String updateSession(@PathVariable Long id,
-                                @RequestParam String venue,
-                                @RequestParam LocalDate startDate,
-                                @RequestParam int durationHours,
-                                RedirectAttributes redirectAttributes) {
-        adminService.updateSession(id, venue, startDate, durationHours);
-        redirectAttributes.addFlashAttribute("success", "Session updated");
-        return "redirect:/admin/sessions";
     }
 
     @PostMapping("/sessions/{id}/delete")

@@ -9,10 +9,19 @@ import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Orchestrates every use case behind the admin panel. This is the
+ * only class AdminController talks to: it owns the translation
+ * between domain objects and admin-facing view DTOs, and applies
+ * admin-panel-specific rules (like keeping an untouched email field
+ * from overwriting a real address). It never touches a repository
+ * directly — entity invariants (uniqueness checks, password
+ * encoding) stay inside UserService and SessionService, which are
+ * the only classes that own their respective repositories.
+ */
 @Service
 public class AdminService {
 
@@ -24,6 +33,12 @@ public class AdminService {
         this.sessionService = sessionService;
     }
 
+    // ----- Users -----
+
+    /**
+     * Builds the list of users shown on the admin users page, with
+     * each user's email masked for display.
+     */
     public List<AdminUserView> getAllUsersForAdmin() {
         List<UserDto> users = userService.getAllUsers();
         List<AdminUserView> userViews = new ArrayList<>();
@@ -35,15 +50,38 @@ public class AdminService {
         return userViews;
     }
 
+    /**
+     * Returns a single user for display on the edit-user page, with
+     * the email masked.
+     */
     public AdminUserView getUserForAdmin(Long userId) {
         UserDto user = userService.getById(userId);
         return new AdminUserView(user);
     }
 
+    /**
+     * Updates a user's details from the admin panel. The email field
+     * on the edit form is deliberately left blank rather than
+     * pre-filled with the masked value, so a blank submission here
+     * means "leave the email unchanged" rather than "erase it" —
+     * this method resolves that by falling back to the existing
+     * email whenever the submitted value is blank.
+     */
     public void updateUser(Long userId, String name, String username, String email, Role role) {
-        userService.adminUpdateUser(userId, name, username, email, role);
+        String emailToSave = email;
+
+        if (emailToSave == null || emailToSave.isBlank()) {
+            UserDto existing = userService.getById(userId);
+            emailToSave = existing.getEmail();
+        }
+
+        userService.adminUpdateUser(userId, name, username, emailToSave, role);
     }
 
+    /**
+     * Resets another user's password. Used only for accounts other
+     * than the admin's own — see updateOwnAccount for self-service.
+     */
     public void resetPassword(Long userId, String newPassword) {
         userService.adminResetPassword(userId, newPassword);
     }
@@ -53,13 +91,46 @@ public class AdminService {
     }
 
     /**
-     * Registers a new admin account. Throws UserAlreadyExistsException
-     * if the username or email is already taken.
+     * Registers a new admin account.
+     *
+     * @throws UserAlreadyExistsException if the username or email is already taken
      */
     public void registerAdmin(User user) throws UserAlreadyExistsException {
         userService.registerAdminUser(user);
     }
 
+    // ----- Admin's own account -----
+
+    /**
+     * Returns the logged-in admin's own account details, unmasked,
+     * for display on their account page.
+     */
+    public UserDto getOwnAccount(String username) {
+        return userService.getByUsername(username);
+    }
+
+    /**
+     * Updates the logged-in admin's own account. Unlike updateUser,
+     * this goes through the standard current-password-checked path,
+     * since here the admin is changing their own credentials rather
+     * than resetting someone else's.
+     */
+    public void updateOwnAccount(String username, String name, String newUsername, String email,
+                                 String currentPassword, String newPassword, String confirmNewPassword) {
+        UserDto user = userService.getByUsername(username);
+        userService.updateAccountDetails(user.getId(), name, newUsername, email,
+                currentPassword, newPassword, confirmNewPassword);
+    }
+
+    // ----- Sessions -----
+
+    /**
+     * Builds the list of sessions shown on the admin sessions page.
+     * Sessions are deliberately view/delete-only from the admin
+     * panel — session content belongs to the user who created it,
+     * and the only legitimate admin need is moderation/cleanup,
+     * which deleteSession already covers.
+     */
     public List<AdminSessionView> getAllSessionsForAdmin() {
         List<Session> sessions = sessionService.getAllSessions();
         List<AdminSessionView> sessionViews = new ArrayList<>();
@@ -69,14 +140,6 @@ public class AdminService {
         }
 
         return sessionViews;
-    }
-
-    public Session getSessionForAdmin(Long sessionId) {
-        return sessionService.getSessionById(sessionId);
-    }
-
-    public void updateSession(Long sessionId, String venue, LocalDate startDate, int durationHours) {
-        sessionService.updateSessionDetails(sessionId, venue, startDate, durationHours);
     }
 
     public void deleteSession(Long sessionId) {
