@@ -83,7 +83,6 @@ public class UserService {
 
         LocalDateTime now = LocalDateTime.now();
         user.setCreatedAt(now);
-        user.setLastLoginAt(now);
 
         userRepository.save(user);
         log.info("Admin user saved with id " + user.getId());

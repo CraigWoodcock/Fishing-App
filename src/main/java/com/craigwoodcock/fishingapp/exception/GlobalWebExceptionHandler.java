@@ -1,5 +1,6 @@
 package com.craigwoodcock.fishingapp.exception;
 
+import com.craigwoodcock.fishingapp.utils.ErrorRedirectResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,6 +11,12 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @ControllerAdvice(basePackages = "com.craigwoodcock.fishingapp.controller.webController")
 public class GlobalWebExceptionHandler {
+
+    private final ErrorRedirectResolver errorRedirectResolver;
+
+    public GlobalWebExceptionHandler(ErrorRedirectResolver errorRedirectResolver) {
+        this.errorRedirectResolver = errorRedirectResolver;
+    }
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ModelAndView handleNotFound(NoHandlerFoundException ex) {
@@ -118,6 +125,24 @@ public class GlobalWebExceptionHandler {
     public ModelAndView handleGenericError(Exception ex) {
         ModelAndView modelAndView = new ModelAndView("error/500");
         modelAndView.addObject("message", "An unexpected error occurred");
+        return modelAndView;
+    }
+
+    /**
+     * Builds an error ModelAndView with the given message, plus a
+     * homeUrl/homeLabel pair the error templates use for their
+     * "back" button. This is resolved from the security context
+     * rather than the request path, since some error views (like
+     * 403, via SecurityConfig's accessDeniedPage) are reached by an
+     * internal forward rather than a fresh request — the security
+     * context stays valid across that forward, the request path
+     * doesn't reliably tell us who's looking at the page.
+     */
+    private ModelAndView buildErrorView(String viewName, String message) {
+        ModelAndView modelAndView = new ModelAndView(viewName);
+        modelAndView.addObject("message", message);
+        modelAndView.addObject("homeUrl", errorRedirectResolver.resolveHomeUrl());
+        modelAndView.addObject("homeLabel", errorRedirectResolver.resolveHomeLabel());
         return modelAndView;
     }
 

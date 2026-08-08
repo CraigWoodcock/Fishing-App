@@ -72,6 +72,10 @@
             </tbody>
         </table>
         <p class="text-faint p-4" th:if="${users.isEmpty()}">No users found.</p>
+        <a class="block text-center bg-danger hover:bg-danger-hover text-paper font-bold py-2 px-4 rounded"
+           th:href="@{/admin/dashboard}">
+            Back
+        </a>
     </div>
 
 </main>

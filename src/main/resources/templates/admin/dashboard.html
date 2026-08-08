@@ -25,10 +25,16 @@
                 Welcome, <span th:text="${#authentication.name}"></span>
             </h2>
         </div>
-        <form method="post" th:action="@{/admin/logout}">
-            <input class="w-full sm:w-auto bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded cursor-pointer"
-                   type="submit" value="Logout"/>
-        </form>
+        <div class="flex gap-3">
+            <a class="flex-1 sm:flex-none text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
+               th:href="@{/admin/account}">
+                Account
+            </a>
+            <form method="post" th:action="@{/admin/logout}">
+                <input class="w-full sm:w-auto bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded cursor-pointer"
+                       type="submit" value="Logout"/>
+            </form>
+        </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
