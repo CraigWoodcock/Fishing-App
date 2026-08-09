@@ -2,6 +2,7 @@ package com.craigwoodcock.fishingapp.exception;
 
 import com.craigwoodcock.fishingapp.utils.ErrorRedirectResolver;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
@@ -107,6 +108,18 @@ public class GlobalWebExceptionHandler {
         return new ModelAndView("redirect:/account");
     }
 
+    /**
+     * Handles an angler being added without an email by redirecting back to
+     * the add-angler form with the validation message as a flash attribute —
+     * a recoverable input mistake, not a system error.
+     */
+    @ExceptionHandler(MissingAnglerEmailException.class)
+    public ModelAndView handleMissingAnglerEmail(MissingAnglerEmailException ex, HttpServletRequest request,
+                                                 RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        return new ModelAndView("redirect:" + request.getRequestURI() + "/new");
+    }
+
     @ExceptionHandler(UserUnauthorizedException.class)
     public ModelAndView handleUnauthorized(UserUnauthorizedException ex) {
         ModelAndView modelAndView = new ModelAndView("error/401");
@@ -119,6 +132,23 @@ public class GlobalWebExceptionHandler {
         ModelAndView modelAndView = new ModelAndView("error/403");
         modelAndView.addObject("message", ex.getMessage());
         return modelAndView;
+    }
+
+    /**
+     * Handles a user attempting to view, edit, or delete a session or catch
+     * they don't have permission for. This is needed alongside
+     * SecurityConfig's accessDeniedPage because an AccessDeniedException
+     * thrown inside a controller method (e.g. requireOwnership checks) is
+     * intercepted by this class's own Exception catch-all before it can ever
+     * propagate out to Spring Security's ExceptionTranslationFilter — so
+     * without this handler it would fall through to error/500 instead of
+     * error/403. Uses buildErrorView so this renders identically to
+     * CustomErrorController's accessDenied(), which handles the same view
+     * for 403s that occur outside a controller (e.g. role-based rejection).
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ModelAndView handleAccessDenied(AccessDeniedException ex) {
+        return buildErrorView("error/403", ex.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

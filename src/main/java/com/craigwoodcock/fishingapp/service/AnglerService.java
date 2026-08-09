@@ -1,5 +1,6 @@
 package com.craigwoodcock.fishingapp.service;
 
+import com.craigwoodcock.fishingapp.exception.MissingAnglerEmailException;
 import com.craigwoodcock.fishingapp.model.entity.Angler;
 import com.craigwoodcock.fishingapp.model.entity.AnglerSession;
 import com.craigwoodcock.fishingapp.model.entity.User;
@@ -20,25 +21,38 @@ public class AnglerService {
     private final AnglerSessionRepository anglerSessionRepository;
     private final SessionRepository sessionRepository;
 
-
     public AnglerService(AnglerRepository anglerRepository, AnglerSessionRepository anglerSessionRepository, SessionRepository sessionRepository) {
         this.anglerRepository = anglerRepository;
         this.anglerSessionRepository = anglerSessionRepository;
         this.sessionRepository = sessionRepository;
     }
 
-    public Angler findOrCreateAngler(String name) {
-        Optional<Angler> existingAngler = anglerRepository.findByName(name);
-        if (existingAngler.isPresent()) {
-            log.info("Angler: " + existingAngler.get().getName() + " already exists");
-            return existingAngler.get();
-        } else {
-            log.info("Creating new Angler.... ");
-            Angler newAngler = new Angler();
-            newAngler.setName(name);
-            log.info("Angler: " + newAngler.getName() + " created");
-            return anglerRepository.save(newAngler);
+    /**
+     * Finds an existing angler by email, or creates a new one. Email is
+     * required and unique, so it's the sole basis for matching — two
+     * anglers can share a name, but never an email. This means the same
+     * real person is always resolved to the same Angler row, however many
+     * different sessions they're added to.
+     *
+     * @param name  the angler's display name
+     * @param email the angler's email; required
+     * @return the existing or newly created Angler
+     * @throws MissingAnglerEmailException if email is null or blank
+     */
+    public Angler findOrCreateAngler(String name, String email) {
+        if (email == null || email.isBlank()) {
+            throw new MissingAnglerEmailException("An angler's email is required.");
         }
+
+        Optional<Angler> existing = anglerRepository.findByEmailIgnoreCase(email);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        Angler angler = new Angler();
+        angler.setName(name);
+        angler.setEmail(email);
+        return anglerRepository.save(angler);
     }
 
     public List<Angler> findAllAnglersByUser(User user) {

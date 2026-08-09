@@ -15,7 +15,7 @@ create table if not exists users
     email      varchar(100) unique               not null,
     role       varchar(20)                       not null,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    last_login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) auto_increment = 31982;
 
 drop table if exists sessions;
@@ -25,7 +25,7 @@ CREATE TABLE if not exists sessions
     id             BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     user_id        BIGINT                            NOT NULL,
     venue          VARCHAR(100)                      NOT NULL,
-    start_date     DATETIME                          NOT NULL,
+    start_date     DATE                          NOT NULL,
     duration_hours INT                               NOT NULL,
     created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -38,7 +38,8 @@ CREATE TABLE if not exists anglers
     id         BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     name       VARCHAR(50)                       NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    email 	   VARCHAR(100) unique NOT NULL
 );
 
 drop table if exists catches;
@@ -58,7 +59,8 @@ CREATE TABLE if not exists catches
     FOREIGN KEY (session_id) REFERENCES sessions (id)
 );
 
-CREATE TABLE angler_session
+drop table if exists angler-session;
+CREATE TABLE if not exists angler_session
 (
     id         BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
     angler_id  BIGINT                            NOT NULL,
@@ -67,6 +69,8 @@ CREATE TABLE angler_session
     FOREIGN KEY (angler_id) REFERENCES anglers (id),
     FOREIGN KEY (session_id) REFERENCES sessions (id)
 );
+
+drop table if exists jwt_tokens;
 
 CREATE TABLE IF NOT EXISTS jwt_tokens
 (
@@ -77,6 +81,8 @@ CREATE TABLE IF NOT EXISTS jwt_tokens
     revoked     BOOLEAN      NOT NULL DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
+
+
 
 -- INSERT INTO users (username, name, password, email, role)
 -- VALUES ('craig', 'craig woodcock', 'craig', 'craig@example.com', 'USER');

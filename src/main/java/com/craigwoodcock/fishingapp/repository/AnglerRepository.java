@@ -12,4 +12,6 @@ public interface AnglerRepository extends JpaRepository<Angler, Long> {
     Optional<Angler> findByName(String name);
 
     Angler findById(long id);
+
+    Optional<Angler> findByEmailIgnoreCase(String email);
 }

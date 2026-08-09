@@ -6,7 +6,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "anglers")
+@Table(name = "anglers", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class Angler {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,17 +16,22 @@ public class Angler {
     @Column(name = "name", nullable = false, length = 50)
     private String name;
 
+    @Column(name = "email", nullable = false, length = 100)
+    private String email;
+
+
     @OneToMany(mappedBy = "angler")
     private Set<Catch> catches = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "angler")
     private Set<AnglerSession> anglerSessions = new LinkedHashSet<>();
 
-    public Angler(Long id, String name, Set<Catch> catches, Set<AnglerSession> anglerSessions) {
+    public Angler(Long id, String name, Set<Catch> catches, Set<AnglerSession> anglerSessions, String email) {
         this.id = id;
         this.name = name;
         this.catches = catches;
         this.anglerSessions = anglerSessions;
+        this.email = email;
     }
 
     public Angler() {
@@ -65,4 +70,11 @@ public class Angler {
         this.catches = catches;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

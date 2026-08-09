@@ -41,8 +41,7 @@ public class SessionService {
 
 
     @Transactional
-    public Session createSession(User user, String venue, LocalDate startDate,
-                                 int durationHours, String anglersList) {
+    public Session createSession(User user, String venue, LocalDate startDate, int durationHours) {
         log.info("Creating new session");
         Session session = new Session();
         session.setUser(user);
@@ -50,45 +49,31 @@ public class SessionService {
         session.setStartDate(startDate);
         session.setDurationHours(durationHours);
         session = sessionRepository.save(session);
-        log.info("Session created with id " + session.getId());
 
-        // Find or create the userAngler, this will be the logged in user.
-        Angler userAngler = anglerService.findOrCreateAngler(user.getName());
+        Angler userAngler = anglerService.findOrCreateAngler(user.getName(), user.getEmail());
         createAnglerSession(session, userAngler);
 
-        addAnglersToSession(session.getId(), anglersList);
         return session;
     }
 
-    /**
-     * Adds each named angler in a comma-separated list to a session,
-     * creating any angler that doesn't already exist and skipping anyone
-     * already attached to the session. Shared by session creation and
-     * session editing so the parsing/dedup rule lives in one place.
-     *
-     * @param sessionId   the session to add anglers to
-     * @param anglersList a comma-separated list of angler names, may be null or blank
-     */
     @Transactional
-    public void addAnglersToSession(Long sessionId, String anglersList) {
-        if (anglersList == null || anglersList.trim().isEmpty()) {
-            return;
-        }
+    public void addAnglerToSession(Long sessionId, String name, String email) {
         Session session = getSessionById(sessionId);
-        List<Angler> existingAnglers = getAnglersForSession(sessionId);
+        Angler angler = anglerService.findOrCreateAngler(name, email);
+        createAnglerSession(session, angler);
+    }
 
-        for (String anglerName : anglersList.split(",")) {
-            String trimmedName = anglerName.trim();
-            if (trimmedName.isEmpty()) {
-                continue;
-            }
-            boolean alreadyOnSession = existingAnglers.stream()
-                    .anyMatch(a -> a.getName().equalsIgnoreCase(trimmedName));
-            if (!alreadyOnSession) {
-                Angler angler = anglerService.findOrCreateAngler(trimmedName);
-                createAnglerSession(session, angler);
-            }
+    private void createAnglerSession(Session session, Angler angler) {
+        AnglerSessionId id = new AnglerSessionId(angler.getId(), session.getId());
+        if (anglerSessionRepository.existsById(id)) {
+            return; // already on this session, nothing to do
         }
+        AnglerSession anglerSession = new AnglerSession();
+        anglerSession.setId(id);
+        anglerSession.setAngler(angler);
+        anglerSession.setSession(session);
+        anglerSession.setCreatedAt(Instant.now());
+        anglerSessionRepository.save(anglerSession);
     }
 
     /**
@@ -111,15 +96,6 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
-    private void createAnglerSession(Session session, Angler angler) {
-        AnglerSession anglerSession = new AnglerSession();
-        AnglerSessionId id = new AnglerSessionId(angler.getId(), session.getId());
-        anglerSession.setId(id);
-        anglerSession.setAngler(angler);
-        anglerSession.setSession(session);
-        anglerSession.setCreatedAt(Instant.now());
-        anglerSessionRepository.save(anglerSession);
-    }
 
     public Session getSessionById(long id) throws SessionNotFoundException {
 
@@ -179,6 +155,36 @@ public class SessionService {
         }
 
         return weightConverter.formatTotalOunces(totalOunces);
+    }
+
+    public boolean isOwner(Session session, User user) {
+        return session.getUser().getId().equals(user.getId());
+    }
+
+    public boolean isUserAssociatedWithSession(Session session, User user) {
+        if (isOwner(session, user)) {
+            return true;
+        }
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            return false;
+        }
+        return getAnglersForSession(session.getId()).stream()
+                .anyMatch(angler -> user.getEmail().equalsIgnoreCase(angler.getEmail()));
+    }
+
+    public List<Session> getSessionsSharedWithUser(User user) {
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            return List.of();
+        }
+        List<AnglerSession> anglerSessions = anglerSessionRepository.findByAngler_EmailIgnoreCase(user.getEmail());
+        List<Session> shared = new ArrayList<>();
+        for (AnglerSession anglerSession : anglerSessions) {
+            Session session = anglerSession.getSession();
+            if (!isOwner(session, user)) {
+                shared.add(session);
+            }
+        }
+        return shared;
     }
 
 
