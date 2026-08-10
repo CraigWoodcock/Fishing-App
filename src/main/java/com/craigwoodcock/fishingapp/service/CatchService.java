@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -177,6 +180,41 @@ public class CatchService {
     public void deleteCatchesForAnglerInSession(Long sessionId, Long anglerId) {
         List<Catch> catches = catchRepository.findBySessionIdAndAnglerId(sessionId, anglerId);
         catchRepository.deleteAll(catches);
+    }
+
+    /**
+     * Returns every catch for a session, heaviest first, for the "view all
+     * catches" page.
+     *
+     * @param sessionId the session to search
+     * @return all catches for the session, ordered by weight descending
+     */
+    public List<Catch> getCatchesForSessionOrderedByWeight(Long sessionId) {
+        List<Catch> catches = new ArrayList<>(catchRepository.findBySessionId(sessionId));
+        Collections.sort(catches, new Comparator<Catch>() {
+            @Override
+            public int compare(Catch first, Catch second) {
+                return second.getWeight().compareTo(first.getWeight());
+            }
+        });
+        return catches;
+    }
+
+    /**
+     * Returns the heaviest catches from a session, regardless of which angler
+     * caught them, for the session view's "top catches" highlight.
+     *
+     * @param sessionId the session to search
+     * @param limit     the maximum number of catches to return
+     * @return up to {@code limit} catches, heaviest first
+     */
+    public List<Catch> getTopCatchesForSession(Long sessionId, int limit) {
+        List<Catch> orderedCatches = getCatchesForSessionOrderedByWeight(sessionId);
+        List<Catch> topCatches = new ArrayList<>();
+        for (int i = 0; i < orderedCatches.size() && i < limit; i++) {
+            topCatches.add(orderedCatches.get(i));
+        }
+        return topCatches;
     }
 
 }

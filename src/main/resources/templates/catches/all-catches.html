@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+    <title>All Catches - Fishing Session Tracker</title>
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+</head>
+<body class="bg-ink text-paper min-h-screen flex flex-col">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-2xl">
+    <h2 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">
+        All Catches — <span th:text="${sess.venue}"></span>
+    </h2>
+
+    <div class="bg-surface rounded-lg mb-8 divide-y divide-line" th:if="${not #lists.isEmpty(catches)}">
+        <a class="flex items-center gap-4 p-3 sm:p-4 hover:bg-surface-alt"
+           th:each="catchRecord : ${catches}"
+           th:href="@{/sessions/{sessionId}/catches/{catchId}(sessionId=${sess.id},catchId=${catchRecord.id})}">
+            <img alt="Catch thumbnail" class="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded flex-shrink-0"
+                 th:if="${catchRecord.photoUrl}"
+                 th:src="${@s3Service.getPhotoUrl(catchRecord.photoUrl)}">
+            <div class="w-14 h-14 sm:w-16 sm:h-16 bg-surface-alt rounded flex items-center justify-center text-xs text-faint flex-shrink-0"
+                 th:unless="${catchRecord.photoUrl}">No photo
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="font-bold truncate" th:text="${catchRecord.angler.name}"></p>
+                <p class="text-sm text-faint truncate" th:text="${catchRecord.fishType}"></p>
+            </div>
+            <p class="font-bold flex-shrink-0" th:text="${@lbOzWeightConverter.format(catchRecord.weight)}"></p>
+        </a>
+    </div>
+
+    <div class="text-center bg-surface rounded-lg p-6 sm:p-8 mb-8" th:if="${#lists.isEmpty(catches)}">
+        <p class="text-faint">No catches logged yet.</p>
+    </div>
+
+    <a class="block text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
+       th:href="@{/sessions/{id}(id=${sess.id})}">
+        Back to Session
+    </a>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>

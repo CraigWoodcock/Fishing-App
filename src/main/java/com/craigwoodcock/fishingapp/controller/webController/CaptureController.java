@@ -52,6 +52,25 @@ public class CaptureController {
     }
 
     /**
+     * Lists every catch recorded for a session, heaviest first. Viewable by
+     * the session owner and by any angler on the session whose account
+     * email matches.
+     */
+    @GetMapping
+    public String listCatches(@PathVariable Long sessionId, Model model, Authentication authentication) {
+        Session session = sessionService.getSessionById(sessionId);
+        User currentUser = userService.findByUsername(authentication.getName());
+
+        if (!sessionService.isUserAssociatedWithSession(session, currentUser)) {
+            throw new AccessDeniedException("You do not have permission to view these catches.");
+        }
+
+        model.addAttribute("sess", session);
+        model.addAttribute("catches", catchService.getCatchesForSessionOrderedByWeight(sessionId));
+        return "catches/all-catches";
+    }
+
+    /**
      * Displays the form for logging a new catch against a session.
      * The angler dropdown is populated only with anglers already attached
      * to this session, so a catch can never be logged for someone who

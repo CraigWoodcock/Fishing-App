@@ -39,11 +39,11 @@
 
         <div class="flex flex-col sm:flex-row gap-3">
             <a class="flex-1 text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
-               th:href="@{/sessions/{id}/catches/new(id=${sess.id})}">
+               th:href="@{/sessions/{id}/catches/new(id=${sess.id})}" th:if="${isOwner}">
                 Add Catch
             </a>
             <a class="flex-1 text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
-               th:href="@{/sessions/{id}/edit(id=${sess.id})}">
+               th:href="@{/sessions/{id}/edit(id=${sess.id})}" th:if="${isOwner}">
                 Edit Session
             </a>
             <a class="flex-1 text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
@@ -53,7 +53,13 @@
         </div>
     </div>
 
-    <h3 class="text-xl sm:text-2xl font-bold mb-4">Catches</h3>
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-xl sm:text-2xl font-bold">Top Catches</h3>
+        <a class="text-sm bg-surface-alt hover:bg-line text-paper font-bold py-2 px-4 rounded"
+           th:href="@{/sessions/{id}/catches(id=${sess.id})}">
+            View All Catches
+        </a>
+    </div>
 
     <div class="bg-surface rounded-lg mb-8 divide-y divide-line" th:if="${not #lists.isEmpty(catches)}">
         <a class="flex items-center gap-4 p-3 sm:p-4 hover:bg-surface-alt"
@@ -76,12 +82,12 @@
     <div class="text-center bg-surface rounded-lg p-6 sm:p-8 mb-8" th:if="${#lists.isEmpty(catches)}">
         <p class="text-faint mb-4">No catches logged yet.</p>
         <a class="inline-block bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
-           th:href="@{/sessions/{id}/catches/new(id=${sess.id})}">
+           th:href="@{/sessions/{id}/catches/new(id=${sess.id})}" th:if="${isOwner}">
             Add Catch
         </a>
     </div>
 
-    <div class="border border-line rounded-lg p-4 sm:p-6">
+    <div class="border border-line rounded-lg p-4 sm:p-6" th:if="${isOwner}">
         <p class="text-sm text-faint mb-3">
             Deleting a session permanently removes it and all of its logged catches. This cannot be undone.
         </p>

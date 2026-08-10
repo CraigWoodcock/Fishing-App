@@ -34,19 +34,30 @@
         <p class="mb-2 text-sm sm:text-base" th:if="${catchRecord.notes}"><strong>Notes:</strong>
             <span th:text="${catchRecord.notes}"></span></p>
     </div>
-    
-    <div class="flex flex-col sm:flex-row gap-3 mb-8">
+
+    <div class="flex flex-col sm:flex-row gap-3 mb-4" th:if="${isOwner}">
         <a class="flex-1 text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
            th:href="@{/sessions/{sessionId}/catches/{catchId}/edit(sessionId=${sess.id},catchId=${catchRecord.id})}">
             Edit
         </a>
-        <a class="flex-1 text-center bg-accent hover:bg-accent-hover text-paper font-bold py-2 px-4 rounded"
+    </div>
+
+    <div class="grid grid-cols-3 gap-3 mb-8">
+        <a class="text-center bg-surface-alt hover:bg-line text-paper font-bold py-2 px-2 sm:px-4 rounded text-sm sm:text-base"
+           href="/dashboard">
+            Dashboard
+        </a>
+        <a class="text-center bg-surface-alt hover:bg-line text-paper font-bold py-2 px-2 sm:px-4 rounded text-sm sm:text-base"
+           th:href="@{/sessions/{id}/catches(id=${sess.id})}">
+            All Catches
+        </a>
+        <a class="text-center bg-surface-alt hover:bg-line text-paper font-bold py-2 px-2 sm:px-4 rounded text-sm sm:text-base"
            th:href="@{/sessions/{id}(id=${sess.id})}">
-            Back
+            Session
         </a>
     </div>
 
-    <div class="border border-line rounded-lg p-4 sm:p-6">
+    <div class="border border-line rounded-lg p-4 sm:p-6" th:if="${isOwner}">
         <p class="text-sm text-faint mb-3">
             Deleting a catch permanently removes it, including its photo. This cannot be undone.
         </p>

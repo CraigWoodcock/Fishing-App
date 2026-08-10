@@ -106,7 +106,7 @@ public class SessionController {
 
         model.addAttribute("sess", session);
         model.addAttribute("isOwner", sessionService.isOwner(session, currentUser));
-        model.addAttribute("catches", catchService.getCatchesForSession(id));
+        model.addAttribute("catches", catchService.getTopCatchesForSession(id, 3));
         model.addAttribute("s3Service", s3Service);
         return "view-session";
     }
