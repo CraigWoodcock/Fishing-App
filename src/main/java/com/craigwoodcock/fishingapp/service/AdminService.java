@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Orchestrates every use case behind the admin panel. This is the
@@ -172,20 +173,17 @@ public class AdminService {
     private AdminAnglerView buildAnglerView(Angler angler) {
         int sessionCount = anglerService.getSessionCountForAngler(angler.getId());
         int catchCount = anglerService.getCatchCountForAngler(angler.getId());
-        String linkedUsername = userService.findUsernameByEmail(angler.getEmail());
-        return new AdminAnglerView(angler, sessionCount, catchCount, linkedUsername);
+
+        Optional<UserDto> linkedUser = userService.findByEmail(angler.getEmail());
+        Long linkedUserId = linkedUser.map(UserDto::getId).orElse(null);
+        String linkedUsername = linkedUser.map(UserDto::getUsername).orElse(null);
+
+        return new AdminAnglerView(angler, sessionCount, catchCount, linkedUserId, linkedUsername);
     }
 
-    /**
-     * Updates an angler's details. Refuses if the angler's email
-     * belongs to a registered user — that identity is managed through
-     * updateUser instead, since editing it here could silently break
-     * the angler-email link that grants that user read access to their
-     * own sessions/catches.
-     */
     public void updateAngler(Long anglerId, String name, String email) {
         Angler angler = anglerService.getAnglerById(anglerId);
-        if (userService.findUsernameByEmail(angler.getEmail()) != null) {
+        if (userService.findByEmail(angler.getEmail()).isPresent()) {
             throw new AnglerLinkedToUserException(
                     "This angler is linked to a registered user and must be managed from the Users page.");
         }
@@ -200,7 +198,7 @@ public class AdminService {
 
     public void deleteAngler(Long anglerId) {
         Angler angler = anglerService.getAnglerById(anglerId);
-        if (userService.findUsernameByEmail(angler.getEmail()) != null) {
+        if (userService.findByEmail(angler.getEmail()).isPresent()) {
             throw new AnglerLinkedToUserException(
                     "This angler is linked to a registered user and cannot be deleted here.");
         }

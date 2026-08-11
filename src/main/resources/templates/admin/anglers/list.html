@@ -57,7 +57,7 @@
                             </button>
                         </form>
                     </div>
-                    <a class="text-accent hover:underline text-sm" th:href="@{/admin/users}"
+                    <a class="text-accent hover:underline text-sm" th:href="@{/admin/users/{id}/edit(id=${angler.linkedUserId})}"
                        th:if="${angler.linkedToUser}"
                        th:text="'Linked to user: ' + ${angler.linkedUsername}">
                     </a>

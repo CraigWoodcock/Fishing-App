@@ -155,16 +155,17 @@ public class UserService {
     }
 
     /**
-     * Returns the username of the user registered with the given email,
-     * or null if no user has that email. Used by AdminService to check
-     * whether an angler is the same person as a registered user.
+     * Returns the user registered with the given email, or empty if no
+     * user has that email. Used by AdminService to check whether an
+     * angler is the same person as a registered user, and to link to
+     * that user's edit page if so.
      */
-    public String findUsernameByEmail(String email) {
+    public Optional<UserDto> findByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if (user.isPresent()) {
-            return user.get().getUsername();
+            return Optional.of(new UserDto(user.get()));
         }
-        return null;
+        return Optional.empty();
     }
 
 
