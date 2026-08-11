@@ -40,9 +40,9 @@ public class AdminController {
 
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        model.addAttribute("userCount", adminService.getAllUsersForAdmin().size());
-        model.addAttribute("sessionCount", adminService.getAllSessionsForAdmin().size());
-        model.addAttribute("AnglerCount", adminService.getAllAnglersForAdmin());
+        model.addAttribute("userCount", adminService.getUserCount());
+        model.addAttribute("sessionCount", adminService.getSessionCount());
+        model.addAttribute("AnglerCount", adminService.getAnglerCount());
         return "admin/dashboard";
     }
 

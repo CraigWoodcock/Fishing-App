@@ -190,4 +190,16 @@ public class AdminService {
     public void deleteAngler(Long anglerId) {
         anglerService.deleteAngler(anglerId);
     }
+
+    public long getUserCount() {
+        return userService.getUserCount();
+    }
+
+    public long getSessionCount() {
+        return sessionService.getSessionCount();
+    }
+
+    public long getAnglerCount() {
+        return anglerService.getAnglerCount();
+    }
 }

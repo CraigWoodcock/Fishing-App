@@ -56,12 +56,17 @@ public class SessionService {
         return session;
     }
 
+    public long getSessionCount() {
+        return sessionRepository.count();
+    }
+
     @Transactional
     public void addAnglerToSession(Long sessionId, String name, String email) {
         Session session = getSessionById(sessionId);
         Angler angler = anglerService.findOrCreateAngler(name, email);
         createAnglerSession(session, angler);
     }
+
 
     private void createAnglerSession(Session session, Angler angler) {
         AnglerSessionId id = new AnglerSessionId(angler.getId(), session.getId());

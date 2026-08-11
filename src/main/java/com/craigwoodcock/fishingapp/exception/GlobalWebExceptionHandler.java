@@ -89,6 +89,18 @@ public class GlobalWebExceptionHandler {
         return modelAndView;
     }
 
+    @ExceptionHandler(AnglerAlreadyExistsException.class)
+    public ModelAndView handleAnglerAlreadyExistsWeb(AnglerAlreadyExistsException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        return new ModelAndView("redirect:/admin/anglers");
+    }
+
+    @ExceptionHandler(AnglerHasRecordsException.class)
+    public ModelAndView handleAnglerHasRecordsWeb(AnglerHasRecordsException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        return new ModelAndView("redirect:/admin/anglers");
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ModelAndView handleUserNotFoundException(UserNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView("error/404");

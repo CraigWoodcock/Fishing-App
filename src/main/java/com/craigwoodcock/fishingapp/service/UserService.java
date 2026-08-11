@@ -162,6 +162,10 @@ public class UserService {
         }
     }
 
+    public long getUserCount() {
+        return userRepository.count();
+    }
+
     public List<UserDto> getAllUsers() throws UserNotFoundException {
 
         List<User> users = userRepository.findAll();

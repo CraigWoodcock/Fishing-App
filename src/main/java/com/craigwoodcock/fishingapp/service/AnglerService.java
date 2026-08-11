@@ -83,6 +83,10 @@ public class AnglerService {
         return (int) anglerSessionRepository.countByAnglerId(anglerId);
     }
 
+    public long getAnglerCount() {
+        return anglerRepository.count();
+    }
+
     public int getCatchCountForAngler(Long anglerId) {
         return (int) catchRepository.countByAnglerId(anglerId);
     }
