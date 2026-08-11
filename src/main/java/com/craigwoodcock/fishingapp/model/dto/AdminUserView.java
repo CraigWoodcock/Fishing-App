@@ -1,6 +1,7 @@
 package com.craigwoodcock.fishingapp.model.dto;
 
 import com.craigwoodcock.fishingapp.model.entity.Role;
+import com.craigwoodcock.fishingapp.utils.EmailMasker;
 
 import java.time.LocalDateTime;
 
@@ -17,23 +18,12 @@ public class AdminUserView {
         this.id = userDto.getId();
         this.username = userDto.getUsername();
         this.name = userDto.getName();
-        this.maskedEmail = maskEmail(userDto.getEmail());
+        this.maskedEmail = EmailMasker.mask(userDto.getEmail());
         this.role = userDto.getRole();
         this.createdAt = userDto.getCreatedAt();
         this.lastLoginAt = userDto.getLastLoginAt();
     }
-
-    private static String maskEmail(String email) {
-        int atIndex = email.indexOf('@');
-        if (atIndex <= 1) {
-            return "***" + email.substring(atIndex);
-        }
-        String localPart = email.substring(0, atIndex);
-        String domainPart = email.substring(atIndex);
-        String visiblePrefix = localPart.substring(0, Math.min(2, localPart.length()));
-        return visiblePrefix + "***" + domainPart;
-    }
-
+    
     public Long getId() {
         return id;
     }

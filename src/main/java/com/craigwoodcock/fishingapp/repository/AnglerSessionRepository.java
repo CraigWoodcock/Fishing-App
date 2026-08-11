@@ -14,4 +14,6 @@ public interface AnglerSessionRepository extends JpaRepository<AnglerSession, An
     void deleteBySessionId(Long sessionId);
 
     List<AnglerSession> findByAngler_EmailIgnoreCase(String email);
+
+    long countByAnglerId(Long anglerId);
 }

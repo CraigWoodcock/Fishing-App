@@ -55,6 +55,14 @@
             </div>
             <span class="text-accent font-bold">Manage &rarr;</span>
         </a>
+        <a class="bg-surface border-t-4 border-danger rounded-lg p-5 flex items-center justify-between hover:bg-accent-hover"
+           th:href="@{/admin/anglers}">
+            <div>
+                <h3 class="text-lg font-semibold">Anglers</h3>
+                <p class="text-faint text-sm" th:text="${anglerCount} + ' registered'"></p>
+            </div>
+            <span class="text-accent font-bold">Manage &rarr;</span>
+        </a>
     </div>
 
     <a class="text-accent hover:text-accent-hover hover:underline text-sm" href="/admin/register">

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Manage Anglers - Admin - Fishing Session Tracker</title>
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link href="@{/images/favicon-180.png}" rel="apple-touch-icon">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <meta content="noindex, nofollow" name="robots">
+</head>
+<body class="bg-ink text-paper min-h-screen flex flex-col">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-6xl">
+
+    <span class="inline-block bg-danger text-paper text-xs font-bold uppercase tracking-wide px-2 py-1 rounded mb-2">
+        Admin Panel
+    </span>
+    <h2 class="text-2xl sm:text-3xl font-semibold mb-6">Manage Anglers</h2>
+
+    <div class="bg-accent text-paper p-3 rounded mb-4" role="alert" th:if="${success}">
+        <p th:text="${success}"></p>
+    </div>
+    <div class="bg-danger text-paper p-3 rounded mb-4" role="alert" th:if="${error}">
+        <p th:text="${error}"></p>
+    </div>
+
+    <div class="bg-surface rounded-lg overflow-x-auto">
+        <table class="w-full text-left text-sm sm:text-base">
+            <thead>
+            <tr class="border-b border-line">
+                <th class="p-3">Name</th>
+                <th class="p-3">Email</th>
+                <th class="p-3">Sessions</th>
+                <th class="p-3">Catches</th>
+                <th class="p-3"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="border-b border-line" th:each="angler : ${anglers}">
+                <td class="p-3" th:text="${angler.name}"></td>
+                <td class="p-3" th:text="${angler.maskedEmail}"></td>
+                <td class="p-3" th:text="${angler.sessionCount}"></td>
+                <td class="p-3" th:text="${angler.catchCount}"></td>
+                <td class="p-3">
+                    <div class="flex gap-2">
+                        <a class="bg-accent hover:bg-accent-hover text-paper font-bold py-1 px-3 rounded"
+                           th:href="@{/admin/anglers/{id}/edit(id=${angler.id})}">
+                            Edit
+                        </a>
+                        <form method="post" th:action="@{/admin/anglers/{id}/delete(id=${angler.id})}">
+                            <button class="bg-danger hover:opacity-90 text-paper font-bold py-1 px-3 rounded"
+                                    type="submit">
+                                Delete
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="text-faint p-4" th:if="${anglers.isEmpty()}">No anglers found.</p>
+    </div>
+
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>

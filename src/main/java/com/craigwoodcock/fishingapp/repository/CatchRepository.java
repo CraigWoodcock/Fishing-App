@@ -34,4 +34,6 @@ public interface CatchRepository extends JpaRepository<Catch, Long> {
      * @return the list of catches that angler made during that session
      */
     List<Catch> findBySessionIdAndAnglerId(Long sessionId, Long anglerId);
+
+    long countByAnglerId(Long anglerId);
 }

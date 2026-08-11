@@ -1,5 +1,7 @@
 package com.craigwoodcock.fishingapp.controller.webController;
 
+import com.craigwoodcock.fishingapp.exception.AnglerAlreadyExistsException;
+import com.craigwoodcock.fishingapp.exception.AnglerHasRecordsException;
 import com.craigwoodcock.fishingapp.exception.InvalidCredentialsException;
 import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.model.entity.Role;
@@ -40,6 +42,7 @@ public class AdminController {
     public String dashboard(Model model) {
         model.addAttribute("userCount", adminService.getAllUsersForAdmin().size());
         model.addAttribute("sessionCount", adminService.getAllSessionsForAdmin().size());
+        model.addAttribute("AnglerCount", adminService.getAllAnglersForAdmin());
         return "admin/dashboard";
     }
 
@@ -147,5 +150,43 @@ public class AdminController {
         adminService.deleteSession(id);
         redirectAttributes.addFlashAttribute("success", "Session deleted");
         return "redirect:/admin/sessions";
+    }
+
+    // ----- Anglers -----
+    @GetMapping("/anglers")
+    public String listAnglers(Model model) {
+        model.addAttribute("anglers", adminService.getAllAnglersForAdmin());
+        return "admin/anglers/list";
+    }
+
+    @GetMapping("/anglers/{id}/edit")
+    public String editAnglerForm(@PathVariable Long id, Model model) {
+        model.addAttribute("angler", adminService.getAnglerForAdmin(id));
+        return "admin/anglers/edit";
+    }
+
+    @PostMapping("/anglers/{id}")
+    public String updateAngler(@PathVariable Long id,
+                               @RequestParam String name,
+                               @RequestParam(required = false) String email,
+                               RedirectAttributes redirectAttributes) {
+        try {
+            adminService.updateAngler(id, name, email);
+            redirectAttributes.addFlashAttribute("success", "Angler updated");
+        } catch (AnglerAlreadyExistsException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/admin/anglers";
+    }
+
+    @PostMapping("/anglers/{id}/delete")
+    public String deleteAngler(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            adminService.deleteAngler(id);
+            redirectAttributes.addFlashAttribute("success", "Angler deleted");
+        } catch (AnglerHasRecordsException ex) {
+            redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        }
+        return "redirect:/admin/anglers";
     }
 }

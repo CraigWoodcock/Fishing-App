@@ -1,12 +1,16 @@
 package com.craigwoodcock.fishingapp.service;
 
+import com.craigwoodcock.fishingapp.exception.AnglerAlreadyExistsException;
+import com.craigwoodcock.fishingapp.exception.AnglerHasRecordsException;
+import com.craigwoodcock.fishingapp.exception.AnglerNotFoundException;
 import com.craigwoodcock.fishingapp.exception.MissingAnglerEmailException;
 import com.craigwoodcock.fishingapp.model.entity.Angler;
 import com.craigwoodcock.fishingapp.model.entity.AnglerSession;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.repository.AnglerRepository;
 import com.craigwoodcock.fishingapp.repository.AnglerSessionRepository;
-import com.craigwoodcock.fishingapp.repository.SessionRepository;
+import com.craigwoodcock.fishingapp.repository.CatchRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,12 +23,12 @@ public class AnglerService {
 
     private final AnglerRepository anglerRepository;
     private final AnglerSessionRepository anglerSessionRepository;
-    private final SessionRepository sessionRepository;
+    private final CatchRepository catchRepository;
 
-    public AnglerService(AnglerRepository anglerRepository, AnglerSessionRepository anglerSessionRepository, SessionRepository sessionRepository) {
+    public AnglerService(AnglerRepository anglerRepository, AnglerSessionRepository anglerSessionRepository, CatchRepository catchRepository) {
         this.anglerRepository = anglerRepository;
         this.anglerSessionRepository = anglerSessionRepository;
-        this.sessionRepository = sessionRepository;
+        this.catchRepository = catchRepository;
     }
 
     /**
@@ -64,5 +68,60 @@ public class AnglerService {
         }
         log.info("Found " + uniqueAnglers.size() + " Anglers");
         return new ArrayList<>(uniqueAnglers);
+    }
+
+    public List<Angler> getAllAnglers() {
+        return anglerRepository.findAll();
+    }
+
+    public Angler getAnglerById(Long id) {
+        return anglerRepository.findById(id)
+                .orElseThrow(() -> new AnglerNotFoundException("Angler with id " + id + " not found"));
+    }
+
+    public int getSessionCountForAngler(Long anglerId) {
+        return (int) anglerSessionRepository.countByAnglerId(anglerId);
+    }
+
+    public int getCatchCountForAngler(Long anglerId) {
+        return (int) catchRepository.countByAnglerId(anglerId);
+    }
+
+    /**
+     * Updates an angler's name and email. Email uniqueness is enforced
+     * the same way it is at creation time in findOrCreateAngler.
+     */
+    @Transactional
+    public void updateAngler(Long anglerId, String name, String email) {
+        Angler angler = getAnglerById(anglerId);
+
+        if (!email.equalsIgnoreCase(angler.getEmail())) {
+            Optional<Angler> existing = anglerRepository.findByEmailIgnoreCase(email);
+            if (existing.isPresent()) {
+                throw new AnglerAlreadyExistsException("An angler with that email already exists");
+            }
+            angler.setEmail(email);
+        }
+
+        angler.setName(name);
+        anglerRepository.save(angler);
+    }
+
+    /**
+     * Deletes an angler, refusing if they have any sessions or catches
+     * attached — the Catch.angler column is non-nullable with no
+     * cascade defined, so an unattached angler is the only kind that
+     * can safely be removed without losing session/catch history.
+     */
+    @Transactional
+    public void deleteAngler(Long anglerId) {
+        Angler angler = getAnglerById(anglerId);
+
+        if (!angler.getCatches().isEmpty() || !angler.getAnglerSessions().isEmpty()) {
+            throw new AnglerHasRecordsException(
+                    "Cannot delete an angler with existing sessions or catches.");
+        }
+
+        anglerRepository.delete(angler);
     }
 }

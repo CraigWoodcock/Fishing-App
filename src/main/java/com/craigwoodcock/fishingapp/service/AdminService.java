@@ -1,9 +1,11 @@
 package com.craigwoodcock.fishingapp.service;
 
 import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
+import com.craigwoodcock.fishingapp.model.dto.AdminAnglerView;
 import com.craigwoodcock.fishingapp.model.dto.AdminSessionView;
 import com.craigwoodcock.fishingapp.model.dto.AdminUserView;
 import com.craigwoodcock.fishingapp.model.dto.UserDto;
+import com.craigwoodcock.fishingapp.model.entity.Angler;
 import com.craigwoodcock.fishingapp.model.entity.Role;
 import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.model.entity.User;
@@ -27,10 +29,12 @@ public class AdminService {
 
     private final UserService userService;
     private final SessionService sessionService;
+    private final AnglerService anglerService;
 
-    public AdminService(UserService userService, SessionService sessionService) {
+    public AdminService(UserService userService, SessionService sessionService, AnglerService anglerService) {
         this.userService = userService;
         this.sessionService = sessionService;
+        this.anglerService = anglerService;
     }
 
     // ----- Users -----
@@ -144,5 +148,46 @@ public class AdminService {
 
     public void deleteSession(Long sessionId) {
         sessionService.deleteSession(sessionId);
+    }
+
+    // ----- Anglers -----
+
+    public List<AdminAnglerView> getAllAnglersForAdmin() {
+        List<Angler> anglers = anglerService.getAllAnglers();
+        List<AdminAnglerView> anglerViews = new ArrayList<>();
+
+        for (Angler angler : anglers) {
+            int sessionCount = anglerService.getSessionCountForAngler(angler.getId());
+            int catchCount = anglerService.getCatchCountForAngler(angler.getId());
+            anglerViews.add(new AdminAnglerView(angler, sessionCount, catchCount));
+        }
+
+        return anglerViews;
+    }
+
+    public AdminAnglerView getAnglerForAdmin(Long anglerId) {
+        Angler angler = anglerService.getAnglerById(anglerId);
+        int sessionCount = anglerService.getSessionCountForAngler(anglerId);
+        int catchCount = anglerService.getCatchCountForAngler(anglerId);
+        return new AdminAnglerView(angler, sessionCount, catchCount);
+    }
+
+    /**
+     * Updates an angler's details. As with updateUser, a blank email
+     * on the edit form means "leave unchanged" rather than "erase it".
+     */
+    public void updateAngler(Long anglerId, String name, String email) {
+        String emailToSave = email;
+
+        if (emailToSave == null || emailToSave.isBlank()) {
+            Angler existing = anglerService.getAnglerById(anglerId);
+            emailToSave = existing.getEmail();
+        }
+
+        anglerService.updateAngler(anglerId, name, emailToSave);
+    }
+
+    public void deleteAngler(Long anglerId) {
+        anglerService.deleteAngler(anglerId);
     }
 }
