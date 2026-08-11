@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
@@ -151,6 +152,19 @@ public class UserService {
     public User findByUsername(String username) {
         return userRepository.findByUsername(username.toLowerCase())
                 .orElseThrow(() -> new UserNotFoundException("Username not found"));
+    }
+
+    /**
+     * Returns the username of the user registered with the given email,
+     * or null if no user has that email. Used by AdminService to check
+     * whether an angler is the same person as a registered user.
+     */
+    public String findUsernameByEmail(String email) {
+        Optional<User> user = userRepository.findByEmail(email);
+        if (user.isPresent()) {
+            return user.get().getUsername();
+        }
+        return null;
     }
 
 

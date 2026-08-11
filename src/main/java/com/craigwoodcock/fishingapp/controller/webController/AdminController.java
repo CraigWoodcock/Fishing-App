@@ -1,9 +1,6 @@
 package com.craigwoodcock.fishingapp.controller.webController;
 
-import com.craigwoodcock.fishingapp.exception.AnglerAlreadyExistsException;
-import com.craigwoodcock.fishingapp.exception.AnglerHasRecordsException;
-import com.craigwoodcock.fishingapp.exception.InvalidCredentialsException;
-import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
+import com.craigwoodcock.fishingapp.exception.*;
 import com.craigwoodcock.fishingapp.model.entity.Role;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.service.AdminService;
@@ -42,7 +39,7 @@ public class AdminController {
     public String dashboard(Model model) {
         model.addAttribute("userCount", adminService.getUserCount());
         model.addAttribute("sessionCount", adminService.getSessionCount());
-        model.addAttribute("AnglerCount", adminService.getAnglerCount());
+        model.addAttribute("anglerCount", adminService.getAnglerCount());
         return "admin/dashboard";
     }
 
@@ -173,7 +170,7 @@ public class AdminController {
         try {
             adminService.updateAngler(id, name, email);
             redirectAttributes.addFlashAttribute("success", "Angler updated");
-        } catch (AnglerAlreadyExistsException ex) {
+        } catch (AnglerAlreadyExistsException | AnglerLinkedToUserException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/admin/anglers";
@@ -184,7 +181,7 @@ public class AdminController {
         try {
             adminService.deleteAngler(id);
             redirectAttributes.addFlashAttribute("success", "Angler deleted");
-        } catch (AnglerHasRecordsException ex) {
+        } catch (AnglerHasRecordsException | AnglerLinkedToUserException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/admin/anglers";

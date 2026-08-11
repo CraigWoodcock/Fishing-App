@@ -45,7 +45,7 @@
                 <td class="p-3" th:text="${angler.sessionCount}"></td>
                 <td class="p-3" th:text="${angler.catchCount}"></td>
                 <td class="p-3">
-                    <div class="flex gap-2">
+                    <div class="flex gap-2" th:if="${!angler.linkedToUser}">
                         <a class="bg-accent hover:bg-accent-hover text-paper font-bold py-1 px-3 rounded"
                            th:href="@{/admin/anglers/{id}/edit(id=${angler.id})}">
                             Edit
@@ -56,8 +56,11 @@
                                 Delete
                             </button>
                         </form>
-
                     </div>
+                    <a class="text-accent hover:underline text-sm" th:href="@{/admin/users}"
+                       th:if="${angler.linkedToUser}"
+                       th:text="'Linked to user: ' + ${angler.linkedUsername}">
+                    </a>
                 </td>
             </tr>
             </tbody>

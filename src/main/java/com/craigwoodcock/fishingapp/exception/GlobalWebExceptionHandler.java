@@ -101,6 +101,12 @@ public class GlobalWebExceptionHandler {
         return new ModelAndView("redirect:/admin/anglers");
     }
 
+    @ExceptionHandler(AnglerLinkedToUserException.class)
+    public ModelAndView handleAnglerLinkedToUser(AnglerLinkedToUserException ex, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("error", ex.getMessage());
+        return new ModelAndView("redirect:/admin/anglers");
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ModelAndView handleUserNotFoundException(UserNotFoundException ex) {
         ModelAndView modelAndView = new ModelAndView("error/404");

@@ -1,5 +1,6 @@
 package com.craigwoodcock.fishingapp.service;
 
+import com.craigwoodcock.fishingapp.exception.AnglerLinkedToUserException;
 import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.model.dto.AdminAnglerView;
 import com.craigwoodcock.fishingapp.model.dto.AdminSessionView;
@@ -157,9 +158,7 @@ public class AdminService {
         List<AdminAnglerView> anglerViews = new ArrayList<>();
 
         for (Angler angler : anglers) {
-            int sessionCount = anglerService.getSessionCountForAngler(angler.getId());
-            int catchCount = anglerService.getCatchCountForAngler(angler.getId());
-            anglerViews.add(new AdminAnglerView(angler, sessionCount, catchCount));
+            anglerViews.add(buildAnglerView(angler));
         }
 
         return anglerViews;
@@ -167,27 +166,45 @@ public class AdminService {
 
     public AdminAnglerView getAnglerForAdmin(Long anglerId) {
         Angler angler = anglerService.getAnglerById(anglerId);
-        int sessionCount = anglerService.getSessionCountForAngler(anglerId);
-        int catchCount = anglerService.getCatchCountForAngler(anglerId);
-        return new AdminAnglerView(angler, sessionCount, catchCount);
+        return buildAnglerView(angler);
+    }
+
+    private AdminAnglerView buildAnglerView(Angler angler) {
+        int sessionCount = anglerService.getSessionCountForAngler(angler.getId());
+        int catchCount = anglerService.getCatchCountForAngler(angler.getId());
+        String linkedUsername = userService.findUsernameByEmail(angler.getEmail());
+        return new AdminAnglerView(angler, sessionCount, catchCount, linkedUsername);
     }
 
     /**
-     * Updates an angler's details. As with updateUser, a blank email
-     * on the edit form means "leave unchanged" rather than "erase it".
+     * Updates an angler's details. Refuses if the angler's email
+     * belongs to a registered user — that identity is managed through
+     * updateUser instead, since editing it here could silently break
+     * the angler-email link that grants that user read access to their
+     * own sessions/catches.
      */
     public void updateAngler(Long anglerId, String name, String email) {
-        String emailToSave = email;
+        Angler angler = anglerService.getAnglerById(anglerId);
+        if (userService.findUsernameByEmail(angler.getEmail()) != null) {
+            throw new AnglerLinkedToUserException(
+                    "This angler is linked to a registered user and must be managed from the Users page.");
+        }
 
+        String emailToSave = email;
         if (emailToSave == null || emailToSave.isBlank()) {
-            Angler existing = anglerService.getAnglerById(anglerId);
-            emailToSave = existing.getEmail();
+            emailToSave = angler.getEmail();
         }
 
         anglerService.updateAngler(anglerId, name, emailToSave);
     }
 
     public void deleteAngler(Long anglerId) {
+        Angler angler = anglerService.getAnglerById(anglerId);
+        if (userService.findUsernameByEmail(angler.getEmail()) != null) {
+            throw new AnglerLinkedToUserException(
+                    "This angler is linked to a registered user and cannot be deleted here.");
+        }
+
         anglerService.deleteAngler(anglerId);
     }
 
