@@ -7,6 +7,8 @@ import com.craigwoodcock.fishingapp.model.dto.AdminSessionView;
 import com.craigwoodcock.fishingapp.model.dto.AdminUserView;
 import com.craigwoodcock.fishingapp.model.dto.UserDto;
 import com.craigwoodcock.fishingapp.model.entity.Angler;
+import com.craigwoodcock.fishingapp.model.entity.AuditAction;
+import com.craigwoodcock.fishingapp.model.entity.AuditLog;
 import com.craigwoodcock.fishingapp.model.entity.Role;
 import com.craigwoodcock.fishingapp.model.entity.Session;
 import com.craigwoodcock.fishingapp.model.entity.User;
@@ -19,12 +21,11 @@ import java.util.Optional;
 /**
  * Orchestrates every use case behind the admin panel. This is the
  * only class AdminController talks to: it owns the translation
- * between domain objects and admin-facing view DTOs, and applies
- * admin-panel-specific rules (like keeping an untouched email field
- * from overwriting a real address). It never touches a repository
- * directly — entity invariants (uniqueness checks, password
- * encoding) stay inside UserService and SessionService, which are
- * the only classes that own their respective repositories.
+ * between domain objects and admin-facing view DTOs, applies
+ * admin-panel-specific rules, and records every write to the audit
+ * log. It never touches a repository directly — entity invariants
+ * stay inside UserService/SessionService/AnglerService, and audit
+ * persistence stays inside AuditLogService.
  */
 @Service
 public class AdminService {
@@ -32,19 +33,18 @@ public class AdminService {
     private final UserService userService;
     private final SessionService sessionService;
     private final AnglerService anglerService;
+    private final AuditLogService auditLogService;
 
-    public AdminService(UserService userService, SessionService sessionService, AnglerService anglerService) {
+    public AdminService(UserService userService, SessionService sessionService,
+                        AnglerService anglerService, AuditLogService auditLogService) {
         this.userService = userService;
         this.sessionService = sessionService;
         this.anglerService = anglerService;
+        this.auditLogService = auditLogService;
     }
 
     // ----- Users -----
 
-    /**
-     * Builds the list of users shown on the admin users page, with
-     * each user's email masked for display.
-     */
     public List<AdminUserView> getAllUsersForAdmin() {
         List<UserDto> users = userService.getAllUsers();
         List<AdminUserView> userViews = new ArrayList<>();
@@ -56,24 +56,12 @@ public class AdminService {
         return userViews;
     }
 
-    /**
-     * Returns a single user for display on the edit-user page, with
-     * the email masked.
-     */
     public AdminUserView getUserForAdmin(Long userId) {
         UserDto user = userService.getById(userId);
         return new AdminUserView(user);
     }
 
-    /**
-     * Updates a user's details from the admin panel. The email field
-     * on the edit form is deliberately left blank rather than
-     * pre-filled with the masked value, so a blank submission here
-     * means "leave the email unchanged" rather than "erase it" —
-     * this method resolves that by falling back to the existing
-     * email whenever the submitted value is blank.
-     */
-    public void updateUser(Long userId, String name, String username, String email, Role role) {
+    public void updateUser(Long userId, String name, String username, String email, Role role, String performedBy) {
         String emailToSave = email;
 
         if (emailToSave == null || emailToSave.isBlank()) {
@@ -82,61 +70,46 @@ public class AdminService {
         }
 
         userService.adminUpdateUser(userId, name, username, emailToSave, role);
+        auditLogService.log(performedBy, AuditAction.USER_UPDATED, "User: " + username);
     }
 
-    /**
-     * Resets another user's password. Used only for accounts other
-     * than the admin's own — see updateOwnAccount for self-service.
-     */
-    public void resetPassword(Long userId, String newPassword) {
+    public void resetPassword(Long userId, String newPassword, String performedBy) {
+        UserDto user = userService.getById(userId);
         userService.adminResetPassword(userId, newPassword);
+        auditLogService.log(performedBy, AuditAction.USER_PASSWORD_RESET, "User: " + user.getUsername());
     }
 
-    public void deleteUser(Long userId) {
+    public void deleteUser(Long userId, String performedBy) {
+        UserDto user = userService.getById(userId);
         userService.deleteUserById(userId);
+        auditLogService.log(performedBy, AuditAction.USER_DELETED, "User: " + user.getUsername());
     }
 
-    /**
-     * Registers a new admin account.
-     *
-     * @throws UserAlreadyExistsException if the username or email is already taken
-     */
-    public void registerAdmin(User user) throws UserAlreadyExistsException {
+    public void registerAdmin(User user, String performedBy) throws UserAlreadyExistsException {
         userService.registerAdminUser(user);
+        auditLogService.log(performedBy, AuditAction.ADMIN_REGISTERED, "New admin: " + user.getUsername());
+    }
+
+    public long getUserCount() {
+        return userService.getUserCount();
     }
 
     // ----- Admin's own account -----
 
-    /**
-     * Returns the logged-in admin's own account details, unmasked,
-     * for display on their account page.
-     */
     public UserDto getOwnAccount(String username) {
         return userService.getByUsername(username);
     }
 
-    /**
-     * Updates the logged-in admin's own account. Unlike updateUser,
-     * this goes through the standard current-password-checked path,
-     * since here the admin is changing their own credentials rather
-     * than resetting someone else's.
-     */
     public void updateOwnAccount(String username, String name, String newUsername, String email,
                                  String currentPassword, String newPassword, String confirmNewPassword) {
         UserDto user = userService.getByUsername(username);
         userService.updateAccountDetails(user.getId(), name, newUsername, email,
                 currentPassword, newPassword, confirmNewPassword);
+        auditLogService.log(username, AuditAction.ACCOUNT_SELF_UPDATED, "Own account");
     }
 
-    // ----- Sessions -----
+    // ----- Sessions (view/delete only, no edit) -----
 
-    /**
-     * Builds the list of sessions shown on the admin sessions page.
-     * Sessions are deliberately view/delete-only from the admin
-     * panel — session content belongs to the user who created it,
-     * and the only legitimate admin need is moderation/cleanup,
-     * which deleteSession already covers.
-     */
     public List<AdminSessionView> getAllSessionsForAdmin() {
         List<Session> sessions = sessionService.getAllSessions();
         List<AdminSessionView> sessionViews = new ArrayList<>();
@@ -148,8 +121,16 @@ public class AdminService {
         return sessionViews;
     }
 
-    public void deleteSession(Long sessionId) {
+    public void deleteSession(Long sessionId, String performedBy) {
+        Session session = sessionService.getSessionById(sessionId);
+        String description = "Session at " + session.getVenue() + " (owner: " + session.getUser().getUsername() + ")";
+
         sessionService.deleteSession(sessionId);
+        auditLogService.log(performedBy, AuditAction.SESSION_DELETED, description);
+    }
+
+    public long getSessionCount() {
+        return sessionService.getSessionCount();
     }
 
     // ----- Anglers -----
@@ -181,7 +162,7 @@ public class AdminService {
         return new AdminAnglerView(angler, sessionCount, catchCount, linkedUserId, linkedUsername);
     }
 
-    public void updateAngler(Long anglerId, String name, String email) {
+    public void updateAngler(Long anglerId, String name, String email, String performedBy) {
         Angler angler = anglerService.getAnglerById(anglerId);
         if (userService.findByEmail(angler.getEmail()).isPresent()) {
             throw new AnglerLinkedToUserException(
@@ -194,9 +175,10 @@ public class AdminService {
         }
 
         anglerService.updateAngler(anglerId, name, emailToSave);
+        auditLogService.log(performedBy, AuditAction.ANGLER_UPDATED, "Angler: " + name);
     }
 
-    public void deleteAngler(Long anglerId) {
+    public void deleteAngler(Long anglerId, String performedBy) {
         Angler angler = anglerService.getAnglerById(anglerId);
         if (userService.findByEmail(angler.getEmail()).isPresent()) {
             throw new AnglerLinkedToUserException(
@@ -204,17 +186,16 @@ public class AdminService {
         }
 
         anglerService.deleteAngler(anglerId);
-    }
-
-    public long getUserCount() {
-        return userService.getUserCount();
-    }
-
-    public long getSessionCount() {
-        return sessionService.getSessionCount();
+        auditLogService.log(performedBy, AuditAction.ANGLER_DELETED, "Angler: " + angler.getName());
     }
 
     public long getAnglerCount() {
         return anglerService.getAnglerCount();
+    }
+
+    // ----- Audit log -----
+
+    public List<AuditLog> getRecentAuditLogs() {
+        return auditLogService.getRecentLogs();
     }
 }

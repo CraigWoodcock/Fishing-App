@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Audit Log - Admin - Fishing Session Tracker</title>
+    <link rel="icon" th:href="@{/images/favicon-32.png}" type="image/png">
+    <link rel="apple-touch-icon" th:href="@{/images/favicon-180.png}">
+    <link rel="stylesheet" th:href="@{/css/output.css}">
+    <meta content="noindex, nofollow" name="robots">
+</head>
+<body class="bg-ink text-paper min-h-screen flex flex-col">
+
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="flex-grow container mx-auto px-4 py-6 sm:py-8 max-w-6xl">
+
+    <span class="inline-block bg-danger text-paper text-xs font-bold uppercase tracking-wide px-2 py-1 rounded mb-2">
+        Admin Panel
+    </span>
+    <h2 class="text-2xl sm:text-3xl font-semibold mb-6">Audit Log</h2>
+
+    <div class="bg-surface rounded-lg overflow-x-auto">
+        <table class="w-full text-left text-sm sm:text-base">
+            <thead>
+            <tr class="border-b border-line">
+                <th class="p-3">Time</th>
+                <th class="p-3">Admin</th>
+                <th class="p-3">Action</th>
+                <th class="p-3">Details</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="border-b border-line" th:each="entry : ${logs}">
+                <td class="p-3" th:text="${#temporals.format(entry.timestamp, 'dd-MM-yyyy HH:mm')}"></td>
+                <td class="p-3" th:text="${entry.performedBy}"></td>
+                <td class="p-3" th:text="${entry.action}"></td>
+                <td class="p-3" th:text="${entry.targetDescription}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <p class="text-faint p-4" th:if="${logs.isEmpty()}">No activity recorded yet.</p>
+    </div>
+
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+</body>
+</html>

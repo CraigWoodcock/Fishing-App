@@ -1,23 +1,24 @@
 package com.craigwoodcock.fishingapp.controller.webController;
 
-import com.craigwoodcock.fishingapp.exception.*;
+import com.craigwoodcock.fishingapp.exception.AnglerAlreadyExistsException;
+import com.craigwoodcock.fishingapp.exception.AnglerHasRecordsException;
+import com.craigwoodcock.fishingapp.exception.AnglerLinkedToUserException;
+import com.craigwoodcock.fishingapp.exception.InvalidCredentialsException;
+import com.craigwoodcock.fishingapp.exception.UserAlreadyExistsException;
 import com.craigwoodcock.fishingapp.model.entity.Role;
 import com.craigwoodcock.fishingapp.model.entity.User;
 import com.craigwoodcock.fishingapp.service.AdminService;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-/**
- * Handles HTTP routing for the Thymeleaf-based admin panel. This
- * class contains no business logic of its own — every request is
- * delegated straight to AdminService, and this controller's job is
- * limited to reading request parameters, choosing a view, and
- * carrying flash messages between redirects. All routes under
- * /admin are restricted to ROLE_ADMIN by SecurityConfig.
- */
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -90,9 +91,10 @@ public class AdminController {
                              @RequestParam String username,
                              @RequestParam(required = false) String email,
                              @RequestParam Role role,
+                             Authentication authentication,
                              RedirectAttributes redirectAttributes) {
         try {
-            adminService.updateUser(id, name, username, email, role);
+            adminService.updateUser(id, name, username, email, role, authentication.getName());
             redirectAttributes.addFlashAttribute("success", "User updated");
         } catch (UserAlreadyExistsException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
@@ -103,15 +105,18 @@ public class AdminController {
     @PostMapping("/users/{id}/password")
     public String resetPassword(@PathVariable Long id,
                                 @RequestParam String newPassword,
+                                Authentication authentication,
                                 RedirectAttributes redirectAttributes) {
-        adminService.resetPassword(id, newPassword);
+        adminService.resetPassword(id, newPassword, authentication.getName());
         redirectAttributes.addFlashAttribute("success", "Password reset");
         return "redirect:/admin/users/" + id + "/edit";
     }
 
     @PostMapping("/users/{id}/delete")
-    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        adminService.deleteUser(id);
+    public String deleteUser(@PathVariable Long id,
+                             Authentication authentication,
+                             RedirectAttributes redirectAttributes) {
+        adminService.deleteUser(id, authentication.getName());
         redirectAttributes.addFlashAttribute("success", "User deleted");
         return "redirect:/admin/users";
     }
@@ -123,15 +128,17 @@ public class AdminController {
     }
 
     @PostMapping("/register")
-    public String registerAdmin(@ModelAttribute User user, RedirectAttributes redirectAttributes) {
+    public String registerAdmin(@ModelAttribute User user,
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes) {
         try {
-            adminService.registerAdmin(user);
+            adminService.registerAdmin(user, authentication.getName());
             redirectAttributes.addFlashAttribute("success", "Admin user registered");
         } catch (UserAlreadyExistsException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
             return "redirect:/admin/register";
         }
-        return "redirect:/admin/users";
+        return "redirect:/admin/dashboard";
     }
 
     // ----- Sessions (view/delete only, no edit) -----
@@ -143,13 +150,16 @@ public class AdminController {
     }
 
     @PostMapping("/sessions/{id}/delete")
-    public String deleteSession(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        adminService.deleteSession(id);
+    public String deleteSession(@PathVariable Long id,
+                                Authentication authentication,
+                                RedirectAttributes redirectAttributes) {
+        adminService.deleteSession(id, authentication.getName());
         redirectAttributes.addFlashAttribute("success", "Session deleted");
         return "redirect:/admin/sessions";
     }
 
     // ----- Anglers -----
+
     @GetMapping("/anglers")
     public String listAnglers(Model model) {
         model.addAttribute("anglers", adminService.getAllAnglersForAdmin());
@@ -166,9 +176,10 @@ public class AdminController {
     public String updateAngler(@PathVariable Long id,
                                @RequestParam String name,
                                @RequestParam(required = false) String email,
+                               Authentication authentication,
                                RedirectAttributes redirectAttributes) {
         try {
-            adminService.updateAngler(id, name, email);
+            adminService.updateAngler(id, name, email, authentication.getName());
             redirectAttributes.addFlashAttribute("success", "Angler updated");
         } catch (AnglerAlreadyExistsException | AnglerLinkedToUserException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
@@ -177,13 +188,23 @@ public class AdminController {
     }
 
     @PostMapping("/anglers/{id}/delete")
-    public String deleteAngler(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String deleteAngler(@PathVariable Long id,
+                               Authentication authentication,
+                               RedirectAttributes redirectAttributes) {
         try {
-            adminService.deleteAngler(id);
+            adminService.deleteAngler(id, authentication.getName());
             redirectAttributes.addFlashAttribute("success", "Angler deleted");
         } catch (AnglerHasRecordsException | AnglerLinkedToUserException ex) {
             redirectAttributes.addFlashAttribute("error", ex.getMessage());
         }
         return "redirect:/admin/anglers";
+    }
+
+    // ----- Audit log -----
+
+    @GetMapping("/audit-log")
+    public String viewAuditLog(Model model) {
+        model.addAttribute("logs", adminService.getRecentAuditLogs());
+        return "admin/audit-log";
     }
 }
