@@ -1,10 +1,10 @@
-drop database if exists fishing_app;
+-- drop database if exists fishing_app;
 
 CREATE database if not exists fishing_app;
 
 USE fishing_app;
 
-drop table if exists users;
+-- drop table if exists users;
 
 create table if not exists users
 (
@@ -18,7 +18,7 @@ create table if not exists users
     last_login_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) auto_increment = 31982;
 
-drop table if exists sessions;
+-- drop table if exists sessions;
 
 CREATE TABLE if not exists sessions
 (
@@ -32,7 +32,7 @@ CREATE TABLE if not exists sessions
     foreign key (user_id) references users (id)
 );
 
-drop table if exists anglers;
+-- drop table if exists anglers;
 CREATE TABLE if not exists anglers
 (
     id         BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE if not exists anglers
     email 	   VARCHAR(100) unique NOT NULL
 );
 
-drop table if exists catches;
+-- drop table if exists catches;
 
 CREATE TABLE if not exists catches
 (
@@ -59,7 +59,7 @@ CREATE TABLE if not exists catches
     FOREIGN KEY (session_id) REFERENCES sessions (id)
 );
 
-drop table if exists angler-session;
+-- drop table if exists angler_session;
 CREATE TABLE if not exists angler_session
 (
     id         BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE if not exists angler_session
     FOREIGN KEY (session_id) REFERENCES sessions (id)
 );
 
-drop table if exists jwt_tokens;
+-- drop table if exists jwt_tokens;
 
 CREATE TABLE IF NOT EXISTS jwt_tokens
 (
@@ -82,6 +82,17 @@ CREATE TABLE IF NOT EXISTS jwt_tokens
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+CREATE TABLE if not exists audit_logs (
+    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    performed_by        VARCHAR(50)  NOT NULL,
+    action              VARCHAR(50)  NOT NULL,
+    target_description  VARCHAR(255) NOT NULL,
+    timestamp           DATETIME     NOT NULL
+);
+
+CREATE INDEX idx_audit_logs_timestamp ON audit_logs (timestamp DESC);
+CREATE INDEX idx_audit_logs_performed_by ON audit_logs (performed_by);
+
 
 
 -- INSERT INTO users (username, name, password, email, role)
@@ -89,4 +100,6 @@ CREATE TABLE IF NOT EXISTS jwt_tokens
 -- drop table angler_session; 
 -- drop table sessions;
 -- drop table catches;
+
+select * from audit_logs;
 
