@@ -87,7 +87,8 @@ CREATE TABLE if not exists audit_logs (
     performed_by        VARCHAR(50)  NOT NULL,
     action              VARCHAR(50)  NOT NULL,
     target_description  VARCHAR(255) NOT NULL,
-    timestamp           DATETIME     NOT NULL
+    timestamp           DATETIME     NOT NULL,
+    details				VARCHAR(255)	NULL
 );
 
 CREATE INDEX idx_audit_logs_timestamp ON audit_logs (timestamp DESC);

@@ -62,15 +62,48 @@ public class AdminService {
     }
 
     public void updateUser(Long userId, String name, String username, String email, Role role, String performedBy) {
-        String emailToSave = email;
+        UserDto existing = userService.getById(userId);
 
+        String emailToSave = email;
         if (emailToSave == null || emailToSave.isBlank()) {
-            UserDto existing = userService.getById(userId);
             emailToSave = existing.getEmail();
         }
 
+        List<String> changes = describeUserChanges(existing, name, username, emailToSave, role);
+
         userService.adminUpdateUser(userId, name, username, emailToSave, role);
-        auditLogService.log(performedBy, AuditAction.USER_UPDATED, "User: " + username);
+
+        if (!changes.isEmpty()) {
+            String details = String.join(", ", changes);
+            auditLogService.log(performedBy, AuditAction.USER_UPDATED, "User: " + username, details);
+        }
+    }
+
+    /**
+     * Compares a user's current details against the values submitted
+     * on the edit form and returns a human-readable description of
+     * each field that actually changed. An empty list means the form
+     * was submitted with no real changes, in which case the caller
+     * should skip writing an audit entry entirely.
+     */
+    private List<String> describeUserChanges(UserDto existing, String newName, String newUsername,
+                                             String newEmail, Role newRole) {
+        List<String> changes = new ArrayList<>();
+
+        if (!existing.getName().equals(newName)) {
+            changes.add("name updated");
+        }
+        if (!existing.getUsername().equals(newUsername.toLowerCase())) {
+            changes.add("username updated");
+        }
+        if (!existing.getEmail().equalsIgnoreCase(newEmail)) {
+            changes.add("email address updated");
+        }
+        if (existing.getRole() != newRole) {
+            changes.add("role updated");
+        }
+
+        return changes;
     }
 
     public void resetPassword(Long userId, String newPassword, String performedBy) {
@@ -174,8 +207,27 @@ public class AdminService {
             emailToSave = angler.getEmail();
         }
 
+        List<String> changes = describeAnglerChanges(angler, name, emailToSave);
+
         anglerService.updateAngler(anglerId, name, emailToSave);
-        auditLogService.log(performedBy, AuditAction.ANGLER_UPDATED, "Angler: " + name);
+
+        if (!changes.isEmpty()) {
+            String details = String.join(", ", changes);
+            auditLogService.log(performedBy, AuditAction.ANGLER_UPDATED, "Angler: " + name, details);
+        }
+    }
+
+    private List<String> describeAnglerChanges(Angler existing, String newName, String newEmail) {
+        List<String> changes = new ArrayList<>();
+
+        if (!existing.getName().equals(newName)) {
+            changes.add("name updated");
+        }
+        if (!existing.getEmail().equalsIgnoreCase(newEmail)) {
+            changes.add("email address updated");
+        }
+
+        return changes;
     }
 
     public void deleteAngler(Long anglerId, String performedBy) {

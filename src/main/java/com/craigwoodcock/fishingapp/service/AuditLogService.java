@@ -25,13 +25,19 @@ public class AuditLogService {
      */
 
     public void log(String performedBy, AuditAction action, String targetDescription) {
+        log(performedBy, action, targetDescription, null);
+    }
+
+    public void log(String performedBy, AuditAction action, String targetDescription, String details) {
         AuditLog entry = new AuditLog();
         entry.setPerformedBy(performedBy);
         entry.setAction(action);
         entry.setTargetDescription(targetDescription);
         entry.setTimestamp(LocalDateTime.now());
+        entry.setDetails(details);
         auditLogRepository.save(entry);
     }
+
 
     public List<AuditLog> getRecentLogs() {
         return auditLogRepository.findAllByOrderByTimestampDesc();

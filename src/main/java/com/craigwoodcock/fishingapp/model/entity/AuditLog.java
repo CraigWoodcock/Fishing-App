@@ -37,6 +37,9 @@ public class AuditLog {
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
 
+    @Column(name = "details", length = 255)
+    private String details;
+
     public Long getId() {
         return id;
     }
@@ -75,5 +78,13 @@ public class AuditLog {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 }

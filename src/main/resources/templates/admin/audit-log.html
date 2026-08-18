@@ -27,6 +27,7 @@
                 <th class="p-3">Time</th>
                 <th class="p-3">Admin</th>
                 <th class="p-3">Action</th>
+                <th class="p-3">Target</th>
                 <th class="p-3">Details</th>
             </tr>
             </thead>
@@ -36,10 +37,15 @@
                 <td class="p-3" th:text="${entry.performedBy}"></td>
                 <td class="p-3" th:text="${entry.action}"></td>
                 <td class="p-3" th:text="${entry.targetDescription}"></td>
+                <td class="p-3" th:text="${entry.details}"></td>
             </tr>
             </tbody>
         </table>
         <p class="text-faint p-4" th:if="${logs.isEmpty()}">No activity recorded yet.</p>
+        <a class="block text-center bg-danger hover:bg-danger-hover text-paper font-bold py-2 px-4 rounded"
+           th:href="@{/admin/dashboard}">
+            Back
+        </a>
     </div>
 
 </main>
